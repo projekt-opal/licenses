@@ -1,0 +1,8 @@
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+
+SELECT DISTINCT ?catalog
+WHERE {
+  GRAPH ?g {
+    ?catalog a dcat:Catalog
+  }
+}
