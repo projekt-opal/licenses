@@ -10,6 +10,11 @@ import org.junit.Test;
 
 public class LicensesTest {
 
+	/**
+	 * Dummy tests providing examples.
+	 * 
+	 * TODO: Test implementation.
+	 */
 	@Test
 	public void test() throws Exception {
 
@@ -40,7 +45,27 @@ public class LicensesTest {
 		if (!exceptionThrown) {
 			throw new AssertionError("Model size error.");
 		}
+	}
 
+	/**
+	 * Dummy tests with example datasets.
+	 * 
+	 * TODO: Test implementation.
+	 */
+	@Test
+	public void testOdcIntegration() throws Exception {
+		// Read test datasets
+		Model datasetModelA = TestUtils.getDatasetAsModel("odc-a");
+		Model datasetModelB = TestUtils.getDatasetAsModel("odc-b");
+
+		// Process datasets
+		JavaApi javaApi = new JavaApi();
+		Model datasetModelAProcessed = javaApi.process(datasetModelA);
+		Model datasetModelBProcessed = javaApi.process(datasetModelB);
+
+		// Test (dummy)
+		Assert.assertEquals(datasetModelA.size(), datasetModelAProcessed.size());
+		Assert.assertEquals(datasetModelB.size(), datasetModelBProcessed.size());
 	}
 
 }

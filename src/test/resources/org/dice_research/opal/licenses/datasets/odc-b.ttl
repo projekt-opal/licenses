@@ -1,0 +1,77 @@
+@prefix ns5:   <http://projekt-opal.de/> .
+@prefix ns8:   <http://metric.projekt-opal.de/> .
+@prefix ns7:   <http://publications.europa.eu/resource/authority/file-type/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix ns0:   <http://purl.org/dc/terms/> .
+@prefix ns2:   <http://www.w3.org/ns/dcat#> .
+@prefix ns1:   <http://projekt-opal.de/dataset/> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix ns4:   <http://www.w3.org/ns/dqv#> .
+@prefix ns3:   <http://projekt-opal.de/distribution/> .
+
+ns5:measurement1110387
+        a                    ns4:qualityMeasurement ;
+        ns4:isMeasurementOf  ns8:KnownLicense ;
+        ns4:value            "0.0"^^xsd:float , "5.0"^^xsd:float .
+
+ns1:https___europeandataportal_eu_set_data_lista_tuturor_institutiilor_2018
+        ns0:publisher              [ a          foaf:Agent ;
+                                     foaf:name  ""
+                                   ] ;
+        ns0:publisher              [ a          foaf:Agent ;
+                                     foaf:name  ""
+                                   ] ;
+        ns0:publisher              [ a          foaf:Agent ;
+                                     foaf:name  ""
+                                   ] ;
+        ns2:contactPoint           [ ns0:type   "http://www.w3.org/2006/vcard/ns#Kind"^^skos:Concept ;
+                                     foaf:name  ""
+                                   ] ;
+        ns2:contactPoint           [ ns0:type   "http://www.w3.org/2006/vcard/ns#Kind"^^skos:Concept ;
+                                     foaf:name  ""
+                                   ] ;
+        ns2:contactPoint           [ ns0:type   "http://www.w3.org/2006/vcard/ns#Kind"^^skos:Concept ;
+                                     foaf:name  ""
+                                   ] ;
+        ns2:distribution           ns3:https___europeandataportal_eu_set_distribution_2eabc098_ef90_44c8_9c87_fe0e25d84e51 ;
+        ns4:hasQualityMeasurement  ns5:measurement1110388 , ns5:measurement1110384 , ns5:measurement1110389 , ns5:measurement1110385 , ns5:measurement1110387 , ns5:measurement1110383 , ns5:measurement1110386 .
+
+ns5:measurement1110385
+        a                    ns4:qualityMeasurement ;
+        ns4:isMeasurementOf  ns8:MultipleSerializations , ns8:LinkedDataRepresentation ;
+        ns4:value            "5.0"^^xsd:float , "0.0"^^xsd:float .
+
+ns5:measurement1110383
+        a                    ns4:qualityMeasurement ;
+        ns4:isMeasurementOf  ns8:Description , ns8:ContactUrl ;
+        ns4:value            "0.0"^^xsd:float , "5.0"^^xsd:float .
+
+ns5:measurement1110388
+        a                    ns4:qualityMeasurement ;
+        ns4:isMeasurementOf  ns8:ContactUrl , ns8:Timeliness ;
+        ns4:value            "0.0"^^xsd:float .
+
+ns5:measurement1110386
+        a                    ns4:qualityMeasurement ;
+        ns4:isMeasurementOf  ns8:Categorization , ns8:Timeliness ;
+        ns4:value            "0.0"^^xsd:float .
+
+ns3:https___europeandataportal_eu_set_distribution_2eabc098_ef90_44c8_9c87_fe0e25d84e51
+        a                ns2:Distribution ;
+        ns0:description  ""@ro ;
+        ns0:format       ns7:XLSX ;
+        ns0:license      <https://www.europeandataportal.eu/content/show-license?license_id=OGL2.0> ;
+        ns0:title        "﻿List of all public institutions or authorities managing public functions and reports on their situation to the National Agency of Civil Servants in the 2018 reference period"@ro ;
+        ns2:accessURL    <http://data.gov.ro/dataset/9c884258-d9b6-4c0f-a507-dcc5d98059dd/resource/f7e8cbbd-6571-47af-b094-fb5774aa9779/download/2018.xlsx> .
+
+ns5:measurement1110384
+        a                    ns4:qualityMeasurement ;
+        ns4:isMeasurementOf  ns8:Description , ns8:MultipleSerializations ;
+        ns4:value            "0.0"^^xsd:float , "5.0"^^xsd:float .
+
+ns5:measurement1110389
+        a                    ns4:qualityMeasurement ;
+        ns4:isMeasurementOf  ns8:Categorization , ns8:LinkedDataRepresentation ;
+        ns4:value            "0.0"^^xsd:float , "5.0"^^xsd:float .
