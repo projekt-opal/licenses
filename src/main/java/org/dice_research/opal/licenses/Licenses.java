@@ -12,35 +12,19 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.dice_research.opal.licenses.exceptions.LicensesException;
 
+
 public class Licenses {
-	
-	private static Pattern europeandataportalPattern = Pattern.compile("http[s]?://(?:www\\.)?europeandataportal\\.eu/content/show-license\\?license_id=(.*)");
-	private static String europeandataportalBaseURI = "http://europeandataportal.eu/content/show-license?license_id=";
-	private String europeandataportalEUHandler(String license) {
-		Matcher m = Licenses.europeandataportalPattern.matcher(license);
 		
-		if (m.matches()) {
-			return Licenses.europeandataportalBaseURI + m.group(1);
-		} else {
-			return null;
-		}
-	}
-	
 	private Statement mapLicenses(Model m, Statement stmt) {
 		Triple t = stmt.asTriple();
 		String license = t.getObject().toString();
 		
-		// Just for testing! Will deploy some kind of handler registry later!
-		String handled = europeandataportalEUHandler(license);
+		license = LicensePatterns.replace(license);
 		
-		if (handled != null) {
-			Resource res = m.createResource(t.getSubject().toString());
-			Property prop = m.createProperty(t.getPredicate().toString());
-			
-			return m.createStatement(res, prop, handled);
-		} else {
-			return stmt;
-		}
+		Resource res = m.createResource(t.getSubject().toString());
+		Property prop = m.createProperty(t.getPredicate().toString());
+		
+		return m.createStatement(res, prop, license);
 	}
 
 	public Model process(Model model) throws LicensesException {

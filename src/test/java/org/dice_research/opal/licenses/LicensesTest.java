@@ -87,11 +87,11 @@ public class LicensesTest {
 				licenses.add(t.getObject().toString());
 		}
 		
-		System.out.print("Licenses: ");
+		/* System.out.print("Licenses: ");
 		for (String s : licenses) {
 			System.out.print(s + "  ");
 		}
-		System.out.println();
+		System.out.println(); */
 		
 		return licenses.size();
 	}
