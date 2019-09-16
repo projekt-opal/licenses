@@ -40,6 +40,7 @@ public class Licenses {
 			Statement stmt = stmts.next();
 			
 			if (isLicenseStatement(stmt)) mapLicense(returnModel, stmt);
+			else returnModel.add(stmt);
 		}
 		
 		return returnModel;
