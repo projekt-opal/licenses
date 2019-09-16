@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * 
+ * Simple regex-replacing utility class
  * @author Jochen Vothknecht
  */
 public class LicenseReplacer {
@@ -18,6 +18,11 @@ public class LicenseReplacer {
 		this.replace = replace;
 	}
 	
+	/**
+	 * Replaces the string if it matches the pattern
+	 * @param license license URI
+	 * @return either the original or the modified string
+	 */
 	public String replace(String license) {
 		Matcher m = pattern.matcher(license);
 		
