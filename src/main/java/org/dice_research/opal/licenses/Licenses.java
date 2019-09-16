@@ -15,7 +15,7 @@ import org.dice_research.opal.licenses.exceptions.LicensesException;
 
 public class Licenses {
 		
-	private Statement mapLicenses(Model m, Statement stmt) {
+	private void mapLicense(Model m, Statement stmt) {
 		Triple t = stmt.asTriple();
 		String license = t.getObject().toString();
 		
@@ -24,7 +24,11 @@ public class Licenses {
 		Resource res = m.createResource(t.getSubject().toString());
 		Property prop = m.createProperty(t.getPredicate().toString());
 		
-		return m.createStatement(res, prop, license);
+		m.add(m.createStatement(res, prop, license));
+	}
+	
+	public boolean isLicenseStatement(Statement stmt) {
+		return Strings.DCT_LICENSE.equals(stmt.asTriple().getPredicate().toString());
 	}
 
 	public Model process(Model model) throws LicensesException {
@@ -35,8 +39,7 @@ public class Licenses {
 		while (stmts.hasNext()) {
 			Statement stmt = stmts.next();
 			
-			if (Strings.DCT_LICENSE.equals(stmt.asTriple().getPredicate().toString())) stmt = mapLicenses(returnModel, stmt);
-			returnModel.add(stmt);
+			if (isLicenseStatement(stmt)) mapLicense(returnModel, stmt);
 		}
 		
 		return returnModel;

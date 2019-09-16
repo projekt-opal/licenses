@@ -24,6 +24,9 @@ import org.apache.jena.rdf.model.SimpleSelector;
  */
 public class LicensePatterns {
 	
+	/**
+	 * The default list of LicenseReplacers
+	 */
 	public static Collection<LicenseReplacer> replacers;
 	
 	static {
@@ -52,6 +55,11 @@ public class LicensePatterns {
 		
 	}
 	
+	/**
+	 * Processes a given URI by the LicenseReplacers
+	 * @param license the license URI to process
+	 * @return the processed URI
+	 */
 	public static String replace(final String license) {
 		String out = license;
 		
@@ -62,12 +70,23 @@ public class LicensePatterns {
 		return out;
 	}
 	
+	/**
+	 * Reads the patterns model from file
+	 * @return the model
+	 */
 	public static Model getModel() {
 		Model m = ModelFactory.createDefaultModel();
 		m.read("LicensePatterns.ttl");
 		return m;
 	}
 	
+	/**
+	 * Adds a URI pattern to specified model
+	 * @param m the model
+	 * @param name the name for the pattern
+	 * @param pattern the regex
+	 * @param replacement the replacement pattern
+	 */
 	public static void addPatternToModel(Model m, String name, String pattern, String replacement) {
 		Resource rpat = m.createResource(Strings.NS_OPAL_LICENSES + name);
 		Property plpat = m.createProperty("opal", ":licensePattern");
@@ -79,6 +98,10 @@ public class LicensePatterns {
 		m.add(m.createStatement(rpat, prpat, lrep));
 	}
 
+	/**
+	 * Creates a default model and writes it to disk
+	 * @param args ignored
+	 */
 	public static void main(String[] args) {
 		Model m = ModelFactory.createDefaultModel();
 		m.setNsPrefix("opal", Strings.NS_OPAL_LICENSES);
@@ -88,8 +111,6 @@ public class LicensePatterns {
 				"europeandataportal",
 				"http[s]?://(?:www\\.)?europeandataportal\\.eu/content/show-license\\?license_id=(.*)",
 				"http://europeandataportal.eu/content/show-license?license_id=$1");
-		
-		
 		
 		
 		try {
