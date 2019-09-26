@@ -25,19 +25,19 @@ public class LicensesTest {
 		inputModel.add(resourceA, property, resourceB);
 
 		JavaApi javaApi = new JavaApi();
-		Model outputModel = javaApi.process(inputModel);
+		Model outputModel = javaApi.process(inputModel, null);
 
 		// Dummy test: Both models should have the same size
 		Assert.assertEquals("Same size", inputModel.size(), outputModel.size());
 
 		// Dummy test: Both models should not have the same size
 		Assert.assertNotEquals("Different size", inputModel.size(),
-				javaApi.process(ModelFactory.createDefaultModel()).size());
+				javaApi.process(ModelFactory.createDefaultModel(), null).size());
 
 		// Dummy test: Exception expected
 		boolean exceptionThrown = false;
 		try {
-			javaApi.process(null);
+			javaApi.process(null, null);
 		} catch (Exception e) {
 			// Exception expected
 			exceptionThrown = true;
@@ -60,8 +60,8 @@ public class LicensesTest {
 
 		// Process datasets
 		JavaApi javaApi = new JavaApi();
-		Model datasetModelAProcessed = javaApi.process(datasetModelA);
-		Model datasetModelBProcessed = javaApi.process(datasetModelB);
+		Model datasetModelAProcessed = javaApi.process(datasetModelA, null);
+		Model datasetModelBProcessed = javaApi.process(datasetModelB, null);
 
 		// Test (dummy)
 		Assert.assertEquals(datasetModelA.size(), datasetModelAProcessed.size());
