@@ -58,17 +58,16 @@ public class ODRL {
 				
 				// Requirements
 				OptionalBoolean notice = bFields[5];  // CC-REL only
-				OptionalBoolean attribution = bFields[6];
-				OptionalBoolean shareAlike = bFields[7];
-				OptionalBoolean copyleft = bFields[8];
-				OptionalBoolean lesserCopyleft = bFields[9];
+				OptionalBoolean attribution = bFields[6];  // CC-REL only
+				OptionalBoolean shareAlike = bFields[7];  // CC-REL only
+				OptionalBoolean copyleft = bFields[8];  // CC-REL only
+				OptionalBoolean lesserCopyleft = bFields[9];  // CC-REL only
 				// OptionalBoolean stateChanges = bFields[10];  // not supported by CC-REL / ODRL
 				
 				// Prohibitions
-				OptionalBoolean commercialUse = bFields[11];
+				OptionalBoolean commercialUse = bFields[11];  // CC-REL only
 				// OptionalBoolean useTrademark = bFields[12];  // not supported by CC-REL
 				
-				// ODRL.addTriple(model, licenseURI, Strings.NS_RDF + "type", Strings.NS_ODRL + "policy");
 				Resource license = model.createResource(licenseURI);
 				license.addProperty(RDF.type, model.createResource(Strings.NS_ODRL + "policy"));
 				
