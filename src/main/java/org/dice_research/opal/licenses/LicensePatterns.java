@@ -1,5 +1,7 @@
 package org.dice_research.opal.licenses;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -14,6 +16,7 @@ import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Selector;
 import org.apache.jena.rdf.model.SimpleSelector;
+import org.apache.jena.rdf.model.StmtIterator;
 
 
 /**
@@ -89,8 +92,8 @@ public class LicensePatterns {
 	 */
 	public static void addPatternToModel(Model m, String name, String pattern, String replacement) {
 		Resource rpat = m.createResource(Strings.NS_OPAL_LICENSES + name);
-		Property plpat = m.createProperty("opal", ":licensePattern");
-		Property prpat = m.createProperty("opal", ":licenseReplacement");
+		Property plpat = m.createProperty(Strings.NS_OPAL_LICENSES + "licensePattern");
+		Property prpat = m.createProperty(Strings.NS_OPAL_LICENSES + "licenseReplacement");
 		Literal lpat = m.createLiteral(pattern);
 		Literal lrep = m.createLiteral(replacement);
 		
@@ -120,6 +123,7 @@ public class LicensePatterns {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		//Model unused = ODRL.model;
 	}
-
 }
