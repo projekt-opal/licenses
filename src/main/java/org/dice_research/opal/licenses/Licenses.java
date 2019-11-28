@@ -1,8 +1,5 @@
 package org.dice_research.opal.licenses;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
