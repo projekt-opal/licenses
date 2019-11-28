@@ -12,4 +12,8 @@ public class Strings {
 	
 	public static String NS_OPAL_LICENSES = "http://projekt-opal.de/licenses/";
 
+	
+	public static String NS_CC = "https://creativecommons.org/ns";
+	
+	public static String NS_ODRL = "http://www.w3.org/ns/odrl/2/";
 }
