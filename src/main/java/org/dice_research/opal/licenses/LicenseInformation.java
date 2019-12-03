@@ -8,14 +8,24 @@ public class LicenseInformation {
 	
 	public class License {
 		
-		// Permissions
+		/*
+		 * Permissions
+		 * 
+		 * This are negative properties.
+		 * If one license in a combination doesn't give you a permission, the resulting license can't give it to you either.
+		 */
 		public final boolean reproduction;
 		public final boolean districution;
 		public final boolean derivative;
 		public final boolean sublicensing;
 		public final boolean patentGrant;
 		
-		// Requirements
+		/*
+		 * Requirements
+		 * 
+		 * This are positive properties.
+		 * If one license in a combination requires you to do something, the resulting license must require you to do this, too.
+		 */
 		public final boolean notice;
 		public final boolean attribution;
 		public final boolean shareAlike;
