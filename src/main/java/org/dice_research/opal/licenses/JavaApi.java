@@ -1,28 +1,38 @@
 package org.dice_research.opal.licenses;
 
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.vocabulary.DCAT;
 import org.dice_research.opal.common.interfaces.JenaModelProcessor;
+import org.dice_research.opal.common.interfaces.ModelProcessor;
 
 /**
  * Public API for other Java components.
  * 
  * @author Adrian Wilke
  */
-public class JavaApi implements JenaModelProcessor {
+@SuppressWarnings("deprecation")
+public class JavaApi implements ModelProcessor, JenaModelProcessor {
 
-	/**
-	 * Reads data in given Jena {@link Model}, processes data related to DCAT
-	 * {@link DCAT#Dataset} URIs, and returns new Jena {@link Model}.
-	 * 
-	 * @param model      Jena input model
-	 * @param datasetUri URI of DCAT dataset to process
-	 * @return Jena output model with processed data
-	 * @throws Exception On errors
-	 */
 	@Override
-	public Model process(Model model, String datasetUri) throws Exception {
-		return new Licenses().process(model, datasetUri);
+	public void processModel(Model model, String datasetUri) throws Exception {
+		new Licenses().process(model, datasetUri);
 	}
 
+	/**
+	 * @deprecated Replaced by {@link #processModel(Model, String)}.
+	 */
+	@Deprecated
+	@Override
+	public Model process(Model model, String datasetUri) throws Exception {
+		processModel(model, datasetUri);
+		return model;
+	}
+
+	/**
+	 * @deprecated Replaced by {@link #processModel(Model, String)}.
+	 */
+	@Deprecated
+	public Model process(Model model) throws Exception {
+		processModel(model, null);
+		return model;
+	}
 }
