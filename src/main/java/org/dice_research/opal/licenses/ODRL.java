@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses.generator;
+package org.dice_research.opal.licenses;
 
 import java.io.File;
 
@@ -14,7 +14,6 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.dice_research.opal.licenses.Strings;
 
 
 public class ODRL {
