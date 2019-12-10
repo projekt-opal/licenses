@@ -1,6 +1,8 @@
 package org.dice_research.opal.licenses;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.jena.graph.Triple;
@@ -11,6 +13,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.dice_research.opal.licenses.LicenseCombinator.License;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -121,5 +124,29 @@ public class LicensesTest {
 		Assert.assertEquals(countLicensesInModel(merged), 2);
 		Assert.assertEquals(countLicensesInModel(processed), 1);
 	}
-
+	
+	private void printLicenseList(List<License> licenses) {
+		System.out.print("[");
+		
+		Iterator<License> it = licenses.iterator();
+		
+		while (it.hasNext()) {
+			System.out.print(it.next().name);
+			if (it.hasNext()) System.out.print(", ");
+		}
+		
+		System.out.println("]");
+	}
+	
+	/**
+	 * Test license combinations.
+	 */
+	@Test
+	public void testLicenseCombinator() throws Exception {
+		License cc0 = LicenseCombinator.getLicense("CC0 1.0");
+		License pseul = LicenseCombinator.getLicense("PSEUL");
+		
+		printLicenseList(LicenseCombinator.combineLicenses(cc0));
+		printLicenseList(LicenseCombinator.combineLicenses(cc0, pseul));
+	}
 }
