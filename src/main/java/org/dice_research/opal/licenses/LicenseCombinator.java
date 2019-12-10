@@ -3,6 +3,7 @@ package org.dice_research.opal.licenses;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
@@ -157,8 +158,33 @@ public class LicenseCombinator {
 			predicate = predicate.and(licenses[i].createPredicate());
 		}
 		
-		// TODO: sort: if input licenses are in output set put them at front
-		return LicenseCombinator.licenses.values().stream().filter(predicate).collect(Collectors.toList());
+		List<License> applicableLicenses = LicenseCombinator.licenses.values().stream().filter(predicate).collect(Collectors.toList());
+		
+		applicableLicenses.sort(new Comparator<License>() {
+			
+			private boolean licenseArrayContains(License license) {
+				for (License l : licenses) {
+					if (license.name.equals(l.name)) return true;
+				}
+				
+				return false;
+			}
+			
+			/**
+			 * compares two licenses simply by the fact that they are contained in input set or not
+			 */
+			@Override
+			public int compare(License l0, License l1) {
+				boolean containsL0 = licenseArrayContains(l0);
+				boolean containsL1 = licenseArrayContains(l1);
+				
+				if (containsL0 && containsL1) return 0;
+				else if (containsL0) return -1;
+				else return 1;
+			}
+		});
+		
+		return applicableLicenses;
 	}
 	
 	public static License getLicense(String name) {
