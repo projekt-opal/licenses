@@ -28,7 +28,7 @@ public class Licenses {
 		return Strings.DCT_LICENSE.equals(stmt.asTriple().getPredicate().toString());
 	}
 
-	public Model process(Model model) throws LicensesException {
+	public Model process(Model model, String datasetUri) throws LicensesException {
 		Model returnModel = ModelFactory.createDefaultModel();
 		
 		StmtIterator stmts = model.listStatements();

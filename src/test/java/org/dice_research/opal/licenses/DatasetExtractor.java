@@ -41,7 +41,7 @@ public class DatasetExtractor {
 	// http://europeandataportal.eu/content/show-license?license_id=OGL2.0
 	private final static String DATASET_A = "http://projekt-opal.de/dataset/https___europeandataportal_eu_set_data_informatii_financiare";
 	// Distribution has license
-	// http://europeandataportal.eu/content/show-license?license_id=ODC-ODbL
+	// https://www.europeandataportal.eu/content/show-license?license_id=OGL2.0
 	private final static String DATASET_B = "http://projekt-opal.de/dataset/https___europeandataportal_eu_set_data_lista_tuturor_institutiilor_2018";
 
 	private static final Logger LOGGER = LogManager.getLogger();
