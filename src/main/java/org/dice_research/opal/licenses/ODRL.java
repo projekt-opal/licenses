@@ -30,7 +30,6 @@ public class ODRL {
 		model.setNsPrefix("opal", Strings.NS_OPAL_LICENSES);
 		model.setNsPrefix("odrl", Strings.NS_ODRL);
 		model.setNsPrefix("cc", Strings.NS_CC);
-		// model.setNsPrefix("rdf", Strings.NS_RDF);		
 		
 		try {
 			//model.read(new FileInputStream(new File("src/main/resources/ODRL22.ttl")), null, "TURTLE");
