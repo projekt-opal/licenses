@@ -1,7 +1,10 @@
 package org.dice_research.opal.licenses;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -125,13 +128,13 @@ public class LicensesTest {
 		Assert.assertEquals(countLicensesInModel(processed), 1);
 	}
 	
-	private void printLicenseList(List<License> licenses) {
+	private void printList(List<? extends Object> objs) {
 		System.out.print("[");
 		
-		Iterator<License> it = licenses.iterator();
+		Iterator<? extends Object> it = objs.iterator();
 		
 		while (it.hasNext()) {
-			System.out.print(it.next().name);
+			System.out.print(it.next().toString());
 			if (it.hasNext()) System.out.print(", ");
 		}
 		
@@ -143,10 +146,15 @@ public class LicensesTest {
 	 */
 	@Test
 	public void testLicenseCombinator() throws Exception {
-		License cc0 = LicenseCombinator.getLicense("CC0 1.0");
-		License pseul = LicenseCombinator.getLicense("PSEUL");
+		Collection<String> cc0 = new LinkedList<String>();
+		cc0.add("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
 		
-		printLicenseList(LicenseCombinator.combineLicenses(cc0));
-		printLicenseList(LicenseCombinator.combineLicenses(cc0, pseul));
+		Collection<String> ccbynd40 = new LinkedList<String>();
+		ccbynd40.addAll(cc0);
+		ccbynd40.add("http://creativecommons.org/licenses/by-nd/4.0/legalcode");
+		
+		LicenseCombinator lc = new LicenseCombinator();
+		printList(lc.getLicenceSuggestions(cc0));
+		printList(lc.getLicenceSuggestions(ccbynd40));
 	}
 }

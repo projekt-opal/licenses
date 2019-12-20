@@ -3,14 +3,19 @@ package org.dice_research.opal.licenses;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.dice_research.opal.licenses.exceptions.UnknownLicenseException;
 
-public class LicenseCombinator {
+
+public class LicenseCombinator implements LicenceCombinatorInterface {
 
 	public static final HashMap<String, License> licenses;
 	
@@ -134,7 +139,7 @@ public class LicenseCombinator {
 					bFields[i - 2] = "Yes".equals(fields[i]);
 				}
 				
-				licenses.put(licenseName, new License(
+				licenses.put(licenseURI, new License(
 						licenseName, licenseURI,
 						bFields[0], bFields[1],
 						bFields[2], bFields[3],
@@ -149,13 +154,36 @@ public class LicenseCombinator {
 			e.printStackTrace();
 		}
 	}
-	
-	public static List<License> combineLicenses(License... licenses) {
-		if (licenses.length < 1) throw new IllegalArgumentException("Must combine at least 1 license");
 		
-		Predicate<License> predicate = licenses[0].createPredicate();
-		for (int i = 1; i < licenses.length; i++) {
-			predicate = predicate.and(licenses[i].createPredicate());
+	public static License getLicense(String uri) throws UnknownLicenseException {
+		License license = licenses.get(uri);
+		
+		if (license == null) throw new UnknownLicenseException(uri);
+		
+		return license;
+	}
+
+	@Override
+	public List<String> getLicenceSuggestions(Collection<String> usedLicenceUris) throws UnknownLicenseException {
+		if (usedLicenceUris.size() < 1) return new LinkedList<String>();
+		
+		Collection<License> usedLicenses;
+		try {
+			usedLicenses = usedLicenceUris.stream().map(uri -> {
+				try {
+					return getLicense(uri);
+				} catch (UnknownLicenseException ule) {
+					throw new RuntimeException(ule);
+				}
+			}).collect(Collectors.toList());
+		} catch (RuntimeException re) {
+			throw (UnknownLicenseException)re.getCause();
+		}
+		
+		Iterator<License> licenseIterator = usedLicenses.iterator();
+		Predicate<License> predicate = licenseIterator.next().createPredicate();
+		while (licenseIterator.hasNext()) {
+			predicate = predicate.and(licenseIterator.next().createPredicate());
 		}
 		
 		List<License> applicableLicenses = LicenseCombinator.licenses.values().stream().filter(predicate).collect(Collectors.toList());
@@ -163,7 +191,7 @@ public class LicenseCombinator {
 		applicableLicenses.sort(new Comparator<License>() {
 			
 			private boolean licenseArrayContains(License license) {
-				for (License l : licenses) {
+				for (License l : usedLicenses) {
 					if (license.name.equals(l.name)) return true;
 				}
 				
@@ -184,10 +212,6 @@ public class LicenseCombinator {
 			}
 		});
 		
-		return applicableLicenses;
-	}
-	
-	public static License getLicense(String name) {
-		return licenses.get(name);
+		return applicableLicenses.stream().map(license -> license.licenseURI).collect(Collectors.toList());
 	}
 }
