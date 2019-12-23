@@ -2,7 +2,9 @@ package org.dice_research.opal.licenses;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -52,6 +54,16 @@ public class LicenseCombinator implements LicenceCombinatorInterface {
 		
 		public final String name;
 		public final String licenseURI;
+
+		/*
+		 * Caching Field-objects heavily speeds up reflective accesses
+		 */
+		private static final List<Field> booleanFields;
+		
+		static {
+			List<Field> fields = Arrays.asList(License.class.getDeclaredFields());
+			booleanFields = fields.stream().filter(field -> field.getType().equals(boolean.class)).collect(Collectors.toList());
+		}
 		
 		public License(
 				String name,
@@ -100,24 +112,16 @@ public class LicenseCombinator implements LicenceCombinatorInterface {
 		 */
 		public Predicate<License> createPredicate() {
 			return (License other) -> {
-				// check negative properties
-				if (reproduction && !other.reproduction) return false;
-				if (distribution && !other.distribution) return false;
-				if (derivative && !other.derivative) return false;
-				if (sublicensing && !other.sublicensing) return false;
-				if (patentGrant && !other.patentGrant) return false;
 				
-				// check positive properties
-				// TODO: can we just check negatives and positives the same way? WTF?
-				if (notice && !other.notice) return false;
-				if (attribution && !other.attribution) return false;
-				if (shareAlike && !other.shareAlike) return false;
-				if (copyleft && !other.copyleft) return false;
-				if (lesserCopyLeft && !other.lesserCopyLeft) return false;
-				if (stateChanges && !other.stateChanges) return false;
-				
-				// TODO: handle prohibitions!
-				
+				for (Field field : booleanFields) {
+					try {
+						if (field.getBoolean(this) && !field.getBoolean(other)) return false;
+					} catch (Exception e) {
+						e.printStackTrace();
+						return false;
+					}
+				}
+
 				return true;
 			};
 		}
