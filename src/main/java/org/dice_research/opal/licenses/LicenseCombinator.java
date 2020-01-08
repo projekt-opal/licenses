@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import org.dice_research.opal.licenses.exceptions.UnknownLicenseException;
 
 
-public class LicenseCombinator implements LicenceCombinatorInterface {
+public class LicenseCombinator implements LicenseCombinatorInterface {
 
 	public static final HashMap<String, License> licenses;
 	
@@ -167,19 +167,15 @@ public class LicenseCombinator implements LicenceCombinatorInterface {
 		return license;
 	}
 
-	@Override
-	public List<String> getLicenceSuggestions(Collection<String> usedLicenceUris) throws UnknownLicenseException {
-		if (usedLicenceUris.size() < 1) return new LinkedList<String>();
-		
-		Collection<License> usedLicenses;
+	public Collection<License> getLicenses(Collection<String> licenseURIs) throws UnknownLicenseException {
 		try {
-			usedLicenses = usedLicenceUris.stream().map(uri -> {
+			return licenseURIs.stream().map(uri -> {
 				try {
 					return getLicense(uri);
 				} catch (UnknownLicenseException ule) {
 					throw new RuntimeException(ule);
 				}
-			}).collect(Collectors.toList());
+			}).collect(Collectors.toSet());
 		} catch (RuntimeException re) {
 			Throwable cause = re.getCause();
 			
@@ -189,7 +185,14 @@ public class LicenseCombinator implements LicenceCombinatorInterface {
 				throw re;
 			}
 		}
+	}
 		
+	@Override
+	public List<String> getLicenseSuggestions(Collection<String> usedLicenseUris) throws UnknownLicenseException {
+		if (usedLicenseUris.size() < 1) return new LinkedList<String>();
+		
+		Collection<License> usedLicenses = getLicenses(usedLicenseUris);
+
 		Iterator<License> licenseIterator = usedLicenses.iterator();
 		Predicate<License> predicate = licenseIterator.next().createPredicate();
 		while (licenseIterator.hasNext()) {
