@@ -2,6 +2,7 @@ package org.dice_research.opal.licenses;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -154,7 +155,68 @@ public class LicensesTest {
 		ccbynd40.add("http://creativecommons.org/licenses/by-nd/4.0/legalcode");
 		
 		LicenseCombinator lc = new LicenseCombinator();
-		printList(lc.getLicenceSuggestions(cc0));
-		printList(lc.getLicenceSuggestions(ccbynd40));
+		printList(lc.getLicenseSuggestions(cc0));
+		printList(lc.getLicenseSuggestions(ccbynd40));
+	}
+	
+	/**
+	 * Test license attributes
+	 * 
+	 * Tests if by giving a single license(no combination computation performed) we get the exact attributes of this license
+	 */
+	@Test
+	public void testLicenseAttributes0() throws Exception {
+		LicenseCombinator lc = new LicenseCombinator();
+		
+		Collection<String> cc0 = new LinkedList<String>();
+		cc0.add("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
+		
+		HashMap<String, Boolean> combination = new HashMap<String, Boolean>();
+		combination.put("reproduction", true);
+		combination.put("distribution", true);
+		combination.put("derivative", true);
+		combination.put("sublicensing", true);
+		combination.put("patentGrant", false);
+		combination.put("notice", false);
+		combination.put("attribution", false);
+		combination.put("shareAlike", false);
+		combination.put("copyLeft", false);
+		combination.put("lesserCopyLeft", false);
+		combination.put("stateChanges", false);
+		combination.put("commercial", false);
+		combination.put("useTrademark", false);
+		
+		Assert.assertEquals(lc.getLicenseAttributes(cc0), combination);
+	}
+
+	/**
+	 * Test license attributes
+	 * 
+	 * Tests if by combining two licenses, we get the smallest denominator attribute set.
+	 */
+	@Test
+	public void testLicenseAttributes1() throws Exception {
+		LicenseCombinator lc = new LicenseCombinator();
+		
+		Collection<String> ccbynd40 = new LinkedList<String>();
+		ccbynd40.add("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
+		ccbynd40.add("http://creativecommons.org/licenses/by-nd/4.0/legalcode");
+		
+		HashMap<String, Boolean> combination = new HashMap<String, Boolean>();
+		combination.put("reproduction", true);
+		combination.put("distribution", true);
+		combination.put("derivative", false);
+		combination.put("sublicensing", false);
+		combination.put("patentGrant", false);
+		combination.put("notice", true);
+		combination.put("attribution", true);
+		combination.put("shareAlike", false);
+		combination.put("copyLeft", false);
+		combination.put("lesserCopyLeft", false);
+		combination.put("stateChanges", true);
+		combination.put("commercial", false);
+		combination.put("useTrademark", false);
+		
+		Assert.assertEquals(lc.getLicenseAttributes(ccbynd40), combination);
 	}
 }

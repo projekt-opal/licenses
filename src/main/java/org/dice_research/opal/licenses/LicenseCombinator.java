@@ -8,10 +8,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,8 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		public final boolean sublicensing;
 		public final boolean patentGrant;
 		
+		protected static final Set<String> permissions;
+		
 		/*
 		 * Requirements
 		 * 
@@ -45,25 +49,48 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		public final boolean notice;
 		public final boolean attribution;
 		public final boolean shareAlike;
-		public final boolean copyleft;
+		public final boolean copyLeft;
 		public final boolean lesserCopyLeft;
 		public final boolean stateChanges;
-		
+
+		protected static final Set<String> requirements;
+
 		// Prohibitions
 		public final boolean commercial;
 		public final boolean useTrademark;
 		
+		protected static final Set<String> prohibitions;
+
 		public final String name;
 		public final String licenseURI;
 
 		/*
 		 * Caching Field-objects heavily speeds up reflective accesses
 		 */
-		private static final List<Field> booleanFields;
+		protected static final List<Field> booleanFields;
 		
 		static {
 			List<Field> fields = Arrays.asList(License.class.getDeclaredFields());
 			booleanFields = fields.stream().filter(field -> field.getType().equals(boolean.class)).collect(Collectors.toList());
+			
+			permissions = new HashSet<>();
+			permissions.add("reproduction");
+			permissions.add("distribution");
+			permissions.add("derivative");
+			permissions.add("sublicensing");
+			permissions.add("patentGrant");
+
+			requirements = new HashSet<>();
+			requirements.add("notice");
+			requirements.add("attribution");
+			requirements.add("shareAlike");
+			requirements.add("copyLeft");
+			requirements.add("lesserCopyLeft");
+			requirements.add("stateChanges");
+
+			prohibitions = new HashSet<>();
+			prohibitions.add("commercial");
+			prohibitions.add("useTrademark");
 		}
 		
 		public License(
@@ -98,7 +125,7 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 			this.notice = notice;
 			this.attribution = attribution;
 			this.shareAlike = shareAlike;
-			this.copyleft = copyLeft;
+			this.copyLeft = copyLeft;
 			this.lesserCopyLeft = lesserCopyLeft;
 			this.stateChanges = stateChanges;
 
@@ -229,13 +256,45 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		return applicableLicenses.stream().map(license -> license.licenseURI).collect(Collectors.toList());
 	}
 
+	
+	
 	@Override
 	public Map<String, Boolean> getLicenseAttributes(Collection<String> usedLicenseUris) throws UnknownLicenseException {
 		if (usedLicenseUris.size() < 1) throw new IllegalArgumentException();
 		
 		HashMap<String, Boolean> out = new HashMap<String, Boolean>();
 
+		try {
+			Iterator<License> licenseIterator = getLicenses(usedLicenseUris).iterator();
+			while (licenseIterator.hasNext()) {
+				License l = licenseIterator.next();
+				
+				for (Field f : License.booleanFields) {
+					String licenseFieldName = f.getName();
+					boolean licenseFieldValue = f.getBoolean(l);
+					Boolean licenseFieldOutValue = out.get(licenseFieldName);
+					
+					if (licenseFieldOutValue == null) {
+						out.put(licenseFieldName, licenseFieldValue);
+					} else if (License.permissions.contains(licenseFieldName) && !licenseFieldValue) {
+						out.put(licenseFieldName, licenseFieldValue);
+					} else if ((License.requirements.contains(licenseFieldName) || License.prohibitions.contains(licenseFieldName)) 
+							   && !licenseFieldOutValue) {
+						out.put(licenseFieldName, licenseFieldValue);
+					}
+				}
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		
+		// print map
+		
+		System.out.println("Map (");
+		out.forEach((k, v) -> {
+			System.out.println("  " + k + " -> " + v);
+		});
+		System.out.println(")");
 		
 		return out;
 	}
