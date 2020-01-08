@@ -288,14 +288,32 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 			e.printStackTrace();
 		}
 		
-		// print map
-		
-		System.out.println("Map (");
+		/* System.out.println("Map (");
 		out.forEach((k, v) -> {
 			System.out.println("  " + k + " -> " + v);
 		});
-		System.out.println(")");
+		System.out.println(")"); */
 		
 		return out;
+	}
+
+	@Override
+	public List<String> getLicenseFromAttributes(Map<String, Boolean> attributes) {
+		List<License> applicableLicenses = LicenseCombinator.licenses.values().stream().filter(license -> {
+			for (Field field : License.booleanFields) {
+				try {
+					if (attributes.get(field.getName()) && !field.getBoolean(license)) return false;
+				} catch (NullPointerException npe) {
+					throw new IllegalArgumentException("Missing attribute: " + field.getName());
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+			}
+			
+			return true;
+		}).collect(Collectors.toList());
+
+		return applicableLicenses.stream().map(license -> license.licenseURI).collect(Collectors.toList());
 	}
 }

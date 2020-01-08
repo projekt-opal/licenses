@@ -159,6 +159,25 @@ public class LicensesTest {
 		printList(lc.getLicenseSuggestions(ccbynd40));
 	}
 	
+	public static final HashMap<String, Boolean> cc0attrs;
+	
+	static {
+		cc0attrs = new HashMap<String, Boolean>();
+		cc0attrs.put("reproduction", true);
+		cc0attrs.put("distribution", true);
+		cc0attrs.put("derivative", true);
+		cc0attrs.put("sublicensing", true);
+		cc0attrs.put("patentGrant", false);
+		cc0attrs.put("notice", false);
+		cc0attrs.put("attribution", false);
+		cc0attrs.put("shareAlike", false);
+		cc0attrs.put("copyLeft", false);
+		cc0attrs.put("lesserCopyLeft", false);
+		cc0attrs.put("stateChanges", false);
+		cc0attrs.put("commercial", false);
+		cc0attrs.put("useTrademark", false);
+	}
+	
 	/**
 	 * Test license attributes
 	 * 
@@ -171,22 +190,7 @@ public class LicensesTest {
 		Collection<String> cc0 = new LinkedList<String>();
 		cc0.add("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
 		
-		HashMap<String, Boolean> combination = new HashMap<String, Boolean>();
-		combination.put("reproduction", true);
-		combination.put("distribution", true);
-		combination.put("derivative", true);
-		combination.put("sublicensing", true);
-		combination.put("patentGrant", false);
-		combination.put("notice", false);
-		combination.put("attribution", false);
-		combination.put("shareAlike", false);
-		combination.put("copyLeft", false);
-		combination.put("lesserCopyLeft", false);
-		combination.put("stateChanges", false);
-		combination.put("commercial", false);
-		combination.put("useTrademark", false);
-		
-		Assert.assertEquals(lc.getLicenseAttributes(cc0), combination);
+		Assert.assertEquals(lc.getLicenseAttributes(cc0), cc0attrs);
 	}
 
 	/**
@@ -218,5 +222,21 @@ public class LicensesTest {
 		combination.put("useTrademark", false);
 		
 		Assert.assertEquals(lc.getLicenseAttributes(ccbynd40), combination);
+	}
+	
+	/**
+	 * Tests getting a license compatible to a given attribute set
+	 */
+	@Test
+	public void testGetLicenseFromAttributes() throws Exception {
+		LicenseCombinator lc = new LicenseCombinator();
+
+		List<String> cc0 = new LinkedList<String>();
+		cc0.add("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
+		
+		Set<String> licensesFromAttributes = new HashSet<>(lc.getLicenseFromAttributes(cc0attrs));
+		Set<String> expectedURIs = new HashSet<>(lc.getLicenseSuggestions(cc0));
+		
+		Assert.assertEquals(licensesFromAttributes, expectedURIs);
 	}
 }

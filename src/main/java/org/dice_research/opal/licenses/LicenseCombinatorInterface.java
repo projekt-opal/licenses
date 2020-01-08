@@ -44,5 +44,14 @@ public interface LicenseCombinatorInterface {
 	 * @throws IllegalArgumentException If the input collection is empty
 	 */
 	Map<String, Boolean> getLicenseAttributes(Collection<String> usedLicenseUris) throws UnknownLicenseException;
+	
+	/**
+	 * Searches for licenses compatible to the given attributes.
+	 * 
+	 * @param attributes A map containing various license attributes. [TODO: describe correct usage of true/false values]
+	 * 
+	 * @return A list of licenses, which are compatible to the given attributes. May be empty if no matching license could be found.
+	 */
+	List<String> getLicenseFromAttributes(Map<String, Boolean> attributes);
 
 }
