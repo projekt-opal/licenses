@@ -2,6 +2,7 @@ package org.dice_research.opal.licenses;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.dice_research.opal.licenses.exceptions.UnknownLicenseException;
 
@@ -12,12 +13,12 @@ import org.dice_research.opal.licenses.exceptions.UnknownLicenseException;
  *
  * @author Adrian Wilke
  */
-public interface LicenceCombinatorInterface {
+public interface LicenseCombinatorInterface {
 
 	/**
 	 * Suggests licenses for a combination of different input licenses.
 	 * 
-	 * @param usedLicenceUris A collection of license-URIs, which have to be
+	 * @param usedLicenseUris A collection of license-URIs, which have to be
 	 *                        considered for suggesting possible licenses.
 	 * 
 	 * @return A list of URIs of licenses, which can be used related to restrictions
@@ -29,6 +30,19 @@ public interface LicenceCombinatorInterface {
 	 * 
 	 * @throws UnknownLicenseException If an input-URI is not known.
 	 */
-	List<String> getLicenceSuggestions(Collection<String> usedLicenceUris) throws UnknownLicenseException;
+	List<String> getLicenseSuggestions(Collection<String> usedLicenseUris) throws UnknownLicenseException;
+	
+	/**
+	 * Computes the attribute set of the smallest denominator of different input licenses.
+	 * 
+	 * @param usedLicenceUris A non-empty collection of license-URIs, which have to be
+	 *                        considered for computing license attributes.
+
+	 * @return A map containing various license attributes. [TODO: describe correct usage of true/false values]
+	 * 
+	 * @throws UnknownLicenseException If an input-URI is not known.
+	 * @throws IllegalArgumentException If the input collection is empty
+	 */
+	Map<String, Boolean> getLicenseAttributes(Collection<String> usedLicenseUris) throws UnknownLicenseException;
 
 }

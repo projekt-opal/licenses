@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -166,7 +167,7 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		
 		return license;
 	}
-
+	
 	public Collection<License> getLicenses(Collection<String> licenseURIs) throws UnknownLicenseException {
 		try {
 			return licenseURIs.stream().map(uri -> {
@@ -186,7 +187,7 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 			}
 		}
 	}
-		
+
 	@Override
 	public List<String> getLicenseSuggestions(Collection<String> usedLicenseUris) throws UnknownLicenseException {
 		if (usedLicenseUris.size() < 1) return new LinkedList<String>();
@@ -226,5 +227,16 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		});
 		
 		return applicableLicenses.stream().map(license -> license.licenseURI).collect(Collectors.toList());
+	}
+
+	@Override
+	public Map<String, Boolean> getLicenseAttributes(Collection<String> usedLicenseUris) throws UnknownLicenseException {
+		if (usedLicenseUris.size() < 1) throw new IllegalArgumentException();
+		
+		HashMap<String, Boolean> out = new HashMap<String, Boolean>();
+
+		
+		
+		return out;
 	}
 }
