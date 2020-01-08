@@ -181,7 +181,13 @@ public class LicenseCombinator implements LicenceCombinatorInterface {
 				}
 			}).collect(Collectors.toList());
 		} catch (RuntimeException re) {
-			throw (UnknownLicenseException)re.getCause();
+			Throwable cause = re.getCause();
+			
+			if (cause instanceof UnknownLicenseException) {
+				throw (UnknownLicenseException)cause;
+			} else {
+				throw re;
+			}
 		}
 		
 		Iterator<License> licenseIterator = usedLicenses.iterator();
