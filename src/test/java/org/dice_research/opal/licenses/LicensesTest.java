@@ -1,7 +1,6 @@
 package org.dice_research.opal.licenses;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,7 +16,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.dice_research.opal.licenses.LicenseCombinator.License;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -238,5 +236,45 @@ public class LicensesTest {
 		Set<String> expectedURIs = new HashSet<>(lc.getLicenseSuggestions(cc0));
 		
 		Assert.assertEquals(licensesFromAttributes, expectedURIs);
+	}
+	
+	@Test
+	public void testGetLicenseSuggestionsFromModels() throws Exception {
+		Model m0 = ModelFactory.createDefaultModel();
+		Model m1 = ModelFactory.createDefaultModel();
+
+		/* ### Build models ### */
+		
+		Resource s, o;
+		Property p;
+		
+		s = m0.createResource("file:///resource0");
+		p = m0.createProperty(Strings.DCT_LICENSE);
+
+		o = m0.createResource("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
+		m0.add(s, p, o);
+		
+		o = m0.createResource("http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode");
+		m0.add(s, p, o);
+
+		
+		s = m1.createResource("file:///resource1");
+		p = m1.createProperty(Strings.DCT_LICENSE);
+
+		o = m1.createResource("http://creativecommons.org/licenses/by-nd/4.0/legalcode");
+		m1.add(s, p ,o);
+		o = m1.createResource("http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode");
+		m1.add(s, p, o);
+		
+		/* ### Real testing ### */
+		
+		LicenseCombinator lc = new LicenseCombinator();
+		
+		Collection<List<String>> suggestions = lc.getLicenseSuggestions(m0, m1);
+		
+		for (List<String> l : suggestions) {
+			System.out.print("List: ");
+			printList(l);
+		}
 	}
 }

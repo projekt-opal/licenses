@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.jena.rdf.model.Model;
 import org.dice_research.opal.licenses.exceptions.UnknownLicenseException;
 
 /**
@@ -37,7 +38,7 @@ public interface LicenseCombinatorInterface {
 	 * 
 	 * @param usedLicenceUris A non-empty collection of license-URIs, which have to be
 	 *                        considered for computing license attributes.
-
+	 *
 	 * @return A map containing various license attributes. [TODO: describe correct usage of true/false values]
 	 * 
 	 * @throws UnknownLicenseException If an input-URI is not known.
@@ -53,5 +54,7 @@ public interface LicenseCombinatorInterface {
 	 * @return A list of licenses, which are compatible to the given attributes. May be empty if no matching license could be found.
 	 */
 	List<String> getLicenseFromAttributes(Map<String, Boolean> attributes);
+
+	Collection<List<String>> getLicenseSuggestions(Model model0, Model model1) throws UnknownLicenseException;
 
 }

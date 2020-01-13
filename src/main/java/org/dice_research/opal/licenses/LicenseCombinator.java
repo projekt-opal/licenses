@@ -17,6 +17,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.SimpleSelector;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.dice_research.opal.licenses.exceptions.UnknownLicenseException;
 
 
@@ -315,5 +321,41 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		}).collect(Collectors.toList());
 
 		return applicableLicenses.stream().map(license -> license.licenseURI).collect(Collectors.toList());
+	}
+
+	private Collection<String> getLicensesFromModel(Model m) {
+		Collection<String> licenses = new HashSet<>();
+		
+		Property p = m.createProperty(Strings.DCT_LICENSE);
+		StmtIterator it = m.listStatements(new SimpleSelector((Resource)null, p, (RDFNode)null));
+		while (it.hasNext()) {
+			licenses.add(it.next().getResource().getURI());
+		}
+		
+		return licenses;
+	}
+	
+	@Override
+	public Collection<List<String>> getLicenseSuggestions(Model model0, Model model1) throws UnknownLicenseException {
+		Collection<List<String>> out = new HashSet<>();
+		
+		Collection<String> licensesM0 = getLicensesFromModel(model0);
+		Collection<String> licensesM1 = getLicensesFromModel(model1);
+
+		for (String licenseM0 : licensesM0) {
+			for (String licenseM1 : licensesM1) {
+				Collection<String> licenses = new LinkedList<>();
+				
+				licenses.add(licenseM0);
+				licenses.add(licenseM1);
+				
+				out.add(getLicenseSuggestions(licenses));
+			}
+		}
+		
+		List<String> empty = new LinkedList<>();
+		out.remove(empty);
+
+		return out;
 	}
 }
