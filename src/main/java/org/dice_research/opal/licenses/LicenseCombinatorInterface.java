@@ -54,7 +54,18 @@ public interface LicenseCombinatorInterface {
 	 * @return A list of licenses, which are compatible to the given attributes. May be empty if no matching license could be found.
 	 */
 	List<String> getLicenseFromAttributes(Map<String, Boolean> attributes);
-
+	
+	/**
+	 * Suggests licenses for a combination of different input licenses gathered from 2 Jena models.
+	 * 
+	 * Licenses are found by DCAT's dct:license property.
+	 * Input models should contain one dataset and may contain zero or more distributions of the dataset.
+	 * 
+	 * @param model0 First input model
+	 * @param model1 Second input model
+	 * @return A Set of license suggestions
+	 * @throws UnknownLicenseException If a model contains some unknown license-URI
+	 */
 	Collection<List<String>> getLicenseSuggestions(Model model0, Model model1) throws UnknownLicenseException;
 
 }
