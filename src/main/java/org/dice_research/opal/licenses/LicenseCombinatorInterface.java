@@ -39,21 +39,21 @@ public interface LicenseCombinatorInterface {
 	 * @param usedLicenceUris A non-empty collection of license-URIs, which have to be
 	 *                        considered for computing license attributes.
 	 *
-	 * @return A map containing various license attributes. [TODO: describe correct usage of true/false values]
+	 * @return A map containing various license attributes.
 	 * 
 	 * @throws UnknownLicenseException If an input-URI is not known.
 	 * @throws IllegalArgumentException If the input collection is empty
 	 */
-	Map<String, Boolean> getLicenseAttributes(Collection<String> usedLicenseUris) throws UnknownLicenseException;
+	Map<LicenseAttribute, Boolean> getLicenseAttributes(Collection<String> usedLicenseUris) throws UnknownLicenseException;
 	
 	/**
 	 * Searches for licenses compatible to the given attributes.
 	 * 
-	 * @param attributes A map containing various license attributes. [TODO: describe correct usage of true/false values]
+	 * @param attributes A map containing various license attributes.
 	 * 
 	 * @return A list of licenses, which are compatible to the given attributes. May be empty if no matching license could be found.
 	 */
-	List<String> getLicenseFromAttributes(Map<String, Boolean> attributes);
+	List<String> getLicenseFromAttributes(Map<LicenseAttribute, Boolean> attributes);
 	
 	/**
 	 * Suggests licenses for a combination of different input licenses gathered from 2 Jena models.
