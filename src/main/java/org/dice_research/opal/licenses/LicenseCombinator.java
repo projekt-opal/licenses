@@ -329,7 +329,7 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		Property p = m.createProperty(Strings.DCT_LICENSE);
 		StmtIterator it = m.listStatements(new SimpleSelector((Resource)null, p, (RDFNode)null));
 		while (it.hasNext()) {
-			licenses.add(it.next().getResource().getURI());
+			licenses.add(it.next().getObject().toString());  // works for resources and literals
 		}
 		
 		return licenses;
