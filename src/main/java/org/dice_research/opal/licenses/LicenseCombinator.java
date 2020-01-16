@@ -44,7 +44,7 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		public final boolean sublicensing;
 		public final boolean patentGrant;
 		
-		protected static final Set<String> permissions;
+		protected static final Map<String, LicenseAttribute> permissions;
 		
 		/*
 		 * Requirements
@@ -59,13 +59,13 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 		public final boolean lesserCopyLeft;
 		public final boolean stateChanges;
 
-		protected static final Set<String> requirements;
+		protected static final Map<String, LicenseAttribute> requirements;
 
 		// Prohibitions
 		public final boolean commercial;
 		public final boolean useTrademark;
 		
-		protected static final Set<String> prohibitions;
+		protected static final Map<String, LicenseAttribute> prohibitions;
 
 		public final String name;
 		public final String licenseURI;
@@ -79,24 +79,24 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 			List<Field> fields = Arrays.asList(License.class.getDeclaredFields());
 			booleanFields = fields.stream().filter(field -> field.getType().equals(boolean.class)).collect(Collectors.toList());
 			
-			permissions = new HashSet<>();
-			permissions.add("reproduction");
-			permissions.add("distribution");
-			permissions.add("derivative");
-			permissions.add("sublicensing");
-			permissions.add("patentGrant");
+			permissions = new HashMap<>();
+			permissions.put("reproduction", LicenseAttribute.Permission.REPRODUCTION);
+			permissions.put("distribution", LicenseAttribute.Permission.DISTRIBUTION);
+			permissions.put("derivative", LicenseAttribute.Permission.DERIVATIVE);
+			permissions.put("sublicensing", LicenseAttribute.Permission.SUBLICENSING);
+			permissions.put("patentGrant", LicenseAttribute.Permission.PATENTGRANT);
 
-			requirements = new HashSet<>();
-			requirements.add("notice");
-			requirements.add("attribution");
-			requirements.add("shareAlike");
-			requirements.add("copyLeft");
-			requirements.add("lesserCopyLeft");
-			requirements.add("stateChanges");
+			requirements = new HashMap<>();
+			requirements.put("notice", LicenseAttribute.Requirement.NOTICE);
+			requirements.put("attribution", LicenseAttribute.Requirement.ATTRIBUTION);
+			requirements.put("shareAlike", LicenseAttribute.Requirement.SHAREALIKE);
+			requirements.put("copyLeft", LicenseAttribute.Requirement.COPYLEFT);
+			requirements.put("lesserCopyLeft", LicenseAttribute.Requirement.LESSERCOPYLEFT);
+			requirements.put("stateChanges", LicenseAttribute.Requirement.STATECHANGES);
 
-			prohibitions = new HashSet<>();
-			prohibitions.add("commercial");
-			prohibitions.add("useTrademark");
+			prohibitions = new HashMap<>();
+			prohibitions.put("commercial", LicenseAttribute.Prohibition.COMMERCIAL);
+			prohibitions.put("useTrademark", LicenseAttribute.Prohibition.USETRADEMARK);
 		}
 		
 		public License(
@@ -158,6 +158,13 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 
 				return true;
 			};
+		}
+		
+		protected static LicenseAttribute attrName2attr(String name) {
+			if (permissions.containsKey(name)) return permissions.get(name);
+			else if (requirements.containsKey(name)) return requirements.get(name);
+			else if (prohibitions.containsKey(name)) return prohibitions.get(name);
+			else throw new RuntimeException("Unknown attribute: " + name);
 		}
 	}
 	
@@ -265,10 +272,10 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 	
 	
 	@Override
-	public Map<String, Boolean> getLicenseAttributes(Collection<String> usedLicenseUris) throws UnknownLicenseException {
+	public Map<LicenseAttribute, Boolean> getLicenseAttributes(Collection<String> usedLicenseUris) throws UnknownLicenseException {
 		if (usedLicenseUris.size() < 1) throw new IllegalArgumentException();
 		
-		HashMap<String, Boolean> out = new HashMap<String, Boolean>();
+		HashMap<LicenseAttribute, Boolean> out = new HashMap<>();
 
 		try {
 			Iterator<License> licenseIterator = getLicenses(usedLicenseUris).iterator();
@@ -278,15 +285,16 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 				for (Field f : License.booleanFields) {
 					String licenseFieldName = f.getName();
 					boolean licenseFieldValue = f.getBoolean(l);
-					Boolean licenseFieldOutValue = out.get(licenseFieldName);
+					Boolean licenseFieldOutValue = out.get(License.attrName2attr(licenseFieldName));
 					
 					if (licenseFieldOutValue == null) {
-						out.put(licenseFieldName, licenseFieldValue);
-					} else if (License.permissions.contains(licenseFieldName) && !licenseFieldValue) {
-						out.put(licenseFieldName, licenseFieldValue);
-					} else if ((License.requirements.contains(licenseFieldName) || License.prohibitions.contains(licenseFieldName)) 
-							   && !licenseFieldOutValue) {
-						out.put(licenseFieldName, licenseFieldValue);
+						out.put(License.attrName2attr(licenseFieldName), licenseFieldValue);
+					} else if (License.permissions.containsKey(licenseFieldName) && !licenseFieldValue) {
+						out.put(License.permissions.get(licenseFieldName), licenseFieldValue);
+					} else if (License.requirements.containsKey(licenseFieldName) && !licenseFieldOutValue) {
+						out.put(License.requirements.get(licenseFieldName), licenseFieldValue);
+					} else if (License.prohibitions.containsKey(licenseFieldName) && !licenseFieldOutValue) {
+						out.put(License.prohibitions.get(licenseFieldName), licenseFieldValue);
 					}
 				}
 			}
@@ -294,21 +302,15 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 			e.printStackTrace();
 		}
 		
-		/* System.out.println("Map (");
-		out.forEach((k, v) -> {
-			System.out.println("  " + k + " -> " + v);
-		});
-		System.out.println(")"); */
-		
 		return out;
 	}
 
 	@Override
-	public List<String> getLicenseFromAttributes(Map<String, Boolean> attributes) {
+	public List<String> getLicenseFromAttributes(Map<LicenseAttribute, Boolean> attributes) {
 		List<License> applicableLicenses = LicenseCombinator.licenses.values().stream().filter(license -> {
 			for (Field field : License.booleanFields) {
 				try {
-					if (attributes.get(field.getName()) && !field.getBoolean(license)) return false;
+					if (attributes.get(License.attrName2attr(field.getName())) && !field.getBoolean(license)) return false;
 				} catch (NullPointerException npe) {
 					throw new IllegalArgumentException("Missing attribute: " + field.getName());
 				} catch (Exception e) {

@@ -157,23 +157,23 @@ public class LicensesTest {
 		printList(lc.getLicenseSuggestions(ccbynd40));
 	}
 	
-	public static final HashMap<String, Boolean> cc0attrs;
+	public static final HashMap<LicenseAttribute, Boolean> cc0attrs;
 	
 	static {
-		cc0attrs = new HashMap<String, Boolean>();
-		cc0attrs.put("reproduction", true);
-		cc0attrs.put("distribution", true);
-		cc0attrs.put("derivative", true);
-		cc0attrs.put("sublicensing", true);
-		cc0attrs.put("patentGrant", false);
-		cc0attrs.put("notice", false);
-		cc0attrs.put("attribution", false);
-		cc0attrs.put("shareAlike", false);
-		cc0attrs.put("copyLeft", false);
-		cc0attrs.put("lesserCopyLeft", false);
-		cc0attrs.put("stateChanges", false);
-		cc0attrs.put("commercial", false);
-		cc0attrs.put("useTrademark", false);
+		cc0attrs = new HashMap<>();
+		cc0attrs.put(LicenseAttribute.Permission.REPRODUCTION, true);
+		cc0attrs.put(LicenseAttribute.Permission.DISTRIBUTION, true);
+		cc0attrs.put(LicenseAttribute.Permission.DERIVATIVE, true);
+		cc0attrs.put(LicenseAttribute.Permission.SUBLICENSING, true);
+		cc0attrs.put(LicenseAttribute.Permission.PATENTGRANT, false);
+		cc0attrs.put(LicenseAttribute.Requirement.NOTICE, false);
+		cc0attrs.put(LicenseAttribute.Requirement.ATTRIBUTION, false);
+		cc0attrs.put(LicenseAttribute.Requirement.SHAREALIKE, false);
+		cc0attrs.put(LicenseAttribute.Requirement.COPYLEFT, false);
+		cc0attrs.put(LicenseAttribute.Requirement.LESSERCOPYLEFT, false);
+		cc0attrs.put(LicenseAttribute.Requirement.STATECHANGES, false);
+		cc0attrs.put(LicenseAttribute.Prohibition.COMMERCIAL, false);
+		cc0attrs.put(LicenseAttribute.Prohibition.USETRADEMARK, false);
 	}
 	
 	/**
@@ -204,20 +204,20 @@ public class LicensesTest {
 		ccbynd40.add("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
 		ccbynd40.add("http://creativecommons.org/licenses/by-nd/4.0/legalcode");
 		
-		HashMap<String, Boolean> combination = new HashMap<String, Boolean>();
-		combination.put("reproduction", true);
-		combination.put("distribution", true);
-		combination.put("derivative", false);
-		combination.put("sublicensing", false);
-		combination.put("patentGrant", false);
-		combination.put("notice", true);
-		combination.put("attribution", true);
-		combination.put("shareAlike", false);
-		combination.put("copyLeft", false);
-		combination.put("lesserCopyLeft", false);
-		combination.put("stateChanges", true);
-		combination.put("commercial", false);
-		combination.put("useTrademark", false);
+		HashMap<LicenseAttribute, Boolean> combination = new HashMap<>();
+		combination.put(LicenseAttribute.Permission.REPRODUCTION, true);
+		combination.put(LicenseAttribute.Permission.DISTRIBUTION, true);
+		combination.put(LicenseAttribute.Permission.DERIVATIVE, false);
+		combination.put(LicenseAttribute.Permission.SUBLICENSING, false);
+		combination.put(LicenseAttribute.Permission.PATENTGRANT, false);
+		combination.put(LicenseAttribute.Requirement.NOTICE, true);
+		combination.put(LicenseAttribute.Requirement.ATTRIBUTION, true);
+		combination.put(LicenseAttribute.Requirement.SHAREALIKE, false);
+		combination.put(LicenseAttribute.Requirement.COPYLEFT, false);
+		combination.put(LicenseAttribute.Requirement.LESSERCOPYLEFT, false);
+		combination.put(LicenseAttribute.Requirement.STATECHANGES, true);
+		combination.put(LicenseAttribute.Prohibition.COMMERCIAL, false);
+		combination.put(LicenseAttribute.Prohibition.USETRADEMARK, false);
 		
 		Assert.assertEquals(lc.getLicenseAttributes(ccbynd40), combination);
 	}
