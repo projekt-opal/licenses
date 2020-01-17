@@ -307,6 +307,17 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 
 	@Override
 	public List<String> getLicenseFromAttributes(Map<LicenseAttribute, Boolean> attributes) {
+		
+		Collection<LicenseAttribute> allAttributes = new HashSet<>();
+		allAttributes.addAll(License.permissions.values());
+		allAttributes.addAll(License.requirements.values());
+		allAttributes.addAll(License.prohibitions.values());
+
+		// add missing attributes to allow input of sparse maps
+		for (LicenseAttribute l : allAttributes) {
+			if (!attributes.containsKey(l)) attributes.put(l, false);
+		}
+		
 		List<License> applicableLicenses = LicenseCombinator.licenses.values().stream().filter(license -> {
 			for (Field field : License.booleanFields) {
 				try {
