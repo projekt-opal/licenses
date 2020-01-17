@@ -21,6 +21,25 @@ import org.junit.Test;
 
 public class LicensesTest {
 
+	public static final HashMap<LicenseAttribute, Boolean> cc0attrs;
+	
+	static {
+		cc0attrs = new HashMap<>();
+		cc0attrs.put(LicenseAttribute.Permission.REPRODUCTION, true);
+		cc0attrs.put(LicenseAttribute.Permission.DISTRIBUTION, true);
+		cc0attrs.put(LicenseAttribute.Permission.DERIVATIVE, true);
+		cc0attrs.put(LicenseAttribute.Permission.SUBLICENSING, true);
+		cc0attrs.put(LicenseAttribute.Permission.PATENTGRANT, false);
+		cc0attrs.put(LicenseAttribute.Requirement.NOTICE, false);
+		cc0attrs.put(LicenseAttribute.Requirement.ATTRIBUTION, false);
+		cc0attrs.put(LicenseAttribute.Requirement.SHAREALIKE, false);
+		cc0attrs.put(LicenseAttribute.Requirement.COPYLEFT, false);
+		cc0attrs.put(LicenseAttribute.Requirement.LESSERCOPYLEFT, false);
+		cc0attrs.put(LicenseAttribute.Requirement.STATECHANGES, false);
+		cc0attrs.put(LicenseAttribute.Prohibition.COMMERCIAL, false);
+		cc0attrs.put(LicenseAttribute.Prohibition.USETRADEMARK, false);
+	}
+	
 	/**
 	 * Dummy tests providing examples.
 	 * 
@@ -182,25 +201,6 @@ public class LicensesTest {
 		// test remaining data order-independent
 		Set<String> cc0SuggSet = new HashSet<String>(cc0Suggestions);
 		Assert.assertEquals(expectedLicenses, cc0SuggSet);
-	}
-	
-	public static final HashMap<LicenseAttribute, Boolean> cc0attrs;
-	
-	static {
-		cc0attrs = new HashMap<>();
-		cc0attrs.put(LicenseAttribute.Permission.REPRODUCTION, true);
-		cc0attrs.put(LicenseAttribute.Permission.DISTRIBUTION, true);
-		cc0attrs.put(LicenseAttribute.Permission.DERIVATIVE, true);
-		cc0attrs.put(LicenseAttribute.Permission.SUBLICENSING, true);
-		cc0attrs.put(LicenseAttribute.Permission.PATENTGRANT, false);
-		cc0attrs.put(LicenseAttribute.Requirement.NOTICE, false);
-		cc0attrs.put(LicenseAttribute.Requirement.ATTRIBUTION, false);
-		cc0attrs.put(LicenseAttribute.Requirement.SHAREALIKE, false);
-		cc0attrs.put(LicenseAttribute.Requirement.COPYLEFT, false);
-		cc0attrs.put(LicenseAttribute.Requirement.LESSERCOPYLEFT, false);
-		cc0attrs.put(LicenseAttribute.Requirement.STATECHANGES, false);
-		cc0attrs.put(LicenseAttribute.Prohibition.COMMERCIAL, false);
-		cc0attrs.put(LicenseAttribute.Prohibition.USETRADEMARK, false);
 	}
 	
 	/**
