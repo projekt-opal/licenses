@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Model;
@@ -297,11 +298,18 @@ public class LicensesTest {
 		
 		LicenseCombinator lc = new LicenseCombinator();
 		
-		Collection<List<String>> suggestions = lc.getLicenseSuggestions(m0, m1);
+		Set<Set<String>> suggestions = lc.getLicenseSuggestions(m0, m1).stream().map(list -> new HashSet<>(list)).collect(Collectors.toSet());
 		
-		for (List<String> l : suggestions) {
-			System.out.print("List: ");
-			printList(l);
-		}
+		Set<String> suggestion = new HashSet<>();
+		suggestion.add("https://www.govdata.de/dl-de/by-2-0");
+		
+		Assert.assertTrue(suggestions.contains(suggestion));
+		
+		suggestion.clear();
+		suggestion.add("http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode");
+		suggestion.add("http://creativecommons.org/licenses/by-nc/4.0/legalcode");
+		suggestion.add("http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode");
+		
+		Assert.assertTrue(suggestions.contains(suggestion));
 	}
 }
