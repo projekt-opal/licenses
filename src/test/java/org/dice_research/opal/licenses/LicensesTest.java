@@ -152,9 +152,36 @@ public class LicensesTest {
 		ccbynd40.addAll(cc0);
 		ccbynd40.add("http://creativecommons.org/licenses/by-nd/4.0/legalcode");
 		
+		
 		LicenseCombinator lc = new LicenseCombinator();
-		printList(lc.getLicenseSuggestions(cc0));
-		printList(lc.getLicenseSuggestions(ccbynd40));
+		
+		Collection<String> expectedLicenses = new LinkedList<>();
+		expectedLicenses.add("https://www.govdata.de/dl-de/by-2-0");
+		
+		Assert.assertEquals(expectedLicenses, lc.getLicenseSuggestions(ccbynd40));
+
+		
+		List<String> cc0Suggestions = lc.getLicenseSuggestions(cc0);
+		
+		Assert.assertEquals("List doesn't start with input license", "https://creativecommons.org/publicdomain/zero/1.0/legalcode", cc0Suggestions.get(0));
+
+		expectedLicenses = new HashSet<>();
+		expectedLicenses.add("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
+		expectedLicenses.add("http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/");
+		expectedLicenses.add("http://www.nationalarchives.gov.uk/doc/open-government-licence/version/1/");
+		expectedLicenses.add("https://www.govdata.de/dl-de/by-2-0");
+		expectedLicenses.add("https://www.govdata.de/dl-de/by-1-0");
+		expectedLicenses.add("http://data.gov.ro/base/images/logoinst/OGL-ROU-1.0.pdf");
+		expectedLicenses.add("https://joinup.ec.europa.eu/software/page/eupl/licence-eupl");
+		expectedLicenses.add("https://www.govdata.de/dl-de/zero-2-0");
+		expectedLicenses.add("https://www.govdata.de/dl-de/by-nc-1-0");
+		expectedLicenses.add("http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/");
+		expectedLicenses.add("http://opendatacommons.org/licenses/pddl/1-0/");
+		expectedLicenses.add("http://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/non-commercial-government-licence.htm");
+		
+		// test remaining data order-independent
+		Set<String> cc0SuggSet = new HashSet<String>(cc0Suggestions);
+		Assert.assertEquals(expectedLicenses, cc0SuggSet);
 	}
 	
 	public static final HashMap<LicenseAttribute, Boolean> cc0attrs;
