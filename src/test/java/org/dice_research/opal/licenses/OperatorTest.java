@@ -1,5 +1,8 @@
 package org.dice_research.opal.licenses;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.dice_research.opal.licenses.operator.Operator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,18 +18,43 @@ public class OperatorTest {
 	public void testOr() {
 		boolean attributesA[] = { true, true, false, false };
 		boolean attributesB[] = { true, false, true, false };
-		boolean actuals[] = new Operator().compute(attributesA, attributesB);
+		boolean actual[] = new Operator().compute(attributesA, attributesB);
 		boolean expected[] = { true, true, true, false };
-		Assert.assertArrayEquals(expected, actuals);
+		Assert.assertArrayEquals(expected, actual);
+	}
+
+	@Test
+	public void testEmpty() {
+		boolean attributesA[] = {};
+		boolean attributesB[] = {};
+		boolean actual[] = new Operator().compute(attributesA, attributesB);
+		boolean expected[] = {};
+		Assert.assertArrayEquals(expected, actual);
+	}
+
+	@Test
+	public void testList() {
+		List<boolean[]> list = new LinkedList<>();
+		Assert.assertNull(new Operator().compute(list));
+
+		boolean attributesA[] = { true, true, false, false, false };
+		boolean attributesB[] = { true, false, true, false, false };
+		boolean attributesC[] = { true, false, false, true, false };
+		list.add(attributesA);
+		list.add(attributesB);
+		list.add(attributesC);
+		boolean actual[] = new Operator().compute(list);
+		boolean expected[] = { true, true, true, true, false };
+		Assert.assertArrayEquals(expected, actual);
 	}
 
 	@Test
 	public void testIdempotency() {
 		boolean attributesA[] = { true, false };
 		boolean attributesB[] = attributesA.clone();
-		boolean actuals[] = new Operator().compute(attributesA, attributesB);
+		boolean actual[] = new Operator().compute(attributesA, attributesB);
 		boolean expected[] = { true, false };
-		Assert.assertArrayEquals(expected, actuals);
+		Assert.assertArrayEquals(expected, actual);
 	}
 
 	@Test
@@ -35,13 +63,13 @@ public class OperatorTest {
 		boolean attributesB[] = { true, false, true, false, false };
 		boolean attributesC[] = { true, false, false, true, false };
 
-		boolean actuals1[] = new Operator().compute(attributesA, new Operator().compute(attributesB, attributesC));
+		boolean actual1[] = new Operator().compute(attributesA, new Operator().compute(attributesB, attributesC));
 		boolean expected1[] = { true, true, true, true, false };
-		Assert.assertArrayEquals(expected1, actuals1);
+		Assert.assertArrayEquals(expected1, actual1);
 
-		boolean actuals2[] = new Operator().compute(new Operator().compute(attributesA, attributesB), attributesC);
+		boolean actual2[] = new Operator().compute(new Operator().compute(attributesA, attributesB), attributesC);
 		boolean expected2[] = { true, true, true, true, false };
-		Assert.assertArrayEquals(expected2, actuals2);
+		Assert.assertArrayEquals(expected2, actual2);
 	}
 
 }
