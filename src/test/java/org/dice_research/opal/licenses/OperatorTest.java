@@ -72,4 +72,13 @@ public class OperatorTest {
 		Assert.assertArrayEquals(expected2, actual2);
 	}
 
+	@Test
+	public void testCommutativity() {
+		boolean attributesA[] = { true, true, false, false };
+		boolean attributesB[] = { true, false, true, false };
+		boolean actual[] = new Operator().compute(attributesA, attributesB);
+		boolean expected[] = new Operator().compute(attributesB, attributesA);
+		Assert.assertArrayEquals(expected, actual);
+	}
+
 }
