@@ -69,7 +69,7 @@ public class LicencesGraph {
 			Files.lines(csvFile.toPath()).forEach((String line) -> {
 				String fields[] = line.split(",");
 
-				String licenseName = fields[0];
+				// String licenseName = fields[0];
 				String licenseURI = fields[1];
 
 				OptionalBoolean bFields[] = new OptionalBoolean[fields.length - 2];
@@ -87,8 +87,8 @@ public class LicencesGraph {
 				OptionalBoolean reproduction = bFields[0];
 				OptionalBoolean distribution = bFields[1];
 				OptionalBoolean derivative = bFields[2];
-				OptionalBoolean sublicensing = bFields[3]; // not supported by ODRL / CC-REL
-				OptionalBoolean patentGrant = bFields[4]; // not supported by ODRL / CC-REL
+				// OptionalBoolean sublicensing = bFields[3]; // not supported by ODRL / CC-REL
+				// OptionalBoolean patentGrant = bFields[4]; // not supported by ODRL / CC-REL
 
 				// Requirements
 				OptionalBoolean notice = bFields[5]; // CC-REL only

@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.cleaning;
 
 import org.apache.jena.rdf.model.Model;
 import org.dice_research.opal.common.interfaces.JenaModelProcessor;

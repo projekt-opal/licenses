@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.cleaning;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

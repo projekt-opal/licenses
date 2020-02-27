@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.cleaning;
 
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Model;
@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.dice_research.opal.licenses.Strings;
 import org.dice_research.opal.licenses.exceptions.LicensesException;
 
 

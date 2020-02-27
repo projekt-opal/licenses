@@ -1,7 +1,5 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.cleaning;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -16,7 +14,7 @@ import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Selector;
 import org.apache.jena.rdf.model.SimpleSelector;
-import org.apache.jena.rdf.model.StmtIterator;
+import org.dice_research.opal.licenses.Strings;
 
 
 /**
