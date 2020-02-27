@@ -21,7 +21,7 @@ public class OperatorTest {
 	}
 
 	@Test
-	public void testSame() {
+	public void testIdempotency() {
 		boolean attributesA[] = { true, false };
 		boolean attributesB[] = attributesA.clone();
 		boolean actuals[] = new Operator().compute(attributesA, attributesB);
@@ -30,17 +30,17 @@ public class OperatorTest {
 	}
 
 	@Test
-	public void testCombination() {
-		boolean attributesA[] = { true, false, false };
-		boolean attributesB[] = { false, true, false };
-		boolean attributesC[] = { false, false, true };
+	public void testAssociativity() {
+		boolean attributesA[] = { true, true, false, false, false };
+		boolean attributesB[] = { true, false, true, false, false };
+		boolean attributesC[] = { true, false, false, true, false };
 
 		boolean actuals1[] = new Operator().compute(attributesA, new Operator().compute(attributesB, attributesC));
-		boolean expected1[] = { true, true, true };
+		boolean expected1[] = { true, true, true, true, false };
 		Assert.assertArrayEquals(expected1, actuals1);
 
 		boolean actuals2[] = new Operator().compute(new Operator().compute(attributesA, attributesB), attributesC);
-		boolean expected2[] = { true, true, true };
+		boolean expected2[] = { true, true, true, true, false };
 		Assert.assertArrayEquals(expected2, actuals2);
 	}
 
