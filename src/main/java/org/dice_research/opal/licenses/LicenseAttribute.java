@@ -16,17 +16,17 @@ public interface LicenseAttribute {
 	public enum Permission implements LicenseAttribute {
 		REPRODUCTION {
 			public String toString() {
-				return Strings.NS_ODRL + "reproduce";
+				return Constants.NS_ODRL + "reproduce";
 			}
 		},
 		DISTRIBUTION {
 			public String toString() {
-				return Strings.NS_ODRL + "distribute";
+				return Constants.NS_ODRL + "distribute";
 			}
 		},
 		DERIVATIVE {
 			public String toString() {
-				return Strings.NS_ODRL + "derive";
+				return Constants.NS_ODRL + "derive";
 			}
 		},
 		SUBLICENSING,
@@ -42,27 +42,27 @@ public interface LicenseAttribute {
 	public enum Requirement implements LicenseAttribute {
 		NOTICE {
 			public String toString() {
-				return Strings.NS_CC + "Notice";
+				return Constants.NS_CC + "Notice";
 			}
 		},
 		ATTRIBUTION {
 			public String toString() {
-				return Strings.NS_CC + "Attribution";
+				return Constants.NS_CC + "Attribution";
 			}
 		},
 		SHAREALIKE {
 			public String toString() {
-				return Strings.NS_CC + "ShareAlike";
+				return Constants.NS_CC + "ShareAlike";
 			}
 		},
 		COPYLEFT {
 			public String toString() {
-				return Strings.NS_CC + "CopyLeft";
+				return Constants.NS_CC + "CopyLeft";
 			}
 		},
 		LESSERCOPYLEFT {
 			public String toString() {
-				return Strings.NS_CC + "LesserCopyleft";
+				return Constants.NS_CC + "LesserCopyleft";
 			}
 		},
 		STATECHANGES
@@ -77,7 +77,7 @@ public interface LicenseAttribute {
 	public enum Prohibition implements LicenseAttribute {
 		COMMERCIAL {
 			public String toString() {
-				return Strings.NS_CC + "CommercialUse";
+				return Constants.NS_CC + "CommercialUse";
 			}
 		},
 		USETRADEMARK

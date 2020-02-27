@@ -338,7 +338,7 @@ public class LicenseCombinator implements LicenseCombinatorInterface {
 	private Collection<String> getLicensesFromModel(Model m) {
 		Collection<String> licenses = new HashSet<>();
 		
-		Property p = m.createProperty(Strings.DCT_LICENSE);
+		Property p = m.createProperty(Constants.DCT_LICENSE);
 		StmtIterator it = m.listStatements(new SimpleSelector((Resource)null, p, (RDFNode)null));
 		while (it.hasNext()) {
 			licenses.add(it.next().getObject().toString());  // works for resources and literals

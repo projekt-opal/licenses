@@ -14,7 +14,7 @@ import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Selector;
 import org.apache.jena.rdf.model.SimpleSelector;
-import org.dice_research.opal.licenses.Strings;
+import org.dice_research.opal.licenses.Constants;
 
 
 /**
@@ -89,9 +89,9 @@ public class LicensePatterns {
 	 * @param replacement the replacement pattern
 	 */
 	public static void addPatternToModel(Model m, String name, String pattern, String replacement) {
-		Resource rpat = m.createResource(Strings.NS_OPAL_LICENSES + name);
-		Property plpat = m.createProperty(Strings.NS_OPAL_LICENSES + "licensePattern");
-		Property prpat = m.createProperty(Strings.NS_OPAL_LICENSES + "licenseReplacement");
+		Resource rpat = m.createResource(Constants.NS_OPAL_LICENSES + name);
+		Property plpat = m.createProperty(Constants.NS_OPAL_LICENSES + "licensePattern");
+		Property prpat = m.createProperty(Constants.NS_OPAL_LICENSES + "licenseReplacement");
 		Literal lpat = m.createLiteral(pattern);
 		Literal lrep = m.createLiteral(replacement);
 		
@@ -105,7 +105,7 @@ public class LicensePatterns {
 	 */
 	public static void main(String[] args) {
 		Model m = ModelFactory.createDefaultModel();
-		m.setNsPrefix("opal", Strings.NS_OPAL_LICENSES);
+		m.setNsPrefix("opal", Constants.NS_OPAL_LICENSES);
 		
 		
 		LicensePatterns.addPatternToModel(m,

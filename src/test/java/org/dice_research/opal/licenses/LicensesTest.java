@@ -112,7 +112,7 @@ public class LicensesTest {
 			Statement stmt = stmts.next();
 			Triple t = stmt.asTriple();
 
-			if (Strings.DCT_LICENSE.equals(t.getPredicate().toString()))
+			if (Constants.DCT_LICENSE.equals(t.getPredicate().toString()))
 				licenses.add(t.getObject().toString());
 		}
 
@@ -298,7 +298,7 @@ public class LicensesTest {
 		Property p;
 
 		s = m0.createResource("file:///resource0");
-		p = m0.createProperty(Strings.DCT_LICENSE);
+		p = m0.createProperty(Constants.DCT_LICENSE);
 
 		o = m0.createResource("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
 		m0.add(s, p, o);
@@ -307,7 +307,7 @@ public class LicensesTest {
 		m0.add(s, p, o);
 
 		s = m1.createResource("file:///resource1");
-		p = m1.createProperty(Strings.DCT_LICENSE);
+		p = m1.createProperty(Constants.DCT_LICENSE);
 
 		o = m1.createResource("http://creativecommons.org/licenses/by-nd/4.0/legalcode");
 		m1.add(s, p, o);

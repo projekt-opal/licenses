@@ -21,9 +21,9 @@ public class ODRL {
 	static {
 		model = ModelFactory.createDefaultModel();
 
-		model.setNsPrefix("opal", Strings.NS_OPAL_LICENSES);
-		model.setNsPrefix("odrl", Strings.NS_ODRL);
-		model.setNsPrefix("cc", Strings.NS_CC);
+		model.setNsPrefix("opal", Constants.NS_OPAL_LICENSES);
+		model.setNsPrefix("odrl", Constants.NS_ODRL);
+		model.setNsPrefix("cc", Constants.NS_CC);
 
 		try {
 			// model.read(new FileInputStream(new File("src/main/resources/ODRL22.ttl")),
@@ -66,42 +66,42 @@ public class ODRL {
 				// OptionalBoolean useTrademark = bFields[12]; // not supported by CC-REL
 
 				Resource license = model.createResource(licenseURI);
-				license.addProperty(RDF.type, model.createResource(Strings.NS_ODRL + "policy"));
+				license.addProperty(RDF.type, model.createResource(Constants.NS_ODRL + "policy"));
 
-				Property permission = model.createProperty(Strings.NS_ODRL + "permission");
+				Property permission = model.createProperty(Constants.NS_ODRL + "permission");
 				Resource permissions = model.createResource();
 				license.addProperty(permission, permissions);
 
-				Property requirement = model.createProperty(Strings.NS_ODRL + "requirement");
+				Property requirement = model.createProperty(Constants.NS_ODRL + "requirement");
 				Resource requirements = model.createResource();
 				license.addProperty(requirement, requirements);
 
-				Property prohibition = model.createProperty(Strings.NS_ODRL + "prohibition");
+				Property prohibition = model.createProperty(Constants.NS_ODRL + "prohibition");
 				Resource prohibitions = model.createResource();
 				license.addProperty(prohibition, prohibitions);
 
-				Property action = model.createProperty(Strings.NS_ODRL + "action");
+				Property action = model.createProperty(Constants.NS_ODRL + "action");
 
 				if (reproduction == OptionalBoolean.TRUE)
-					permissions.addProperty(action, model.createProperty(Strings.NS_ODRL + "reproduce"));
+					permissions.addProperty(action, model.createProperty(Constants.NS_ODRL + "reproduce"));
 				if (distribution == OptionalBoolean.TRUE)
-					permissions.addProperty(action, model.createProperty(Strings.NS_ODRL + "distribute"));
+					permissions.addProperty(action, model.createProperty(Constants.NS_ODRL + "distribute"));
 				if (derivative == OptionalBoolean.TRUE)
-					permissions.addProperty(action, model.createProperty(Strings.NS_ODRL + "derive"));
+					permissions.addProperty(action, model.createProperty(Constants.NS_ODRL + "derive"));
 
 				if (notice == OptionalBoolean.TRUE)
-					requirements.addProperty(action, model.createProperty(Strings.NS_CC + "Notice"));
+					requirements.addProperty(action, model.createProperty(Constants.NS_CC + "Notice"));
 				if (attribution == OptionalBoolean.TRUE)
-					requirements.addProperty(action, model.createProperty(Strings.NS_CC + "Attribution"));
+					requirements.addProperty(action, model.createProperty(Constants.NS_CC + "Attribution"));
 				if (shareAlike == OptionalBoolean.TRUE)
-					requirements.addProperty(action, model.createProperty(Strings.NS_CC + "ShareAlike"));
+					requirements.addProperty(action, model.createProperty(Constants.NS_CC + "ShareAlike"));
 				if (copyleft == OptionalBoolean.TRUE)
-					requirements.addProperty(action, model.createProperty(Strings.NS_CC + "Copyleft"));
+					requirements.addProperty(action, model.createProperty(Constants.NS_CC + "Copyleft"));
 				if (lesserCopyleft == OptionalBoolean.TRUE)
-					requirements.addProperty(action, model.createProperty(Strings.NS_CC + "LesserCopyleft"));
+					requirements.addProperty(action, model.createProperty(Constants.NS_CC + "LesserCopyleft"));
 
 				if (commercialUse == OptionalBoolean.TRUE)
-					prohibitions.addProperty(action, model.createProperty(Strings.NS_CC + "CommercialUse"));
+					prohibitions.addProperty(action, model.createProperty(Constants.NS_CC + "CommercialUse"));
 
 			});
 		} catch (IOException e) {

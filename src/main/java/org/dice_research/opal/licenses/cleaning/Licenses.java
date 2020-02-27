@@ -7,7 +7,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.dice_research.opal.licenses.Strings;
+import org.dice_research.opal.licenses.Constants;
 import org.dice_research.opal.licenses.exceptions.LicensesException;
 
 
@@ -26,7 +26,7 @@ public class Licenses {
 	}
 	
 	public boolean isLicenseStatement(Statement stmt) {
-		return Strings.DCT_LICENSE.equals(stmt.asTriple().getPredicate().toString());
+		return Constants.DCT_LICENSE.equals(stmt.asTriple().getPredicate().toString());
 	}
 
 	public Model process(Model model, String datasetUri) throws LicensesException {
