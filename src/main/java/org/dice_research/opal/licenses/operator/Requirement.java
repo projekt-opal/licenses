@@ -10,15 +10,14 @@ package org.dice_research.opal.licenses.operator;
 public class Requirement extends Attribute {
 
 	@Override
-	public Attribute setUri() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean getBoolean() {
+	public boolean mapToBoolean() throws NullPointerException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
+	public Attribute parseBoolean(boolean bool) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

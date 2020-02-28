@@ -10,15 +10,15 @@ package org.dice_research.opal.licenses.operator;
 public class Prohibition extends Attribute {
 
 	@Override
-	public Attribute setUri() {
+	public boolean mapToBoolean() throws NullPointerException {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 	@Override
-	public boolean getBoolean() {
+	public Attribute parseBoolean(boolean bool) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 }

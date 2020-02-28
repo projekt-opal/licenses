@@ -1,6 +1,8 @@
 package org.dice_research.opal.licenses.operator;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Attributes.
@@ -8,6 +10,11 @@ import java.util.List;
  * @author Adrian Wilke
  */
 public class Attributes {
+
+	/**
+	 * Insertion-ordered map: Attribute-URI to Attribute.
+	 */
+	private Map<String, Attribute> attributes = new LinkedHashMap<>();
 
 	public Attributes addAttribute(Attribute attribute) {
 		// General way of adding per/pro/req
@@ -41,23 +48,22 @@ public class Attributes {
 		return this;
 	}
 
-	public List<Attribute> getAttributes() {
-		// TODO
-		return null;
+	public Map<String, Attribute> getMap() {
+		return this.attributes;
 	}
 
 	public List<Permission> getPermissions() {
-		// TODO
+		// TODO: Maybe not needed?
 		return null;
 	}
 
 	public List<Prohibition> getProhibitions() {
-		// TODO
+		// TODO: Maybe not needed?
 		return null;
 	}
 
 	public List<Requirement> getRequirements() {
-		// TODO
+		// TODO: Maybe not needed?
 		return null;
 	}
 

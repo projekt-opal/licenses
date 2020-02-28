@@ -1,16 +1,22 @@
 package org.dice_research.opal.licenses.operator;
 
-import java.util.List;
-
+/**
+ * A configuration comprises a list of attributes, which is used for
+ * computations and a knowledge base containing license information.
+ *
+ * @author Adrian Wilke
+ */
 public class Configuration {
 
-	Configuration addAttribute(Attribute attribute) {
-		// TODO
+	private Attributes attributes = new Attributes();
+
+	public Configuration addAttribute(Attribute attribute) {
+		attributes.addAttribute(attribute);
 		return this;
 	}
 
-	List<Attribute> getAttributes() {
-		// TODO
-		return null;
+	public Attributes getAttributes() {
+		return attributes;
 	}
+
 }
