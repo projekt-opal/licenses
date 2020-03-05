@@ -14,27 +14,27 @@
 	</properties>
 
 	<version>0.0.1-SNAPSHOT</version>
-	
+
 	<build>
-	<plugins>
-	<plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
-        <executions>
-            <execution>
-                <goals>
-                    <goal>java</goal>
-                </goals>
-            </execution>
-        </executions>
-        <configuration>
-            <mainClass>org.dice_research.opal.licenses.LicensePatterns</mainClass>
-        </configuration>
-    </plugin>
-	</plugins>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>org.dice_research.opal.licenses.LicensePatterns</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
-	
+
 	<dependencies>
 
 		<!-- OPAL common -->
@@ -44,6 +44,13 @@
 			<groupId>org.dice-research.opal</groupId>
 			<artifactId>common</artifactId>
 			<version>[1,2)</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.8</version>
 		</dependency>
 
 		<!-- Jena -->
