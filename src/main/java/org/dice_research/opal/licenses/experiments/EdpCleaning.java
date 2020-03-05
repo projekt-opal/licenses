@@ -1,10 +1,8 @@
 package org.dice_research.opal.licenses.experiments;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -17,7 +15,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -132,18 +129,7 @@ public class EdpCleaning {
 	 */
 	protected File download() throws IOException {
 		File file = File.createTempFile(SOURCE_FILE_PREFIX, ".csv");
-		download(new URL(SOURCE_URL), file);
+		Io.download(new URL(SOURCE_URL), file);
 		return file;
-	}
-
-	/**
-	 * Copies URL stream to file stream.
-	 */
-	protected void download(URL url, File file) throws IOException {
-		InputStream inputStream = url.openStream();
-		FileOutputStream outputStream = new FileOutputStream(file);
-		IOUtils.copy(inputStream, outputStream);
-		inputStream.close();
-		outputStream.close();
 	}
 }
