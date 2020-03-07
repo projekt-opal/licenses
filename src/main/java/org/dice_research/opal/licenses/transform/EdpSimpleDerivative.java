@@ -17,7 +17,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
-import org.dice_research.opal.licenses.experiments.Io;
+import org.dice_research.opal.licenses.Io;
 
 /**
  * Parses CSV file of file "European Data Portal Licence Compatibility Matrix"

@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses.experiments;
+package org.dice_research.opal.licenses;
 
 import java.io.File;
 import java.io.FileOutputStream;

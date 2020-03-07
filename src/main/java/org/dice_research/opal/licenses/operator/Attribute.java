@@ -57,11 +57,18 @@ public abstract class Attribute {
 	 * 
 	 * @throws NullPointerException if not set
 	 */
-	public boolean getValue(boolean isSet) throws NullPointerException {
+	public boolean getValue() throws NullPointerException {
 		if (value == null) {
 			throw new NullPointerException();
 		}
-		return isSet;
+		return value;
+	}
+
+	/**
+	 * Checks, if the value is not null.
+	 */
+	public boolean hasValue() throws NullPointerException {
+		return (value != null);
 	}
 
 	@Override
@@ -104,7 +111,7 @@ public abstract class Attribute {
 
 	@Override
 	public String toString() {
-		return getUri();
+		return getUri() + (value == null ? "" : "=" + value);
 	}
 
 }

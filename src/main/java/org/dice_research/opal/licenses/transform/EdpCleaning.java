@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses.experiments;
+package org.dice_research.opal.licenses.transform;
 
 import java.io.File;
 import java.io.FileReader;
@@ -17,10 +17,11 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dice_research.opal.licenses.Io;
 
 /**
- * Checks CSV file for duplicate keys ('license') and combines them by summing
- * up values ('count').
+ * Checks SPARQL results (CSV file) for duplicate keys ('license') and combines
+ * them by summing up values ('count').
  *
  * @author Adrian Wilke
  */

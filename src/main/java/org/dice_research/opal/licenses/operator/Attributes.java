@@ -17,8 +17,7 @@ public class Attributes {
 	private Map<String, Attribute> attributes = new LinkedHashMap<>();
 
 	public Attributes addAttribute(Attribute attribute) {
-		// General way of adding per/pro/req
-		// TODO Auto-generated method stub
+		attributes.put(attribute.getUri(), attribute);
 		return this;
 	}
 
@@ -67,4 +66,8 @@ public class Attributes {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return attributes.keySet().toString();
+	}
 }
