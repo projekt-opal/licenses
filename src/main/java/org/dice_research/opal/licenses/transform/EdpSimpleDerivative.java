@@ -24,6 +24,8 @@ import org.dice_research.opal.licenses.experiments.Io;
  * and sheet "Simple Derivative". Corrects error in IDs (CC-PDM). Creates
  * resource file {@value #OUTPUT_FILE}.
  *
+ * Run with {@link #main(String[])}.
+ *
  * Source file:
  * https://www.europeandataportal.eu/en/content/licence-assistant-european-data-portal-licence-compatibility-matrix
  * http://www.europeandataportal.eu/sites/default/files/edp-licence-compatibility-published_v1_0.xlsx
