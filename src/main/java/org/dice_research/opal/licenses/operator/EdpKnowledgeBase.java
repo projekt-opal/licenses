@@ -19,6 +19,8 @@ import org.apache.logging.log4j.Logger;
  * 
  * Does not include attribute 'Sublicensing' as it contains a 'N.A.' value.
  * 
+ * Usage: Use {@link #getAttributes()} or {@link #getLicenses()}.
+ * 
  * Based on "European Data Portal Licence Compatibility Matrix" and sheet
  * "Licence Descriptions".
  * 
@@ -180,7 +182,7 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 	/**
 	 * Creates URI from id.
 	 */
-	protected static String attributeIdToUri(String id) {
+	public static String attributeIdToUri(String id) {
 		try {
 			return new URI(URI_PREFIX + id.replaceAll(" ", "-")).toString();
 		} catch (URISyntaxException e) {
