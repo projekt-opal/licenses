@@ -1,5 +1,6 @@
 package org.dice_research.opal.licenses.operator;
 
+import java.text.ParseException;
 import java.util.Objects;
 
 /**
@@ -84,9 +85,23 @@ public abstract class Attribute {
 	public abstract boolean mapToBoolean() throws NullPointerException;
 
 	/**
+	 * Maps attribute value to binary representation.
+	 * 
+	 * @throws NullPointerException if not set
+	 */
+	public abstract int mapToBinary() throws NullPointerException;
+
+	/**
 	 * Parses boolean value and returns instance.
 	 */
 	public abstract Attribute parseBoolean(boolean bool);
+
+	/**
+	 * Parses binary value and returns instance.
+	 * 
+	 * @throws ParseException if not 0 or 1
+	 */
+	public abstract Attribute parseBinary(int binary) throws ParseException;
 
 	/**
 	 * Sets URI identifying this attribute.
@@ -112,6 +127,32 @@ public abstract class Attribute {
 	@Override
 	public String toString() {
 		return getUri() + (value == null ? "" : "=" + value);
+	}
+
+	/**
+	 * Gets boolean representation of binary value.
+	 * 
+	 * @throws ParseException if not 0 or 1
+	 */
+	public static final boolean binaryToBoolean(int binary) throws ParseException {
+		if (binary == 0) {
+			return false;
+		} else if (binary == 1) {
+			return true;
+		} else {
+			throw new ParseException(Integer.toString(binary), 0);
+		}
+	}
+
+	/**
+	 * Gets binary representation of boolean value.
+	 */
+	public static final int booleanToBinary(boolean bool) {
+		if (bool == false) {
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 
 }
