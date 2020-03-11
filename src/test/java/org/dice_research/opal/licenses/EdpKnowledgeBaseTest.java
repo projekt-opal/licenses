@@ -1,6 +1,6 @@
 package org.dice_research.opal.licenses;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.dice_research.opal.licenses.operator.Attribute;
 import org.dice_research.opal.licenses.operator.Attributes;
@@ -28,7 +28,7 @@ public class EdpKnowledgeBaseTest {
 
 	@Test
 	public void testLicenses() {
-		List<License> licenses = new EdpKnowledgeBase().getLicenses();
+		Collection<License> licenses = new EdpKnowledgeBase().getLicenses().values();
 		Assert.assertEquals(NUMBER_OF_LICENSES, licenses.size());
 		for (License license : licenses) {
 			Assert.assertNotNull(license.getUri());

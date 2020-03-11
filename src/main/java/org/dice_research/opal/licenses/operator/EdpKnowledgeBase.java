@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -58,7 +59,7 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 	}
 
 	@Override
-	public List<License> getLicenses() {
+	public Map<String, License> getLicenses() {
 		if (!isLoaded) {
 			try {
 				load();

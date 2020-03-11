@@ -12,6 +12,18 @@ import java.util.Map;
 public class Attributes {
 
 	/**
+	 * Gets array of attribute values.
+	 */
+	public boolean[] getArray() {
+		boolean[] array = new boolean[attributes.size()];
+		int counter = 0;
+		for (Attribute attribute : attributes.values()) {
+			array[counter++] = attribute.getValue();
+		}
+		return array;
+	}
+
+	/**
 	 * Insertion-ordered map: Attribute-URI to Attribute.
 	 */
 	private Map<String, Attribute> attributes = new LinkedHashMap<>();
@@ -21,49 +33,8 @@ public class Attributes {
 		return this;
 	}
 
-	/**
-	 * @see https://w3c.github.io/odrl/bp/ §1 How to Represent a General Permission
-	 */
-	public Attributes addPermission(Permission attribute) {
-		// TODO: Implement
-		return this;
-	}
-
-	/**
-	 * @see https://w3c.github.io/odrl/bp/ §3 How to represent a prohibition
-	 */
-	public Attributes addProhibition(Prohibition attribute) {
-		// TODO: Implement
-		return this;
-	}
-
-	/**
-	 * @see https://w3c.github.io/odrl/bp/ §2 How to represent an obligation
-	 * 
-	 *      TODO: Obligation/Duty
-	 */
-	public Attributes addRequirement(Requirement attribute) {
-		// TODO: Implement
-		return this;
-	}
-
 	public Map<String, Attribute> getMap() {
 		return this.attributes;
-	}
-
-	public List<Permission> getPermissions() {
-		// TODO: Maybe not needed?
-		return null;
-	}
-
-	public List<Prohibition> getProhibitions() {
-		// TODO: Maybe not needed?
-		return null;
-	}
-
-	public List<Requirement> getRequirements() {
-		// TODO: Maybe not needed?
-		return null;
 	}
 
 	@Override

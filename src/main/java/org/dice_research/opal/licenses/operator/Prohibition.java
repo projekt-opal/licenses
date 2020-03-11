@@ -8,6 +8,7 @@ import java.text.ParseException;
  * @see https://www.w3.org/TR/odrl-model/
  * @see https://www.w3.org/TR/odrl-vocab/
  * @see https://w3c.github.io/odrl/bp/
+ * @see https://w3c.github.io/odrl/bp/ §3 How to represent a prohibition
  *
  * @author Adrian Wilke
  */
