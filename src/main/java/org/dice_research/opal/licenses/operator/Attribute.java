@@ -58,7 +58,7 @@ public abstract class Attribute {
 	 * 
 	 * @throws NullPointerException if not set
 	 */
-	public boolean getValue() throws NullPointerException {
+	public Boolean getValue() throws NullPointerException {
 		if (value == null) {
 			throw new NullPointerException();
 		}
