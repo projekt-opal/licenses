@@ -37,18 +37,17 @@ public class KnowledgeBase {
 		return urisToLicenses;
 	}
 
-	public List<License> getMatchingLicenses(boolean[] attributeValues) {
+	public List<License> getMatchingLicenses(boolean[] attributeValues, boolean internal) {
 		List<License> licenses = new LinkedList<>();
-
-		for (License license : getUrisToLicenses().values()) {
-
-			// TODO
-			if (!license.derivatesAllowed) {
-				continue;
-			}
-
-			if (Arrays.equals(attributeValues, license.getAttributes().getInternalArray())) {
-				licenses.add(license);
+		for (License license : getLicenses()) {
+			if (internal) {
+				if (Arrays.equals(attributeValues, license.getAttributes().getInternalArray())) {
+					licenses.add(license);
+				}
+			} else {
+				if (Arrays.equals(attributeValues, license.getAttributes().getValuesArray())) {
+					licenses.add(license);
+				}
 			}
 		}
 		return licenses;

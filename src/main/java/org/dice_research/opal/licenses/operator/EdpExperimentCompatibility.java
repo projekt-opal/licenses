@@ -52,7 +52,7 @@ public class EdpExperimentCompatibility {
 
 		for (License license : kb.getLicenses()) {
 			List<String> compatible = getCompatibleUris(license.getUri());
-			List<License> matching = kb.getMatchingLicenses(license.getAttributes().getInternalArray());
+			List<License> matching = kb.getMatchingLicenses(license.getAttributes().getInternalArray(), true);
 			System.out.println(license.getName());
 			System.out.println("Comp (EDP): " + compatible);
 			System.out.println("Match     : " + matching);
@@ -79,7 +79,7 @@ public class EdpExperimentCompatibility {
 				License licenseB = kb.getUrisToLicenses().get(uriLicenseB);
 				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalArray(),
 						licenseB.getAttributes().getInternalArray());
-				List<License> resultingLicenses = kb.getMatchingLicenses(result);
+				List<License> resultingLicenses = kb.getMatchingLicenses(result, false);
 				addResult(stringBuilder, licenseA, licenseB, result, resultingLicenses);
 			}
 		}
