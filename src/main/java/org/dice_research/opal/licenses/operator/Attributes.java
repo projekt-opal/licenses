@@ -12,9 +12,9 @@ import java.util.Set;
 public class Attributes {
 
 	/**
-	 * Gets array of attribute values.
+	 * Gets array of attribute values for computation. (E.g. values of permissions
+	 * are inverted.)
 	 */
-
 	public boolean[] getInternalArray() {
 		boolean[] array = new boolean[attributes.size()];
 		int counter = 0;
@@ -25,7 +25,7 @@ public class Attributes {
 	}
 
 	/**
-	 * Gets array of attribute values.
+	 * Gets array of original attribute values.
 	 */
 	public boolean[] getValuesArray() {
 		boolean[] array = new boolean[attributes.size()];
