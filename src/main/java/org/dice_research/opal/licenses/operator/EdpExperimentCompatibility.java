@@ -44,7 +44,11 @@ public class EdpExperimentCompatibility {
 		// Current state: There are special attributes, like "derivatesAllowed" which
 		// can not be handeled like other attributes.
 		// Attribute "derivatesAllowed" was included into the License class.
+		// -> OK
+		//
 		// Other attributes have to be checked (e.g. share alike)
+		// Problem: here are lots of cases:
+		// https://creativecommons.org/share-your-work/licensing-considerations/compatible-licenses
 
 		EdpKnowledgeBase kb = new EdpKnowledgeBase();
 		kb.useIdsAsUris = true;
@@ -52,10 +56,17 @@ public class EdpExperimentCompatibility {
 
 		for (License license : kb.getLicenses()) {
 			List<String> compatible = getCompatibleUris(license.getUri());
-			List<License> matching = kb.getMatchingLicenses(license.getAttributes().getInternalArray(), true);
-			System.out.println(license.getName());
+			List<License> matching = kb.getMatchingLicenses(license);
+			System.out.print(license.getName());
+			if (license.shareAlike) {
+				System.out.print("  shareAlike");
+			}
+			if (!license.derivatesAllowed) {
+				System.out.print("  noDerivates");
+			}
+			System.out.println();
 			System.out.println("Comp (EDP): " + compatible);
-			System.out.println("Match     : " + matching);
+			System.out.println("Match     : " + matching.stream().map(l -> l.getUri()).collect(Collectors.toList()));
 			System.out.println();
 		}
 
@@ -79,7 +90,7 @@ public class EdpExperimentCompatibility {
 				License licenseB = kb.getUrisToLicenses().get(uriLicenseB);
 				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalArray(),
 						licenseB.getAttributes().getInternalArray());
-				List<License> resultingLicenses = kb.getMatchingLicenses(result, false);
+				List<License> resultingLicenses = kb.getMatchingLicenses(result);
 				addResult(stringBuilder, licenseA, licenseB, result, resultingLicenses);
 			}
 		}

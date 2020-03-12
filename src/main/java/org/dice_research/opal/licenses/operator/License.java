@@ -13,8 +13,10 @@ public class License {
 	private String name;
 	private String uri;
 
-	// TODO: This is a special case
+	// TODO: These are a special cases. Could directly be integrated into
+	// attributes.
 	public boolean derivatesAllowed = true;
+	public boolean shareAlike = false;
 
 	public Attributes getAttributes() {
 		return attributes;

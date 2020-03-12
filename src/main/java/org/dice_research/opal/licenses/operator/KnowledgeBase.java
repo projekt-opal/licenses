@@ -37,17 +37,40 @@ public class KnowledgeBase {
 		return urisToLicenses;
 	}
 
-	public List<License> getMatchingLicenses(boolean[] attributeValues, boolean internal) {
+	// TODO: license required for shareAlike. But array required for using operator.
+	public List<License> getMatchingLicenses(License license) {
+		boolean[] attributeValues = license.getAttributes().getValuesArray();
 		List<License> licenses = new LinkedList<>();
-		for (License license : getLicenses()) {
-			if (internal) {
-				if (Arrays.equals(attributeValues, license.getAttributes().getInternalArray())) {
-					licenses.add(license);
-				}
-			} else {
-				if (Arrays.equals(attributeValues, license.getAttributes().getValuesArray())) {
-					licenses.add(license);
-				}
+
+		// CC-BY-ND 4.0, CC-BY-NC-ND 4.0, PSEUL
+		if (!license.derivatesAllowed) {
+			return licenses;
+		}
+
+		for (License licenseB : getLicenses()) {
+			if (Arrays.equals(attributeValues, licenseB.getAttributes().getValuesArray())) {
+				licenses.add(licenseB);
+			}
+		}
+
+		if (license.shareAlike) {
+			if (licenses.contains(license)) {
+				licenses = new LinkedList<>();
+				licenses.add(license);
+				return licenses;
+			}
+		}
+
+		return licenses;
+	}
+
+	// TODO: license required for shareAlike. But array (internal) required for
+	// using operator.
+	public List<License> getMatchingLicenses(boolean[] internalAttributeValues) {
+		List<License> licenses = new LinkedList<>();
+		for (License licenseB : getLicenses()) {
+			if (Arrays.equals(internalAttributeValues, licenseB.getAttributes().getInternalArray())) {
+				licenses.add(licenseB);
 			}
 		}
 		return licenses;

@@ -40,6 +40,7 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 
 	public static final String ATTRIBUTE_ID_SUBLICENSING = attributeIdToUri("Sublicensing");
 	public static final String ATTRIBUTE_ID_DERIVATES = attributeIdToUri("Derivative Works");
+	public static final String ATTRIBUTE_ID_ALIKE = attributeIdToUri("Share Alike");
 
 	/**
 	 * Config: Use IDs as URIs (true) or use KB URIs (false)
@@ -77,12 +78,14 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 		List<String> attributeUris = new LinkedList<>();
 		boolean idsParsed = false;
 		boolean typesParsed = false;
-		boolean derivatesAllowed = true;
 
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(RESOURCE_CSV);
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		Iterable<CSVRecord> csvRecords = CSVFormat.DEFAULT.parse(bufferedReader);
 		for (CSVRecord csvRecord : csvRecords) {
+
+			boolean derivatesAllowed = true;
+			boolean shareAlike = false;
 
 			// First line: Collect IDs
 			if (!idsParsed) {
@@ -117,6 +120,11 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 							derivatesAllowed = false;
 						}
 					}
+					if (attributeUris.get(i).equals(ATTRIBUTE_ID_ALIKE)) {
+						if (csvRecord.get(i).equals("1")) {
+							shareAlike = true;
+						}
+					}
 
 					Attribute attribute = createAttribute(
 							super.getAttributes().getUriToAttributeMap().get(attributeUris.get(i)));
@@ -142,6 +150,9 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 
 				if (!derivatesAllowed) {
 					license.derivatesAllowed = false;
+				}
+				if (shareAlike) {
+					license.shareAlike = true;
 				}
 
 				addLicense(license);
