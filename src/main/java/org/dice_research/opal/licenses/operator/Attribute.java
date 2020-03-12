@@ -83,30 +83,53 @@ public abstract class Attribute {
 	public abstract String getType();
 
 	/**
+	 * Gets type of attribute.
+	 */
+	public abstract boolean invertForComputation();
+
+	/**
 	 * Maps attribute value to boolean representation.
 	 * 
 	 * @throws NullPointerException if not set
 	 */
-	public abstract boolean mapToBoolean() throws NullPointerException;
+	public boolean mapToBoolean() throws NullPointerException {
+		if (getValue() == null) {
+			throw new NullPointerException();
+		} else {
+			return !getValue();
+		}
+	}
 
 	/**
 	 * Maps attribute value to binary representation.
 	 * 
 	 * @throws NullPointerException if not set
 	 */
-	public abstract int mapToBinary() throws NullPointerException;
+	public int mapToBinary() throws NullPointerException {
+		if (getValue() == null) {
+			throw new NullPointerException();
+		} else {
+			return booleanToBinary(!getValue());
+		}
+	}
 
 	/**
 	 * Parses boolean value and returns instance.
 	 */
-	public abstract Attribute parseBoolean(boolean bool);
+	public Attribute parseBoolean(boolean bool) {
+		setValue(!bool);
+		return this;
+	}
 
 	/**
 	 * Parses binary value and returns instance.
 	 * 
 	 * @throws ParseException if not 0 or 1
 	 */
-	public abstract Attribute parseBinary(int binary) throws ParseException;
+	public Attribute parseBinary(int binary) throws ParseException {
+		setValue(!binaryToBoolean(binary));
+		return this;
+	}
 
 	/**
 	 * Sets URI identifying this attribute.

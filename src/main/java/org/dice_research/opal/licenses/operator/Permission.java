@@ -1,7 +1,5 @@
 package org.dice_research.opal.licenses.operator;
 
-import java.text.ParseException;
-
 /**
  * Attribute of type permission.
  * 
@@ -17,59 +15,16 @@ public class Permission extends Attribute {
 	public static final String TYPE = Permission.class.getSimpleName();
 
 	/**
-	 * Maps attribute value to boolean representation.
-	 * 
-	 * @throws NullPointerException if not set
-	 */
-	@Override
-	public boolean mapToBoolean() throws NullPointerException {
-		if (getValue() == null) {
-			throw new NullPointerException();
-		} else {
-			return !getValue();
-		}
-	}
-
-	/**
-	 * Maps attribute value to binary representation.
-	 * 
-	 * @throws NullPointerException if not set
-	 */
-	@Override
-	public int mapToBinary() throws NullPointerException {
-		if (getValue() == null) {
-			throw new NullPointerException();
-		} else {
-			return booleanToBinary(!getValue());
-		}
-	}
-
-	/**
-	 * Parses boolean value and returns instance.
-	 */
-	@Override
-	public Permission parseBoolean(boolean bool) {
-		setValue(!bool);
-		return this;
-	}
-
-	/**
-	 * Parses binary value and returns instance.
-	 * 
-	 * @throws ParseException if not 0 or 1
-	 */
-	@Override
-	public Permission parseBinary(int binary) throws ParseException {
-		setValue(!binaryToBoolean(binary));
-		return this;
-	}
-
-	/**
 	 * Gets type of attribute.
 	 */
 	@Override
 	public String getType() {
 		return TYPE;
+	}
+
+	@Override
+	public boolean invertForComputation() {
+		return true;
 	}
 
 }

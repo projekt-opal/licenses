@@ -36,7 +36,7 @@ public class KnowledgeBase {
 	public List<License> getMatchingLicenses(boolean[] attributeValues) {
 		List<License> licenses = new LinkedList<>();
 		for (License license : getLicenses().values()) {
-			if (Arrays.equals(attributeValues, license.getAttributes().getArray())) {
+			if (Arrays.equals(attributeValues, license.getAttributes().getInternalArray())) {
 				licenses.add(license);
 			}
 		}
