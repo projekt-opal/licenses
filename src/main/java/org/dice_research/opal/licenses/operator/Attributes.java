@@ -14,7 +14,20 @@ public class Attributes {
 	/**
 	 * Gets array of attribute values.
 	 */
-	public boolean[] toArray() {
+
+	public boolean[] getInternalArray() {
+		boolean[] array = new boolean[attributes.size()];
+		int counter = 0;
+		for (Attribute attribute : attributes.values()) {
+			array[counter++] = attribute.invertForComputation() ? !attribute.getValue() : attribute.getValue();
+		}
+		return array;
+	}
+
+	/**
+	 * Gets array of attribute values.
+	 */
+	public boolean[] getValuesArray() {
 		boolean[] array = new boolean[attributes.size()];
 		int counter = 0;
 		for (Attribute attribute : attributes.values()) {

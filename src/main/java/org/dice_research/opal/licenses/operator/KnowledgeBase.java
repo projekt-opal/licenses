@@ -39,6 +39,7 @@ public class KnowledgeBase {
 
 	public List<License> getMatchingLicenses(boolean[] attributeValues) {
 		List<License> licenses = new LinkedList<>();
+
 		for (License license : getUrisToLicenses().values()) {
 
 			// TODO
@@ -46,7 +47,7 @@ public class KnowledgeBase {
 				continue;
 			}
 
-			if (Arrays.equals(attributeValues, license.getAttributes().toArray())) {
+			if (Arrays.equals(attributeValues, license.getAttributes().getInternalArray())) {
 				licenses.add(license);
 			}
 		}

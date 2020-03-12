@@ -71,7 +71,11 @@ public class EdpKnowledgeBaseTest {
 		for (License license : licenses) {
 			stringBuilder.append(license);
 			stringBuilder.append(System.lineSeparator());
-			stringBuilder.append(Arrays.toString(license.getAttributes().toArray()));
+			stringBuilder.append("Values:   ");
+			stringBuilder.append(Arrays.toString(license.getAttributes().getValuesArray()));
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append("Internal: ");
+			stringBuilder.append(Arrays.toString(license.getAttributes().getInternalArray()));
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append(System.lineSeparator());
 		}
