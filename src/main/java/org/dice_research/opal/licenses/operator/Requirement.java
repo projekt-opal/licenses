@@ -8,10 +8,13 @@ import java.text.ParseException;
  * @see https://www.w3.org/TR/odrl-model/
  * @see https://www.w3.org/TR/odrl-vocab/
  * @see https://w3c.github.io/odrl/bp/
+ * @see https://w3c.github.io/odrl/bp/ §2 How to represent an obligation
  *
  * @author Adrian Wilke
  */
 public class Requirement extends Attribute {
+
+	public static final String TYPE = Requirement.class.getSimpleName();
 
 	/**
 	 * Maps attribute value to boolean representation.
@@ -60,5 +63,13 @@ public class Requirement extends Attribute {
 		setValue(binaryToBoolean(binary));
 		return this;
 	}
-	
+
+	/**
+	 * Gets type of attribute.
+	 */
+	@Override
+	public String getType() {
+		return TYPE;
+	}
+
 }

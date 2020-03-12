@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.apache.commons.csv.CSVFormat;
@@ -26,6 +29,85 @@ public class EdpExperimentCompatibility {
 	protected Vector<Vector<Boolean>> matrix = new Vector<>();
 	protected LinkedHashMap<String, Integer> uris = new LinkedHashMap<>();
 	protected boolean isLoaded = false;
+
+	// TODO: Remove when completed
+	public static void main(String[] args) throws IOException {
+		new EdpExperimentCompatibility().runExperiment();
+	}
+
+	protected void runExperiment() throws IOException {
+		EdpKnowledgeBase kb = new EdpKnowledgeBase();
+
+		// Structure to access licenses by URIs used in this class
+		Map<String, License> nameuriToLicense = new HashMap<>();
+		for (License license : kb.getLicenses().values()) {
+			nameuriToLicense.put(EdpKnowledgeBase.attributeIdToUri(license.getName()), license);
+		}
+
+		StringBuilder stringBuilder = new StringBuilder();
+
+		for (Attribute attribute : nameuriToLicense.values().iterator().next().getAttributes().getObjects()) {
+			System.out.println(attribute.getClass().getSimpleName());
+			System.out.println(attribute.getUri());
+			System.out.println();
+		}
+
+		for (String uriLicenseA : getUris()) {
+			License licenseA = nameuriToLicense.get(uriLicenseA);
+			for (String uriLicenseB : getUris()) {
+				License licenseB = nameuriToLicense.get(uriLicenseB);
+				boolean[] result = new Operator().compute(licenseA.getAttributes().getArray(),
+						licenseB.getAttributes().getArray());
+				List<License> resultingLicenses = kb.getMatchingLicenses(result);
+				addResult(stringBuilder, licenseA, licenseB, result, resultingLicenses);
+			}
+		}
+
+		// TODO: Investigate
+
+		System.out.println(stringBuilder);
+	}
+
+	protected void addResult(StringBuilder stringBuilder, License licenseA, License licenseB, boolean[] result,
+			List<License> resultingLicenses) {
+
+		for (Attribute license : licenseA.getAttributes().getObjects()) {
+			if (license instanceof Permission) {
+				stringBuilder.append("Per ");
+			} else if (license instanceof Prohibition) {
+				stringBuilder.append("Pro ");
+
+			} else if (license instanceof Requirement) {
+				stringBuilder.append("Req ");
+			}
+		}
+		stringBuilder.append(System.lineSeparator());
+
+		stringBuilder.append(licenseA.getName());
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(Arrays.toString(licenseA.getAttributes().getArray()));
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(licenseB.getName());
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(Arrays.toString(licenseB.getAttributes().getArray()));
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append("Result");
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(Arrays.toString(result));
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(resultingLicenses);
+		stringBuilder.append(System.lineSeparator());
+		// TODO: Instead of the following test, directly get the intersection of
+		// compatible
+		// licenses of A and B.
+		if ((Boolean.FALSE && resultingLicenses.contains(licenseA)) && resultingLicenses.contains(licenseB)) {
+			stringBuilder.append("ok");
+		} else {
+			stringBuilder.append("fail");
+		}
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(System.lineSeparator());
+	}
 
 	public List<String> getUris() throws IOException {
 		if (!isLoaded) {
