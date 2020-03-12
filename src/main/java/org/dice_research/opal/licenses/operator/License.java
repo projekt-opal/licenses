@@ -49,7 +49,7 @@ public class License {
 		ArrayList<String> attributeUris = new ArrayList<String>(configuration.getAttributes().getUris());
 		boolean[] bool = new boolean[attributeUris.size()];
 		for (int i = 0; i < attributeUris.size(); i++) {
-			bool[i] = attributes.getUriToAttributeMap().get(attributeUris.get(i)).mapToBoolean();
+			bool[i] = attributes.getUriToAttributeMap().get(attributeUris.get(i)).getValue();
 		}
 		return bool;
 	}

@@ -58,7 +58,7 @@ public class EdpExperimentCompatibility {
 				License licenseB = nameuriToLicense.get(uriLicenseB);
 				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalArray(),
 						licenseB.getAttributes().getInternalArray());
-				List<License> resultingLicenses = kb.getMatchingLicenses(result);
+				List<License> resultingLicenses = kb.getMatchingLicenses(result, false);
 				addResult(stringBuilder, licenseA, licenseB, result, resultingLicenses);
 			}
 		}

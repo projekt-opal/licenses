@@ -54,18 +54,6 @@ public abstract class Attribute {
 	}
 
 	/**
-	 * Gets value of this attribute.
-	 * 
-	 * @throws NullPointerException if not set
-	 */
-	public Boolean getValue() throws NullPointerException {
-		if (value == null) {
-			throw new NullPointerException();
-		}
-		return value;
-	}
-
-	/**
 	 * Checks, if the value is not null.
 	 */
 	public boolean hasValue() throws NullPointerException {
@@ -88,16 +76,15 @@ public abstract class Attribute {
 	public abstract boolean invertForComputation();
 
 	/**
-	 * Maps attribute value to boolean representation.
+	 * Gets value of this attribute.
 	 * 
 	 * @throws NullPointerException if not set
 	 */
-	public boolean mapToBoolean() throws NullPointerException {
-		if (getValue() == null) {
+	public Boolean getValue() throws NullPointerException {
+		if (value == null) {
 			throw new NullPointerException();
-		} else {
-			return !getValue();
 		}
+		return value;
 	}
 
 	/**
@@ -105,20 +92,12 @@ public abstract class Attribute {
 	 * 
 	 * @throws NullPointerException if not set
 	 */
-	public int mapToBinary() throws NullPointerException {
+	public int getBinaryValue() throws NullPointerException {
 		if (getValue() == null) {
 			throw new NullPointerException();
 		} else {
-			return booleanToBinary(!getValue());
+			return booleanToBinary(getValue());
 		}
-	}
-
-	/**
-	 * Parses boolean value and returns instance.
-	 */
-	public Attribute parseBoolean(boolean bool) {
-		setValue(!bool);
-		return this;
 	}
 
 	/**
@@ -126,8 +105,16 @@ public abstract class Attribute {
 	 * 
 	 * @throws ParseException if not 0 or 1
 	 */
-	public Attribute parseBinary(int binary) throws ParseException {
-		setValue(!binaryToBoolean(binary));
+	public Attribute setValue(int binary) throws ParseException {
+		setValue(binaryToBoolean(binary));
+		return this;
+	}
+
+	/**
+	 * Sets value of this attribute.
+	 */
+	public Attribute setValue(boolean value) {
+		this.value = value;
 		return this;
 	}
 
@@ -141,14 +128,6 @@ public abstract class Attribute {
 			throw new NullPointerException();
 		}
 		this.uri = uri;
-		return this;
-	}
-
-	/**
-	 * Sets value of this attribute.
-	 */
-	public Attribute setValue(boolean value) {
-		this.value = value;
 		return this;
 	}
 
