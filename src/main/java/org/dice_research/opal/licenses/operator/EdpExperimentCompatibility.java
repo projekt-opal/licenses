@@ -6,11 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -32,32 +34,51 @@ public class EdpExperimentCompatibility {
 
 	// TODO: Remove when completed
 	public static void main(String[] args) throws IOException {
-		new EdpExperimentCompatibility().runExperiment();
+//		new EdpExperimentCompatibility().runExperiment();
+		new EdpExperimentCompatibility().checkEdpMatrix();
+	}
+
+	protected void checkEdpMatrix() throws IOException {
+
+		// TODO
+		// Current state: There are special attributes, like "derivatesAllowed" which
+		// can not be handeled like other attributes.
+		// Attribute "derivatesAllowed" was included into the License class.
+		// Other attributes have to be checked (e.g. share alike)
+
+		EdpKnowledgeBase kb = new EdpKnowledgeBase();
+		kb.useIdsAsUris = true;
+		kb.load();
+
+		for (License license : kb.getLicenses()) {
+			List<String> compatible = getCompatibleUris(license.getUri());
+			List<License> matching = kb.getMatchingLicenses(license.getAttributes().toArray());
+			System.out.println(license.getName());
+			System.out.println("Comp (EDP): " + compatible);
+			System.out.println("Match     : " + matching);
+			System.out.println();
+		}
+
 	}
 
 	protected void runExperiment() throws IOException {
 		EdpKnowledgeBase kb = new EdpKnowledgeBase();
-
-		// Structure to access licenses by URIs used in this class
-		Map<String, License> nameuriToLicense = new HashMap<>();
-		for (License license : kb.getLicenses().values()) {
-			nameuriToLicense.put(EdpKnowledgeBase.attributeIdToUri(license.getName()), license);
-		}
+		kb.useIdsAsUris = true;
 
 		StringBuilder stringBuilder = new StringBuilder();
 
-		for (Attribute attribute : nameuriToLicense.values().iterator().next().getAttributes().getObjects()) {
+		for (Attribute attribute : kb.getAttributes().getObjects()) {
 			System.out.println(attribute.getClass().getSimpleName());
 			System.out.println(attribute.getUri());
 			System.out.println();
 		}
 
 		for (String uriLicenseA : getUris()) {
-			License licenseA = nameuriToLicense.get(uriLicenseA);
+			License licenseA = kb.getUrisToLicenses().get(uriLicenseA);
 			for (String uriLicenseB : getUris()) {
-				License licenseB = nameuriToLicense.get(uriLicenseB);
-				boolean[] result = new Operator().compute(licenseA.getAttributes().getArray(),
-						licenseB.getAttributes().getArray());
+				License licenseB = kb.getUrisToLicenses().get(uriLicenseB);
+				boolean[] result = new Operator().compute(licenseA.getAttributes().toArray(),
+						licenseB.getAttributes().toArray());
 				List<License> resultingLicenses = kb.getMatchingLicenses(result);
 				addResult(stringBuilder, licenseA, licenseB, result, resultingLicenses);
 			}
@@ -69,7 +90,7 @@ public class EdpExperimentCompatibility {
 	}
 
 	protected void addResult(StringBuilder stringBuilder, License licenseA, License licenseB, boolean[] result,
-			List<License> resultingLicenses) {
+			List<License> resultingLicenses) throws NullPointerException, IOException {
 
 		for (Attribute license : licenseA.getAttributes().getObjects()) {
 			if (license instanceof Permission) {
@@ -85,26 +106,51 @@ public class EdpExperimentCompatibility {
 
 		stringBuilder.append(licenseA.getName());
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append(Arrays.toString(licenseA.getAttributes().getArray()));
+		stringBuilder.append(Arrays.toString(licenseA.getAttributes().toArray()));
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append(licenseB.getName());
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append(Arrays.toString(licenseB.getAttributes().getArray()));
+		stringBuilder.append(Arrays.toString(licenseB.getAttributes().toArray()));
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append("Result");
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append(Arrays.toString(result));
 		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append("Result (");
+		stringBuilder.append(resultingLicenses.size());
+		stringBuilder.append("): ");
 		stringBuilder.append(resultingLicenses);
 		stringBuilder.append(System.lineSeparator());
-		// TODO: Instead of the following test, directly get the intersection of
-		// compatible
-		// licenses of A and B.
-		if ((Boolean.FALSE && resultingLicenses.contains(licenseA)) && resultingLicenses.contains(licenseB)) {
+
+		// See https://www.baeldung.com/java-lists-intersection
+		Set<String> compatibleUris = getCompatibleUris(licenseA.getUri()).stream().distinct()
+				.filter(getCompatibleUris(licenseB.getUri())::contains).collect(Collectors.toSet());
+
+		stringBuilder.append("Compatible (");
+		stringBuilder.append(compatibleUris.size());
+		stringBuilder.append("): ");
+		stringBuilder.append(compatibleUris);
+		stringBuilder.append(System.lineSeparator());
+
+		Set<String> resultingUris = new HashSet<>();
+		for (License license : resultingLicenses) {
+			resultingUris.add(license.getUri());
+		}
+
+		if (compatibleUris.equals(resultingUris)) {
 			stringBuilder.append("ok");
 		} else {
 			stringBuilder.append("fail");
 		}
+
+		// TODO: Instead of the following test, directly get the intersection of
+		// compatible
+		// licenses of A and B.
+//		if ((Boolean.FALSE && resultingLicenses.contains(licenseA)) && resultingLicenses.contains(licenseB)) {
+//			stringBuilder.append("ok");
+//		} else {
+//			stringBuilder.append("fail");
+//		}
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append(System.lineSeparator());
 	}
@@ -116,11 +162,33 @@ public class EdpExperimentCompatibility {
 		return new ArrayList<>(uris.keySet());
 	}
 
+	public List<String> getCompatibleUris(String uri) throws IOException {
+		if (!isLoaded) {
+			load();
+		}
+		List<String> compatibleUris = new LinkedList<>();
+		Vector<Boolean> compatible = matrix.get(getIndexOfUri(uri));
+		for (String uriB : getUris()) {
+			if (compatible.get(getIndexOfUri(uriB))) {
+				compatibleUris.add(uriB);
+			}
+		}
+		return compatibleUris;
+	}
+
+	Integer getIndexOfUri(String uri) {
+		if (!uris.containsKey(uri)) {
+			throw new RuntimeException();
+		} else {
+			return uris.get(uri);
+		}
+	}
+
 	public Boolean getValue(String uriA, String uriB) throws IOException {
 		if (!isLoaded) {
 			load();
 		}
-		return matrix.get(uris.get(uriA)).get(uris.get(uriB));
+		return matrix.get(getIndexOfUri(uriA)).get(getIndexOfUri(uriB));
 	}
 
 	protected EdpExperimentCompatibility load() throws IOException {

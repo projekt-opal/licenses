@@ -6,9 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
  * 
  * Does not include attribute 'Sublicensing' as it contains a 'N.A.' value.
  * 
- * Usage: Use {@link #getAttributes()} or {@link #getLicenses()}.
+ * Usage: Use {@link #getAttributes()} or {@link #getUrisToLicenses()}.
  * 
  * Based on "European Data Portal Licence Compatibility Matrix" and sheet
  * "Licence Descriptions".
@@ -39,6 +39,7 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 	public static final String URI_PREFIX = "http://example.org/";
 
 	public static final String ATTRIBUTE_ID_SUBLICENSING = attributeIdToUri("Sublicensing");
+	public static final String ATTRIBUTE_ID_DERIVATES = attributeIdToUri("Derivative Works");
 
 	/**
 	 * Config: Use IDs as URIs (true) or use KB URIs (false)
@@ -61,7 +62,7 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 	}
 
 	@Override
-	public Map<String, License> getLicenses() {
+	public LinkedHashMap<String, License> getUrisToLicenses() {
 		if (!isLoaded) {
 			try {
 				load();
@@ -69,13 +70,14 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 				throw new RuntimeException(e);
 			}
 		}
-		return super.getLicenses();
+		return super.getUrisToLicenses();
 	}
 
-	protected void load() throws IOException {
+	public EdpKnowledgeBase load() throws IOException {
 		List<String> attributeUris = new LinkedList<>();
 		boolean idsParsed = false;
 		boolean typesParsed = false;
+		boolean derivatesAllowed = true;
 
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(RESOURCE_CSV);
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -109,6 +111,13 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 					if (skipSublicensing && attributeUris.get(i).equals(ATTRIBUTE_ID_SUBLICENSING)) {
 						continue;
 					}
+
+					if (attributeUris.get(i).equals(ATTRIBUTE_ID_DERIVATES)) {
+						if (csvRecord.get(i).equals("0")) {
+							derivatesAllowed = false;
+						}
+					}
+
 					Attribute attribute = createAttribute(
 							super.getAttributes().getUriToAttributeMap().get(attributeUris.get(i)));
 					try {
@@ -128,12 +137,19 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 					uri = csvRecord.get(csvRecord.size() - 2);
 				}
 
-				addLicense(new License().setUri(uri).setName(csvRecord.get(csvRecord.size() - 1))
-						.setAttributes(attributes));
+				License license = new License().setUri(uri).setName(csvRecord.get(csvRecord.size() - 1))
+						.setAttributes(attributes);
+
+				if (!derivatesAllowed) {
+					license.derivatesAllowed = false;
+				}
+
+				addLicense(license);
 			}
 		}
 
 		isLoaded = true;
+		return this;
 	}
 
 	/**

@@ -1,10 +1,10 @@
 package org.dice_research.opal.licenses.operator;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A knowledge base comprises known attributes and a list of known licenses.
@@ -14,7 +14,7 @@ import java.util.Map;
 public class KnowledgeBase {
 
 	private Attributes attributes = new Attributes();
-	private Map<String, License> licenses = new HashMap<String, License>();
+	private LinkedHashMap<String, License> urisToLicenses = new LinkedHashMap<String, License>();
 
 	public KnowledgeBase addAttribute(Attribute attribute) {
 		attributes.addAttribute(attribute);
@@ -22,21 +22,31 @@ public class KnowledgeBase {
 	}
 
 	public void addLicense(License license) {
-		licenses.put(license.getUri(), license);
+		urisToLicenses.put(license.getUri(), license);
 	}
 
 	public Attributes getAttributes() {
 		return attributes;
 	}
 
-	public Map<String, License> getLicenses() {
-		return licenses;
+	public Collection<License> getLicenses() {
+		return urisToLicenses.values();
+	}
+
+	public LinkedHashMap<String, License> getUrisToLicenses() {
+		return urisToLicenses;
 	}
 
 	public List<License> getMatchingLicenses(boolean[] attributeValues) {
 		List<License> licenses = new LinkedList<>();
-		for (License license : getLicenses().values()) {
-			if (Arrays.equals(attributeValues, license.getAttributes().getArray())) {
+		for (License license : getUrisToLicenses().values()) {
+
+			// TODO
+			if (!license.derivatesAllowed) {
+				continue;
+			}
+
+			if (Arrays.equals(attributeValues, license.getAttributes().toArray())) {
 				licenses.add(license);
 			}
 		}

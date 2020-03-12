@@ -2,7 +2,6 @@ package org.dice_research.opal.licenses.operator;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -15,7 +14,7 @@ public class Attributes {
 	/**
 	 * Gets array of attribute values.
 	 */
-	public boolean[] getArray() {
+	public boolean[] toArray() {
 		boolean[] array = new boolean[attributes.size()];
 		int counter = 0;
 		for (Attribute attribute : attributes.values()) {
@@ -27,14 +26,14 @@ public class Attributes {
 	/**
 	 * Insertion-ordered map: Attribute-URI to Attribute.
 	 */
-	private Map<String, Attribute> attributes = new LinkedHashMap<>();
+	private LinkedHashMap<String, Attribute> attributes = new LinkedHashMap<>();
 
 	public Attributes addAttribute(Attribute attribute) {
 		attributes.put(attribute.getUri(), attribute);
 		return this;
 	}
 
-	public Map<String, Attribute> getUriToAttributeMap() {
+	public LinkedHashMap<String, Attribute> getUriToAttributeMap() {
 		return this.attributes;
 	}
 

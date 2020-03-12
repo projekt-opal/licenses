@@ -15,7 +15,7 @@ public class Execution {
 
 	public boolean[] compute() {
 		List<boolean[]> attributes = new LinkedList<>();
-		for (License license : knowledgeBase.getLicenses().values()) {
+		for (License license : knowledgeBase.getUrisToLicenses().values()) {
 			attributes.add(license.mapToBoolean(configuration));
 		}
 		return new Operator().compute(attributes);

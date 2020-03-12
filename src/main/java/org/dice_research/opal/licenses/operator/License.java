@@ -13,6 +13,9 @@ public class License {
 	private String name;
 	private String uri;
 
+	// TODO: This is a special case
+	public boolean derivatesAllowed = true;
+
 	public Attributes getAttributes() {
 		return attributes;
 	}

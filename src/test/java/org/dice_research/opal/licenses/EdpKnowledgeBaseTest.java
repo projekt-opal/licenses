@@ -35,7 +35,7 @@ public class EdpKnowledgeBaseTest {
 
 	@Test
 	public void testLicenses() {
-		Collection<License> licenses = new EdpKnowledgeBase().getLicenses().values();
+		Collection<License> licenses = new EdpKnowledgeBase().getUrisToLicenses().values();
 		Assert.assertEquals(NUMBER_OF_LICENSES, licenses.size());
 		for (License license : licenses) {
 			Assert.assertNotNull(license.getUri());
@@ -57,7 +57,7 @@ public class EdpKnowledgeBaseTest {
 			edpKnowledgeBase.useIdsAsUris = true;
 		}
 
-		Collection<License> licenses = edpKnowledgeBase.getLicenses().values();
+		Collection<License> licenses = edpKnowledgeBase.getUrisToLicenses().values();
 		Attributes attributes = edpKnowledgeBase.getAttributes();
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -71,7 +71,7 @@ public class EdpKnowledgeBaseTest {
 		for (License license : licenses) {
 			stringBuilder.append(license);
 			stringBuilder.append(System.lineSeparator());
-			stringBuilder.append(Arrays.toString(license.getAttributes().getArray()));
+			stringBuilder.append(Arrays.toString(license.getAttributes().toArray()));
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append(System.lineSeparator());
 		}
