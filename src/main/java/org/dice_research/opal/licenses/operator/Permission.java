@@ -14,6 +14,8 @@ import java.text.ParseException;
  */
 public class Permission extends Attribute {
 
+	public static final String TYPE = Permission.class.getSimpleName();
+
 	/**
 	 * Maps attribute value to boolean representation.
 	 * 
@@ -60,6 +62,14 @@ public class Permission extends Attribute {
 	public Permission parseBinary(int binary) throws ParseException {
 		setValue(!binaryToBoolean(binary));
 		return this;
+	}
+
+	/**
+	 * Gets type of attribute.
+	 */
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
 }

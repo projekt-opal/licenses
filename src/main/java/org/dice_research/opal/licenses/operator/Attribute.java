@@ -78,6 +78,11 @@ public abstract class Attribute {
 	}
 
 	/**
+	 * Gets type of attribute.
+	 */
+	public abstract String getType();
+
+	/**
 	 * Maps attribute value to boolean representation.
 	 * 
 	 * @throws NullPointerException if not set

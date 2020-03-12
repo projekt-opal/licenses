@@ -14,6 +14,8 @@ import java.text.ParseException;
  */
 public class Prohibition extends Attribute {
 
+	public static final String TYPE = Prohibition.class.getSimpleName();
+
 	/**
 	 * Maps attribute value to boolean representation.
 	 * 
@@ -62,4 +64,11 @@ public class Prohibition extends Attribute {
 		return this;
 	}
 
+	/**
+	 * Gets type of attribute.
+	 */
+	@Override
+	public String getType() {
+		return TYPE;
+	}
 }

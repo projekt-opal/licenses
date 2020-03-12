@@ -14,6 +14,8 @@ import java.text.ParseException;
  */
 public class Requirement extends Attribute {
 
+	public static final String TYPE = Requirement.class.getSimpleName();
+
 	/**
 	 * Maps attribute value to boolean representation.
 	 * 
@@ -60,6 +62,14 @@ public class Requirement extends Attribute {
 	public Requirement parseBinary(int binary) throws ParseException {
 		setValue(binaryToBoolean(binary));
 		return this;
+	}
+
+	/**
+	 * Gets type of attribute.
+	 */
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
 }
