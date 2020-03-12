@@ -9,9 +9,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 		AttributeTest.class,
 
-		EdpKnowledgeBaseTest.class,
+		OperatorTest.class,
 
-		OperatorTest.class })
+		EpdLcmDerivatesTest.class,
+
+		EdpLcmKnowledgeBaseTest.class, })
 
 public class AllTests {
 }

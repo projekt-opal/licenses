@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.dice_research.opal.licenses.LicenseAttribute;
-import org.dice_research.opal.licenses.LicenseCombinator;
-import org.dice_research.opal.licenses.LicenseCombinatorInterface;
-import org.dice_research.opal.licenses.exceptions.UnknownLicenseException;
+import org.dice_research.opal.licenses.old.LicenseAttribute;
+import org.dice_research.opal.licenses.old.LicenseCombinator;
+import org.dice_research.opal.licenses.old.LicenseCombinatorInterface;
+import org.dice_research.opal.licenses.old.exceptions.UnknownLicenseException;
 
 
 public class Example {

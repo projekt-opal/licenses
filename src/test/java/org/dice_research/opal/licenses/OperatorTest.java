@@ -3,7 +3,6 @@ package org.dice_research.opal.licenses;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.dice_research.opal.licenses.operator.Operator;
 import org.junit.Assert;
 import org.junit.Test;
 
