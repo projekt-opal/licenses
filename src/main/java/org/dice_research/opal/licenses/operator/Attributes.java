@@ -1,8 +1,9 @@
 package org.dice_research.opal.licenses.operator;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Attributes.
@@ -33,12 +34,29 @@ public class Attributes {
 		return this;
 	}
 
-	public Map<String, Attribute> getMap() {
+	public Map<String, Attribute> getUriToAttributeMap() {
 		return this.attributes;
+	}
+
+	public Collection<Attribute> getObjects() {
+		return this.attributes.values();
+	}
+
+	public Set<String> getUris() {
+		return this.attributes.keySet();
 	}
 
 	@Override
 	public String toString() {
 		return attributes.keySet().toString();
+	}
+
+	public String toLines() {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (Attribute attribute : getObjects()) {
+			stringBuilder.append(attribute);
+			stringBuilder.append(System.lineSeparator());
+		}
+		return stringBuilder.toString();
 	}
 }

@@ -131,7 +131,7 @@ public abstract class Attribute {
 
 	@Override
 	public String toString() {
-		return getUri() + (value == null ? "" : "=" + value);
+		return getUri() + (value == null ? "" : "=" + value) + " (" + getType() + ")";
 	}
 
 	/**

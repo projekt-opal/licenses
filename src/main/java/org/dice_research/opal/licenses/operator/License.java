@@ -46,10 +46,10 @@ public class License {
 	 * boolean values.
 	 */
 	public boolean[] mapToBoolean(Configuration configuration) {
-		ArrayList<String> attributeUris = new ArrayList<String>(configuration.getAttributes().getMap().keySet());
+		ArrayList<String> attributeUris = new ArrayList<String>(configuration.getAttributes().getUris());
 		boolean[] bool = new boolean[attributeUris.size()];
 		for (int i = 0; i < attributeUris.size(); i++) {
-			bool[i] = attributes.getMap().get(attributeUris.get(i)).mapToBoolean();
+			bool[i] = attributes.getUriToAttributeMap().get(attributeUris.get(i)).mapToBoolean();
 		}
 		return bool;
 	}

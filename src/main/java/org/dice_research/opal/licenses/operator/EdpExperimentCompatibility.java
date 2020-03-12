@@ -46,6 +46,12 @@ public class EdpExperimentCompatibility {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
+		for (Attribute attribute : nameuriToLicense.values().iterator().next().getAttributes().getObjects()) {
+			System.out.println(attribute.getClass().getSimpleName());
+			System.out.println(attribute.getUri());
+			System.out.println();
+		}
+
 		for (String uriLicenseA : getUris()) {
 			License licenseA = nameuriToLicense.get(uriLicenseA);
 			for (String uriLicenseB : getUris()) {
@@ -64,15 +70,37 @@ public class EdpExperimentCompatibility {
 
 	protected void addResult(StringBuilder stringBuilder, License licenseA, License licenseB, boolean[] result,
 			List<License> resultingLicenses) {
+
+		for (Attribute license : licenseA.getAttributes().getObjects()) {
+			if (license instanceof Permission) {
+				stringBuilder.append("Per ");
+			} else if (license instanceof Prohibition) {
+				stringBuilder.append("Pro ");
+
+			} else if (license instanceof Requirement) {
+				stringBuilder.append("Req ");
+			}
+		}
+		stringBuilder.append(System.lineSeparator());
+
 		stringBuilder.append(licenseA.getName());
 		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(Arrays.toString(licenseA.getAttributes().getArray()));
+		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append(licenseB.getName());
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(Arrays.toString(licenseB.getAttributes().getArray()));
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append("Result");
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append(Arrays.toString(result));
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append(resultingLicenses);
 		stringBuilder.append(System.lineSeparator());
-		if (resultingLicenses.contains(licenseA) && resultingLicenses.contains(licenseB)) {
+		// TODO: Instead of the following test, directly get the intersection of
+		// compatible
+		// licenses of A and B.
+		if ((Boolean.FALSE && resultingLicenses.contains(licenseA)) && resultingLicenses.contains(licenseB)) {
 			stringBuilder.append("ok");
 		} else {
 			stringBuilder.append("fail");

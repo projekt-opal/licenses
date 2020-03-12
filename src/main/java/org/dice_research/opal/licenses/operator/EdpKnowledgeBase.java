@@ -38,10 +38,12 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 	public static final String RESOURCE_CSV = "edp-licence-compatibility-matrix-licence-descriptions.csv";
 	public static final String URI_PREFIX = "http://example.org/";
 
-	public static final String TYPE_PERMISSION = "Permission";
-	public static final String TYPE_PROHIBITION = "Prohibition";
-	public static final String TYPE_REQIREMENT = "Requirement";
 	public static final String ATTRIBUTE_ID_SUBLICENSING = attributeIdToUri("Sublicensing");
+
+	/**
+	 * Config: Use IDs as URIs (true) or use KB URIs (false)
+	 */
+	public boolean useIdsAsUris = false;
 
 	protected boolean isLoaded = false;
 	protected boolean skipSublicensing = true;
@@ -107,7 +109,8 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 					if (skipSublicensing && attributeUris.get(i).equals(ATTRIBUTE_ID_SUBLICENSING)) {
 						continue;
 					}
-					Attribute attribute = createAttribute(super.getAttributes().getMap().get(attributeUris.get(i)));
+					Attribute attribute = createAttribute(
+							super.getAttributes().getUriToAttributeMap().get(attributeUris.get(i)));
 					try {
 						addAttributeValue(attribute, csvRecord.get(i));
 					} catch (IllegalArgumentException e) {
@@ -117,8 +120,16 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 					}
 					attributes.addAttribute(attribute);
 				}
-				addLicense(new License().setUri(csvRecord.get(csvRecord.size() - 2))
-						.setName(csvRecord.get(csvRecord.size() - 1)).setAttributes(attributes));
+
+				String uri = null;
+				if (useIdsAsUris) {
+					uri = attributeIdToUri(csvRecord.get(csvRecord.size() - 1));
+				} else {
+					uri = csvRecord.get(csvRecord.size() - 2);
+				}
+
+				addLicense(new License().setUri(uri).setName(csvRecord.get(csvRecord.size() - 1))
+						.setAttributes(attributes));
 			}
 		}
 
@@ -132,11 +143,11 @@ public class EdpKnowledgeBase extends KnowledgeBase {
 	 */
 	protected Attribute createAttribute(String uri, String type) {
 		Attribute attribute;
-		if (type.equals(TYPE_PERMISSION)) {
+		if (type.equals(Permission.TYPE)) {
 			attribute = new Permission();
-		} else if (type.equals(TYPE_PROHIBITION)) {
+		} else if (type.equals(Prohibition.TYPE)) {
 			attribute = new Prohibition();
-		} else if (type.equals(TYPE_REQIREMENT)) {
+		} else if (type.equals(Requirement.TYPE)) {
 			attribute = new Requirement();
 		} else {
 			throw new IllegalArgumentException("Unkown type: " + type + ", URI: " + uri);

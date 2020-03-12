@@ -1,5 +1,6 @@
 package org.dice_research.opal.licenses;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.dice_research.opal.licenses.operator.Attribute;
@@ -7,6 +8,7 @@ import org.dice_research.opal.licenses.operator.Attributes;
 import org.dice_research.opal.licenses.operator.EdpKnowledgeBase;
 import org.dice_research.opal.licenses.operator.License;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -15,6 +17,11 @@ import org.junit.Test;
  * @author Adrian Wilke
  */
 public class EdpKnowledgeBaseTest {
+
+	/**
+	 * Config: Execute {@link #print()}.
+	 */
+	public static final boolean PRINT = true;
 
 	// Does not include attribute 'Sublicensing' as it contains a 'N.A.' value.
 	public static final int NUMBER_OF_ATTRIBUTES = 13 - 1;
@@ -39,18 +46,51 @@ public class EdpKnowledgeBaseTest {
 		}
 	}
 
+	@Test
+	public void print() {
+		Assume.assumeTrue(PRINT);
+
+		EdpKnowledgeBase edpKnowledgeBase = new EdpKnowledgeBase();
+
+		// Use IDs as URIs (true) or use KB URIs (false)
+		if (Boolean.TRUE) {
+			edpKnowledgeBase.useIdsAsUris = true;
+		}
+
+		Collection<License> licenses = edpKnowledgeBase.getLicenses().values();
+		Attributes attributes = edpKnowledgeBase.getAttributes();
+		StringBuilder stringBuilder = new StringBuilder();
+
+		stringBuilder.append(getClass().getName());
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(System.lineSeparator());
+
+		stringBuilder.append(attributes.toLines());
+		stringBuilder.append(System.lineSeparator());
+
+		for (License license : licenses) {
+			stringBuilder.append(license);
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append(Arrays.toString(license.getAttributes().getArray()));
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append(System.lineSeparator());
+		}
+
+		System.out.println(stringBuilder.toString());
+	}
+
 	protected void checkAttributes(Attributes attributes, boolean hasValue) {
 
-		Assert.assertEquals(NUMBER_OF_ATTRIBUTES, attributes.getMap().size());
+		Assert.assertEquals(NUMBER_OF_ATTRIBUTES, attributes.getUriToAttributeMap().size());
 
 		// Keys
-		for (String key : attributes.getMap().keySet()) {
+		for (String key : attributes.getUris()) {
 			Assert.assertNotNull(key);
 			Assert.assertFalse(key.isEmpty());
 		}
 
 		// Values
-		for (Attribute attribute : attributes.getMap().values()) {
+		for (Attribute attribute : attributes.getObjects()) {
 			Assert.assertNotNull(attribute.getUri());
 			Assert.assertFalse(attribute.getUri().isEmpty());
 			if (hasValue) {
