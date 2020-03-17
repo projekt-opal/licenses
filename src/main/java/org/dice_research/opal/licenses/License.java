@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class License {
 
-	private Attributes attributes;
+	private Attributes attributes = new Attributes();
 	private String name;
 	private String uri;
 

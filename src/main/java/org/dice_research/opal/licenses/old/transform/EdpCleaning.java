@@ -17,7 +17,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dice_research.opal.licenses.Io;
+import org.dice_research.opal.licenses.io.Net;
 
 /**
  * Checks SPARQL results (CSV file) for duplicate keys ('license') and combines
@@ -130,7 +130,7 @@ public class EdpCleaning {
 	 */
 	protected File download() throws IOException {
 		File file = File.createTempFile(SOURCE_FILE_PREFIX, ".csv");
-		Io.download(new URL(SOURCE_URL), file);
+		Net.download(new URL(SOURCE_URL), file);
 		return file;
 	}
 }

@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.io;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,7 +13,7 @@ import org.apache.commons.io.IOUtils;
  *
  * @author Adrian Wilke
  */
-public abstract class Io {
+public abstract class Net {
 
 	/**
 	 * Copies URL stream to file stream.
