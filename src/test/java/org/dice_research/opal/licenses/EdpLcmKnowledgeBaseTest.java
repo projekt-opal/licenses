@@ -75,7 +75,7 @@ public class EdpLcmKnowledgeBaseTest {
 			stringBuilder.append(Arrays.toString(license.getAttributes().getValuesArray()));
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append("Internal: ");
-			stringBuilder.append(Arrays.toString(license.getAttributes().getInternalArray()));
+			stringBuilder.append(Arrays.toString(license.getAttributes().getInternalValuesArray()));
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append(System.lineSeparator());
 		}

@@ -81,35 +81,36 @@ public class KnowledgeBase {
 		boolean[] attributeValues = license.getAttributes().getValuesArray();
 		List<License> licenses = new LinkedList<>();
 
-		// CC-BY-ND 4.0, CC-BY-NC-ND 4.0, PSEUL
+		// No derivates allowed -> Return empty list
+		// (CC-BY-ND 4.0, CC-BY-NC-ND 4.0, PSEUL)
 		if (!license.derivatesAllowed) {
 			return licenses;
 		}
 
-		for (License licenseB : getLicenses()) {
-			if (Arrays.equals(attributeValues, licenseB.getAttributes().getValuesArray())) {
-				licenses.add(licenseB);
-			}
-		}
-
+		// Share-alike: Use Predifined lists
 		if (license.shareAlike) {
 			List<String> shareAlikeLicenses = getShareAlikeLicenses(license.getUri());
 
 			// No share-alike: Use only license itself
 			if (shareAlikeLicenses.isEmpty()) {
-				licenses = new LinkedList<>();
 				licenses.add(license);
 				return licenses;
 			}
 
 			// Return share-alike licenses from knowledge base
 			else {
-				licenses = new LinkedList<>();
 				for (String uri : shareAlikeLicenses) {
 					licenses.add(getUrisToLicenses().get(uri));
 				}
 				return licenses;
+			}
+		}
 
+		// TODO: Will not work by simply comparing values (missing OR)
+		// Check attributes
+		for (License licenseB : getLicenses()) {
+			if (Arrays.equals(attributeValues, licenseB.getAttributes().getValuesArray())) {
+				licenses.add(licenseB);
 			}
 		}
 
@@ -118,10 +119,22 @@ public class KnowledgeBase {
 
 	// TODO: license required for shareAlike. But array (internal) required for
 	// using operator.
+	/**
+	 * Attribute values have to be checked additionally.
+	 * 
+	 * If an attribute of result is a restriction/prohibition, which is true, than
+	 * only true values of licenses are allowed. If it is false, and therefore there
+	 * is no restriction, every value is allowed.
+	 * 
+	 */
 	public List<License> getMatchingLicenses(boolean[] internalAttributeValues) {
 		List<License> licenses = new LinkedList<>();
+		for (int i = 0; i < internalAttributeValues.length; i++) {
+
+		}
 		for (License licenseB : getLicenses()) {
-			if (Arrays.equals(internalAttributeValues, licenseB.getAttributes().getInternalArray())) {
+			// TODO check if OR is also needed here
+			if (Arrays.equals(internalAttributeValues, licenseB.getAttributes().getInternalValuesArray())) {
 				licenses.add(licenseB);
 			}
 		}

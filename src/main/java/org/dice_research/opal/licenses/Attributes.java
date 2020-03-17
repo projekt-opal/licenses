@@ -12,14 +12,14 @@ import java.util.Set;
 public class Attributes {
 
 	/**
-	 * Gets array of attribute values for computation. (E.g. values of permissions
-	 * are inverted.)
+	 * Gets array of internal attribute values for computation. (E.g. values of
+	 * permissions are inverted.)
 	 */
-	public boolean[] getInternalArray() {
+	public boolean[] getInternalValuesArray() {
 		boolean[] array = new boolean[attributes.size()];
 		int counter = 0;
 		for (Attribute attribute : attributes.values()) {
-			array[counter++] = attribute.invertForComputation() ? !attribute.getValue() : attribute.getValue();
+			array[counter++] = attribute.getInternalValue();
 		}
 		return array;
 	}

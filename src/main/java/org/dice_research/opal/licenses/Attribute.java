@@ -88,6 +88,19 @@ public abstract class Attribute {
 	}
 
 	/**
+	 * Gets internal value for computation. (E.g. values of permissions are
+	 * inverted.)
+	 * 
+	 * @throws NullPointerException if not set
+	 */
+	public Boolean getInternalValue() throws NullPointerException {
+		if (value == null) {
+			throw new NullPointerException();
+		}
+		return invertForComputation() ? !value : value;
+	}
+
+	/**
 	 * Maps attribute value to binary representation.
 	 * 
 	 * @throws NullPointerException if not set

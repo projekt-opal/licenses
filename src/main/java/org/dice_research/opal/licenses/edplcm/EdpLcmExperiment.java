@@ -34,8 +34,8 @@ public class EdpLcmExperiment {
 
 	// TODO: Remove when completed
 	public static void main(String[] args) throws IOException {
-//		new EdpExperimentCompatibility().runExperiment();
-		new EdpLcmExperiment().checkEdpMatrix();
+		new EdpLcmExperiment().runExperiment();
+//		new EdpLcmExperiment().checkEdpMatrix();
 	}
 
 	protected void checkEdpMatrix() throws IOException {
@@ -56,6 +56,13 @@ public class EdpLcmExperiment {
 		for (License license : kb.getLicenses()) {
 			List<String> compatible = derivates.getCompatibleUris(license.getUri());
 			List<License> matching = kb.getMatchingLicenses(license);
+
+			// Skip equal lists
+			List<String> matchingUris = matching.stream().map(m -> m.getUri()).collect(Collectors.toList());
+			if (compatible.containsAll(matchingUris) && matchingUris.containsAll(compatible)) {
+				continue;
+			}
+
 			System.out.print(license.getName());
 			if (license.shareAlike) {
 				System.out.print("  shareAlike");
@@ -87,8 +94,8 @@ public class EdpLcmExperiment {
 			License licenseA = kb.getUrisToLicenses().get(uriLicenseA);
 			for (String uriLicenseB : derivates.getUris()) {
 				License licenseB = kb.getUrisToLicenses().get(uriLicenseB);
-				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalArray(),
-						licenseB.getAttributes().getInternalArray());
+				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalValuesArray(),
+						licenseB.getAttributes().getInternalValuesArray());
 				List<License> resultingLicenses = kb.getMatchingLicenses(result);
 				addResult(stringBuilder, licenseA, licenseB, result, resultingLicenses);
 			}
@@ -116,11 +123,11 @@ public class EdpLcmExperiment {
 
 		stringBuilder.append(licenseA.getName());
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append(Arrays.toString(licenseA.getAttributes().getInternalArray()));
+		stringBuilder.append(Arrays.toString(licenseA.getAttributes().getInternalValuesArray()));
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append(licenseB.getName());
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append(Arrays.toString(licenseB.getAttributes().getInternalArray()));
+		stringBuilder.append(Arrays.toString(licenseB.getAttributes().getInternalValuesArray()));
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append("Result");
 		stringBuilder.append(System.lineSeparator());
