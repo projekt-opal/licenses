@@ -100,6 +100,7 @@ public class CcExperiment {
 	 * Creates knowledge base including data of all files.
 	 * 
 	 * TODO: Is there another predicate, e.g. legal statement?
+	 * https://creativecommons.org/ns#Jurisdiction
 	 */
 	public KnowledgeBase createKnowledgeBase(List<File> files) {
 		KnowledgeBase knowledgeBase = new KnowledgeBase();
