@@ -78,7 +78,9 @@ public class KnowledgeBase {
 		return this;
 	}
 
-	// TODO: license required for shareAlike. But array required for using operator.
+	// TODO: OLD code, remove dependencies updated
+	// TO DO: license required for shareAlike. But array required for using
+	// operator.
 	public List<License> getMatchingLicensesOLDEDP(License license) {
 		boolean[] attributeValues = license.getAttributes().getValuesArray();
 		List<License> licenses = new LinkedList<>();
@@ -108,7 +110,7 @@ public class KnowledgeBase {
 			}
 		}
 
-		// TODO: Will not work by simply comparing values (missing OR)
+		// TO DO: Will not work by simply comparing values (missing OR)
 		// Check attributes
 		for (License licenseB : getLicenses()) {
 			if (Arrays.equals(attributeValues, licenseB.getAttributes().getValuesArray())) {
@@ -119,7 +121,8 @@ public class KnowledgeBase {
 		return licenses;
 	}
 
-	// TODO: license required for shareAlike. But array (internal) required for
+	// TODO: OLD code, remove dependencies updated
+	// TO DO: license required for shareAlike. But array (internal) required for
 	// using operator.
 	/**
 	 * Attribute values have to be checked additionally.
@@ -135,7 +138,7 @@ public class KnowledgeBase {
 
 		}
 		for (License licenseB : getLicenses()) {
-			// TODO check if OR is also needed here
+			// TO DO check if OR is also needed here
 			if (Arrays.equals(internalAttributeValues, licenseB.getAttributes().getInternalValuesArray())) {
 				licenses.add(licenseB);
 			}
@@ -145,19 +148,37 @@ public class KnowledgeBase {
 
 	public List<License> getMatchingLicenses(List<License> inputLicenses, boolean[] internalValues) {
 
+		// No license to check -> no result
+		if (inputLicenses.isEmpty()) {
+			return new ArrayList<>(0);
+		}
+
+		// One license does not allow derivates -> no result
 		for (License license : inputLicenses) {
 			if (!license.derivatesAllowed) {
 				return new ArrayList<>(0);
 			}
 		}
 
-		// TODO: Handle Share alike
-		// if (license.getAttributes().getUris().contains(SHARE_ALIKE)
-		// &&
-		// license.getAttributes().getUriToAttributeMap().get(SHARE_ALIKE).getValue()) {
-		// license.shareAlike = true;
-		// }
+		// TODO: Does not work for e.g. public domain + share alike
+		// One license is share-alike -> check, if all licenses are equal
+//		boolean shareAlike = false;
+//		for (License license : inputLicenses) {
+//			if (license.shareAlike) {
+//				shareAlike = true;
+//				break;
+//			}
+//		}
+//		if (shareAlike) {
+//			License firstLicense = inputLicenses.get(0);
+//			for (License license : inputLicenses) {
+//				if (!firstLicense.equals(license)) {
+//					return new ArrayList<>(0);
+//				}
+//			}
+//		}
 
+		// Check single attributes
 		List<License> resultingLicenses = new LinkedList<>();
 		List<Attribute> attributes = getAttributes().getObjects();
 		licenseLoop: for (License license : getLicenses()) {
