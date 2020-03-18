@@ -32,7 +32,7 @@ import org.dice_research.opal.licenses.Requirement;
 import org.dice_research.opal.licenses.utils.LineStorage;
 
 /**
- * Creative Commons.
+ * Creates Creative Commons knowledge base.
  * 
  * <p>
  * Data: To get the underlying data, clone
@@ -64,6 +64,9 @@ public class CcData {
 	public static final Property PROP_REPLACED_BY = DCTerms.isReplacedBy;
 	public static final Property PROP_TITLE = DCTerms.title;
 	public static final Property PROP_ID = DC.identifier;
+
+	public static final String DERIVATIVE_WORKS = "http://creativecommons.org/ns#DerivativeWorks";
+	public static final String SHARE_ALIKE = "http://creativecommons.org/ns#ShareAlike";
 
 	public static boolean print = true;
 
@@ -184,18 +187,44 @@ public class CcData {
 			// Add true/false
 
 			for (Attribute attribute : knowledgeBase.getAttributes().getObjects()) {
+
 				if (attribute instanceof Permission) {
 					license.getAttributes().addAttribute(new Permission().setUri(attribute.getUri())
 							.setValue(permissions.contains(attribute.getUri())));
-				} else if (attribute instanceof Prohibition) {
+
+					// Special case: http://creativecommons.org/ns#DerivativeWorks (Permission)
+					if (attribute.getUri().equals(DERIVATIVE_WORKS)) {
+						if (license.getAttributes().getAttribute(attribute.getUri()).getValue()) {
+							license.derivatesAllowed = true;
+						} else {
+							license.derivatesAllowed = false;
+						}
+					}
+				}
+
+				else if (attribute instanceof Prohibition) {
 					license.getAttributes().addAttribute(new Prohibition().setUri(attribute.getUri())
 							.setValue(prohibitions.contains(attribute.getUri())));
-				} else if (attribute instanceof Requirement) {
+				}
+
+				else if (attribute instanceof Requirement) {
 					license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
 							.setValue(requirements.contains(attribute.getUri())));
-				} else {
+
+					// Special case: http://creativecommons.org/ns#ShareAlike (Requirement)
+					if (attribute.getUri().equals(SHARE_ALIKE)) {
+						if (license.getAttributes().getAttribute(attribute.getUri()).getValue()) {
+							license.shareAlike = true;
+						} else {
+							license.shareAlike = false;
+						}
+					}
+				}
+
+				else {
 					throw new RuntimeException("Unknown type of attribute");
 				}
+
 			}
 
 			knowledgeBase.addLicense(license);

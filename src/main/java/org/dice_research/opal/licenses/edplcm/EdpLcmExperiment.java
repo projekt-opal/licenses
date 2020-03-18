@@ -55,7 +55,7 @@ public class EdpLcmExperiment {
 
 		for (License license : kb.getLicenses()) {
 			List<String> compatible = derivates.getCompatibleUris(license.getUri());
-			List<License> matching = kb.getMatchingLicenses(license);
+			List<License> matching = kb.getMatchingLicensesOLDEDP(license);
 
 			// Skip equal lists
 			List<String> matchingUris = matching.stream().map(m -> m.getUri()).collect(Collectors.toList());
@@ -96,7 +96,7 @@ public class EdpLcmExperiment {
 				License licenseB = kb.getUrisToLicenses().get(uriLicenseB);
 				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalValuesArray(),
 						licenseB.getAttributes().getInternalValuesArray());
-				List<License> resultingLicenses = kb.getMatchingLicenses(result);
+				List<License> resultingLicenses = kb.getMatchingLicensesOLDEDP(result);
 				addResult(stringBuilder, licenseA, licenseB, result, resultingLicenses);
 			}
 		}

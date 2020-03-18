@@ -1,7 +1,8 @@
 package org.dice_research.opal.licenses;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -46,12 +47,16 @@ public class Attributes {
 		return this;
 	}
 
+	public Attribute getAttribute(String uri) {
+		return attributes.get(uri);
+	}
+
 	public LinkedHashMap<String, Attribute> getUriToAttributeMap() {
 		return this.attributes;
 	}
 
-	public Collection<Attribute> getObjects() {
-		return this.attributes.values();
+	public List<Attribute> getObjects() {
+		return new ArrayList<Attribute>(this.attributes.values());
 	}
 
 	public Set<String> getUris() {

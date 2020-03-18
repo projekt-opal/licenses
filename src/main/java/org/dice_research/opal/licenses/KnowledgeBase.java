@@ -79,7 +79,7 @@ public class KnowledgeBase {
 	}
 
 	// TODO: license required for shareAlike. But array required for using operator.
-	public List<License> getMatchingLicenses(License license) {
+	public List<License> getMatchingLicensesOLDEDP(License license) {
 		boolean[] attributeValues = license.getAttributes().getValuesArray();
 		List<License> licenses = new LinkedList<>();
 
@@ -129,7 +129,7 @@ public class KnowledgeBase {
 	 * is no restriction, every value is allowed.
 	 * 
 	 */
-	public List<License> getMatchingLicenses(boolean[] internalAttributeValues) {
+	public List<License> getMatchingLicensesOLDEDP(boolean[] internalAttributeValues) {
 		List<License> licenses = new LinkedList<>();
 		for (int i = 0; i < internalAttributeValues.length; i++) {
 
@@ -141,6 +141,55 @@ public class KnowledgeBase {
 			}
 		}
 		return licenses;
+	}
+
+	public List<License> getMatchingLicenses(List<License> inputLicenses, boolean[] internalValues) {
+
+		for (License license : inputLicenses) {
+			if (!license.derivatesAllowed) {
+				return new ArrayList<>(0);
+			}
+		}
+
+		// TODO: Handle Share alike
+		// if (license.getAttributes().getUris().contains(SHARE_ALIKE)
+		// &&
+		// license.getAttributes().getUriToAttributeMap().get(SHARE_ALIKE).getValue()) {
+		// license.shareAlike = true;
+		// }
+
+		List<License> resultingLicenses = new LinkedList<>();
+		List<Attribute> attributes = getAttributes().getObjects();
+		licenseLoop: for (License license : getLicenses()) {
+			boolean[] licenseInternalValues = license.getAttributes().getInternalValuesArray();
+			for (int i = 0; i < internalValues.length; i++) {
+
+				if (attributes.get(i).getType().equals(Permission.TYPE)) {
+					if (internalValues[i] != licenseInternalValues[i]) {
+						continue licenseLoop;
+					}
+				}
+
+				else if (attributes.get(i).getType().equals(Prohibition.TYPE)) {
+					if (internalValues[i] && !licenseInternalValues[i]) {
+						continue licenseLoop;
+					}
+				}
+
+				else if (attributes.get(i).getType().equals(Requirement.TYPE)) {
+					if (internalValues[i] && !licenseInternalValues[i]) {
+						continue licenseLoop;
+					}
+				}
+
+				else {
+					throw new RuntimeException("Unknown type");
+				}
+			}
+
+			resultingLicenses.add(license);
+		}
+		return resultingLicenses;
 	}
 
 	public String toLines() {
