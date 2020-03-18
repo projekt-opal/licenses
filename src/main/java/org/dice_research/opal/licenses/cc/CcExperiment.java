@@ -1,329 +1,122 @@
 package org.dice_research.opal.licenses.cc;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResIterator;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.vocabulary.DC;
-import org.apache.jena.vocabulary.DCTerms;
-import org.apache.jena.vocabulary.RDF;
 import org.dice_research.opal.licenses.Attribute;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.Permission;
 import org.dice_research.opal.licenses.Prohibition;
 import org.dice_research.opal.licenses.Requirement;
-import org.dice_research.opal.licenses.io.LineStorage;
 
-/**
- * Creative Commons.
- * 
- * <p>
- * Data: To get the underlying data, clone
- * https://github.com/projekt-opal/cc.licenserdf (or
- * https://github.com/creativecommons/cc.licenserdf).
- * </p>
- *
- * <p>
- * After cloning, specify the data directory with
- * {@link #setSourceDirectory(String)}. Get the files related to 'License
- * Compatibility Chart' using {@link #getMatixFiles()}. Create the knowledge
- * base using {@link #createKnowledgeBase(List)}.
- * </p>
- * 
- * <p>
- * Additionally: Get a list of all RDF files using {@link #getAllRdfFiles()}.
- * Get a list of non-replaced lices files using {@link #getNonReplacedFiles()}.
- * </p>
- *
- * @author Adrian Wilke
- */
 public class CcExperiment {
 
-	public static final String CC_NS = "http://creativecommons.org/ns#";
-	public static final Resource LICENSE = ResourceFactory.createResource(CC_NS + "License");
-	public static final Property PROP_PROHIBITS = ResourceFactory.createProperty(CC_NS + "prohibits");
-	public static final Property PROP_REQUIRES = ResourceFactory.createProperty(CC_NS + "requires");
-	public static final Property PROP_PERMITS = ResourceFactory.createProperty(CC_NS + "permits");
-	public static final Property PROP_REPLACED_BY = DCTerms.isReplacedBy;
-	public static final Property PROP_TITLE = DCTerms.title;
-	public static final Property PROP_ID = DC.identifier;
+//	public static void main(String[] args) {
+//		CcData ccData = new CcData();
+//		KnowledgeBase kb = ccData.setSourceDirectory("../cc.licenserdf/cc/licenserdf/licenses/")
+//				.createKnowledgeBase(ccData.getMatixFiles());
+//		new CcExperiment().execute(kb);
+//	}
 
-	public static boolean print = true;
+	public static final String SHARE_ALIKE = "http://creativecommons.org/ns#ShareAlike";
+	public static final String DERIVATIVE_WORKS = "http://creativecommons.org/ns#DerivativeWorks";
 
-	private String sourceDirectory;
-	private static List<File> allRdfFiles;
+//	private void execute(KnowledgeBase kb) {
+////		for (License licenseA : kb.getLicenses()) {
+////			for (License licenseB : kb.getLicenses()) {
+////				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalValuesArray(),
+////						licenseB.getAttributes().getInternalValuesArray());
+////				List<License> resultingLicenses = getMatchingLicenses(kb, result);
+////			}
+////		}
+//		Map<License, List<License>> map = new HashMap<>();
+////		for (License license : kb.getLicenses()) {
+////			map.put(license, getMatchingLicenses(kb, license.getAttributes().getInternalValuesArray()));
+////		}
+//
+////		License byNc = kb.getUrisToLicenses().get("http://creativecommons.org/licenses/by-nc/4.0/");
+////		map.put(byNc, getMatchingLicenses(kb, byNc.getAttributes().getInternalValuesArray()));
+//		License bySa = kb.getUrisToLicenses().get("http://creativecommons.org/licenses/by-sa/4.0/");
+//		map.put(bySa, getMatchingLicenses(kb, bySa.getAttributes().getInternalValuesArray()));
+//
+//		System.err.println(" " + Arrays.toString(bySa.getAttributes().getInternalValuesArray()));
+//		System.err.println(" " + Arrays.toString(bySa.getAttributes().getValuesArray()));
+//
+//		for (Entry<License, List<License>> entry : map.entrySet()) {
+//			System.out.println(entry.getKey());
+//			for (License resultLicense : entry.getValue()) {
+//				System.out.println(resultLicense);
+//				System.out.println(Arrays.toString(resultLicense.getAttributes().getValuesArray()));
+//			}
+//			System.out.println();
+//		}
+//	}
 
-	/**
-	 * Test run.
-	 */
-	public static void main(String[] args) throws IOException {
+	private void tmpcheck(License license, int i, boolean a, boolean b, String... string) {
+		if (string.length == 0)
+			string = new String[1];
+		string[0] = "";
+//		if(license.getUri().equals(CcMatrix.I2_BY)) {
+		System.err.println(i + " " + license + " " + a + " " + b + " " + string[0]);
+//		}
 
-		CcExperiment cc = new CcExperiment().setSourceDirectory("../cc.licenserdf/cc/licenserdf/licenses/")
-				.readDirectory();
-
-		List<File> rdfFiles = cc.getMatixFiles();
-		if (print) {
-			for (File file : rdfFiles) {
-				System.out.println(file);
-			}
-			System.out.println();
-		}
-
-		KnowledgeBase knowledgeBase = cc.createKnowledgeBase(rdfFiles);
-		if (print) {
-			System.out.println(knowledgeBase.getAttributes().toLines());
-			for (License license : knowledgeBase.getLicenses()) {
-				System.out.println(license);
-				System.out.println(Arrays.toString(license.getAttributes().getValuesArray()));
-			}
-		}
 	}
 
-	/**
-	 * Creates knowledge base including data of all files.
-	 * 
-	 * TODO: Is there another predicate, e.g. legal statement?
-	 * https://creativecommons.org/ns#Jurisdiction
-	 */
-	public KnowledgeBase createKnowledgeBase(List<File> files) {
-		KnowledgeBase knowledgeBase = new KnowledgeBase();
+	public List<License> getMatchingLicenses(KnowledgeBase kb, boolean[] resultInternalValues) {
 
-		// Get attributes sorted by type and URI. Add them to knowledge base.
+//		System.err.println(Arrays.toString(resultInternalValues));
 
-		Set<String> permissions = new TreeSet<>();
-		Set<String> prohibitions = new TreeSet<>();
-		Set<String> requirements = new TreeSet<>();
-		for (File file : files) {
-			extractAttributes(file, permissions, prohibitions, requirements);
-		}
-		for (String attribute : permissions) {
-			knowledgeBase.addAttribute(new Permission().setUri(attribute));
-		}
-		for (String attribute : prohibitions) {
-			knowledgeBase.addAttribute(new Prohibition().setUri(attribute));
-		}
-		for (String attribute : requirements) {
-			knowledgeBase.addAttribute(new Requirement().setUri(attribute));
-		}
+		List<Attribute> attributesList = new ArrayList<Attribute>(kb.getAttributes().getObjects());
 
-		// Add licenses
-
-		for (File file : files) {
-			addLicense(file, knowledgeBase);
-		}
-
-		return knowledgeBase;
-	}
-
-	/**
-	 * Adds license to knowledge base.
-	 */
-	private void addLicense(File file, KnowledgeBase knowledgeBase) {
-		StmtIterator stmtIterator;
-		Model model = RDFDataMgr.loadModel(file.toURI().toString(), Lang.RDFXML);
-
-		ResIterator licensesIt = model.listResourcesWithProperty(RDF.type, LICENSE);
-		while (licensesIt.hasNext()) {
-			License license = new License();
-
-			// URI
-
-			Resource licenseResource = licensesIt.next();
-			license.setUri(licenseResource.getURI());
-
-			// Name
-
-			stmtIterator = licenseResource.listProperties(PROP_ID);
-			if (stmtIterator.hasNext()) {
-				license.setName(stmtIterator.next().getObject().toString());
-			}
-			if (stmtIterator.hasNext()) {
-				throw new RuntimeException(
-						"Multiple IDs " + license.getName() + " " + stmtIterator.next() + " " + file.getAbsolutePath());
-			}
-
-			// Attributes
-
-			Set<String> permissions = new TreeSet<>();
-			Set<String> prohibitions = new TreeSet<>();
-			Set<String> requirements = new TreeSet<>();
-
-			// Collect triple information
-
-			stmtIterator = licenseResource.listProperties(PROP_PERMITS);
-			while (stmtIterator.hasNext()) {
-				permissions.add(stmtIterator.next().getObject().asResource().getURI());
-			}
-
-			stmtIterator = licenseResource.listProperties(PROP_PROHIBITS);
-			while (stmtIterator.hasNext()) {
-				prohibitions.add(stmtIterator.next().getObject().asResource().getURI());
-			}
-
-			stmtIterator = licenseResource.listProperties(PROP_REQUIRES);
-			while (stmtIterator.hasNext()) {
-				requirements.add(stmtIterator.next().getObject().asResource().getURI());
-			}
-
-			// Add true/false
-
-			for (Attribute attribute : knowledgeBase.getAttributes().getObjects()) {
-				if (attribute instanceof Permission) {
-					license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
-							.setValue(permissions.contains(attribute.getUri())));
-				} else if (attribute instanceof Prohibition) {
-					license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
-							.setValue(prohibitions.contains(attribute.getUri())));
-				} else if (attribute instanceof Requirement) {
-					license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
-							.setValue(requirements.contains(attribute.getUri())));
+		List<License> licenses = new LinkedList<>();
+		licenseLoop: for (License license : kb.getLicenses()) {
+			boolean[] licenseInternalValues = license.getAttributes().getInternalValuesArray();
+			for (int i = 0; i < resultInternalValues.length; i++) {
+				if (attributesList.get(i).getType().equals(Permission.TYPE)) {
+					if (resultInternalValues[i] != licenseInternalValues[i]) {
+						tmpcheck(license, i, resultInternalValues[i], licenseInternalValues[i]);
+						continue licenseLoop;
+					}
+				} else if (attributesList.get(i).getType().equals(Prohibition.TYPE)) {
+					if (resultInternalValues[i] && !licenseInternalValues[i]) {
+						tmpcheck(license, i, resultInternalValues[i], licenseInternalValues[i], "pro");
+						continue licenseLoop;
+					}
+				} else if (attributesList.get(i).getType().equals(Requirement.TYPE)) {
+					if (resultInternalValues[i] && !licenseInternalValues[i]) {
+						tmpcheck(license, i, resultInternalValues[i], licenseInternalValues[i]);
+						continue licenseLoop;
+					}
 				} else {
-					throw new RuntimeException("Unknown type of attribute");
+					throw new RuntimeException("Unknown type");
 				}
+//				if (resultInternalValues[i] && !licenseInternalValues[i]) {
+//					System.err.println(i + " " + license + " " + Arrays.toString(licenseInternalValues));
+//					continue licenseLoop;
+//				}
 			}
 
-			knowledgeBase.addLicense(license);
-		}
-	}
+//			if (license.getAttributes().getUris().contains(SHARE_ALIKE)
+//					&& license.getAttributes().getUriToAttributeMap().get(SHARE_ALIKE).getValue()) {
+//				license.shareAlike = true;
+//			}
 
-	/**
-	 * Extracts attribute URIs from files.
-	 */
-	private void extractAttributes(File file, Set<String> permissions, Set<String> prohibitions,
-			Set<String> requirements) {
-		StmtIterator stmtIterator;
-		Model model = RDFDataMgr.loadModel(file.toURI().toString(), Lang.RDFXML);
-
-		ResIterator licensesIt = model.listResourcesWithProperty(RDF.type, LICENSE);
-		while (licensesIt.hasNext()) {
-			Resource licenseResource = licensesIt.next();
-
-			stmtIterator = licenseResource.listProperties(PROP_PERMITS);
-			while (stmtIterator.hasNext()) {
-				permissions.add(stmtIterator.next().getObject().asResource().getURI());
+			// http://creativecommons.org/ns#DerivativeWorks (Permission)
+			if (!license.getAttributes().getUriToAttributeMap().get(DERIVATIVE_WORKS).getValue()) {
+				// TODO: maybe elsewhere
+				license.derivatesAllowed = false;
+				return new ArrayList<>(0);
 			}
 
-			stmtIterator = licenseResource.listProperties(PROP_PROHIBITS);
-			while (stmtIterator.hasNext()) {
-				prohibitions.add(stmtIterator.next().getObject().asResource().getURI());
-			}
-
-			stmtIterator = licenseResource.listProperties(PROP_REQUIRES);
-			while (stmtIterator.hasNext()) {
-				requirements.add(stmtIterator.next().getObject().asResource().getURI());
-			}
+			licenses.add(license);
 		}
-	}
-
-	/**
-	 * Gets licenses of 'License Compatibility Chart'
-	 * 
-	 * @see https://wiki.creativecommons.org/index.php?title=Wiki/cc_license_compatibility&oldid=70058
-	 */
-	public List<File> getMatixFiles() {
-		List<File> files = new LinkedList<>();
-		files.add(new File(sourceDirectory, "creativecommons.org_publicdomain_mark_1.0_.rdf"));
-		files.add(new File(sourceDirectory, "creativecommons.org_publicdomain_zero_1.0_.rdf"));
-		files.add(new File(sourceDirectory, "creativecommons.org_licenses_by_4.0_.rdf"));
-		files.add(new File(sourceDirectory, "creativecommons.org_licenses_by-sa_4.0_.rdf"));
-		files.add(new File(sourceDirectory, "creativecommons.org_licenses_by-nc_4.0_.rdf"));
-		files.add(new File(sourceDirectory, "creativecommons.org_licenses_by-nd_4.0_.rdf"));
-		files.add(new File(sourceDirectory, "creativecommons.org_licenses_by-nc-sa_4.0_.rdf"));
-		files.add(new File(sourceDirectory, "creativecommons.org_licenses_by-nc-nd_4.0_.rdf"));
-		return files;
-	}
-
-	/**
-	 * Filters records not having {@link #PROP_REPLACED_BY} from all RDF files.
-	 */
-	public List<File> getNonReplacedFiles() {
-
-		// Cache
-		String storageId = "cc-non-replaced";
-		if (LineStorage.exists(storageId)) {
-			return LineStorage.read(storageId).stream()
-					.collect(Collectors.mapping(l -> new File(l), Collectors.toList()));
-		}
-
-		// Filter
-		List<File> files = new LinkedList<>();
-		for (File file : getAllRdfFiles()) {
-			Model model = RDFDataMgr.loadModel(file.toURI().toString(), Lang.RDFXML);
-
-			ResIterator licensesIt = model.listResourcesWithProperty(RDF.type, LICENSE);
-			while (licensesIt.hasNext()) {
-				Resource licenseResource = licensesIt.next();
-
-				StmtIterator idIt = licenseResource.listProperties(PROP_REPLACED_BY);
-				if (idIt.hasNext()) {
-					continue;
-				} else {
-					files.add(file);
-				}
-			}
-		}
-
-		// Cache
-		LineStorage.write(storageId,
-				files.stream().map(f -> Paths.get(f.getAbsolutePath()).toString()).collect(Collectors.toList()));
-
-		return files;
-	}
-
-	/**
-	 * Gets RDF files in directory.
-	 */
-	public List<File> getAllRdfFiles() {
-		if (allRdfFiles == null) {
-			return new ArrayList<>(0);
-		} else {
-			return allRdfFiles;
-		}
-	}
-
-	/**
-	 * Gets RDF files in directory.
-	 */
-	private CcExperiment readDirectory() throws IOException {
-
-		if (sourceDirectory == null) {
-			throw new NullPointerException("Source directory not set.");
-		}
-
-		File directory = new File(sourceDirectory);
-		if (!directory.canRead()) {
-			throw new IOException("Can not read " + directory);
-		}
-
-		allRdfFiles = Files.list(Paths.get(directory.toURI())).map(p -> p.toFile())
-				.filter(f -> f.getName().endsWith("rdf")).collect(Collectors.toList());
-
-		return this;
-	}
-
-	/**
-	 * Sets directory with CC RDF files.
-	 */
-	public CcExperiment setSourceDirectory(String sourceDirectory) {
-		this.sourceDirectory = sourceDirectory;
-		return this;
+		return licenses;
 	}
 
 }

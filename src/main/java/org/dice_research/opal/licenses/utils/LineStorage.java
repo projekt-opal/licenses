@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses.io;
+package org.dice_research.opal.licenses.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public abstract class LineStorage {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static File getFile(String id) {
-		return new File(System.getProperty("java.io.tmpdir"), LineStorage.class.getPackageName() + "." + id);
+		return new File(System.getProperty("java.io.tmpdir"), LineStorage.class.getPackage().getName() + "." + id);
 	}
 
 	public static List<String> read(String id) {

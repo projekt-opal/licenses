@@ -17,7 +17,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
-import org.dice_research.opal.licenses.io.Net;
+import org.dice_research.opal.licenses.utils.Io;
 
 /**
  * Parses CSV file of file "European Data Portal Licence Compatibility Matrix"
@@ -52,7 +52,7 @@ public class EdpLcmSimpleDerivative {
 		// Get source data
 		File file = File.createTempFile(EdpLcmSimpleDerivative.class.getSimpleName(), ".csv");
 		file.deleteOnExit();
-		Net.download(new URL(URL_DERIVATIVE), file);
+		Io.download(new URL(URL_DERIVATIVE), file);
 
 		// Parse
 		instance.parseCsv(file);

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.dice_research.opal.licenses.utils.ArrayUtil;
+
 /**
  * A knowledge base comprises known attributes and a list of known licenses.
  *
@@ -139,5 +141,20 @@ public class KnowledgeBase {
 			}
 		}
 		return licenses;
+	}
+
+	public String toLines() {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (Attribute attribute : getAttributes().getObjects()) {
+			stringBuilder.append(attribute);
+			stringBuilder.append(System.lineSeparator());
+		}
+		for (License license : getLicenses()) {
+			stringBuilder.append(ArrayUtil.intString(license.getAttributes().getValuesArray()));
+			stringBuilder.append(" ");
+			stringBuilder.append(license.getUri());
+			stringBuilder.append(System.lineSeparator());
+		}
+		return stringBuilder.toString();
 	}
 }
