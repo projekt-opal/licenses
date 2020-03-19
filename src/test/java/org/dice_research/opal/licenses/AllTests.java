@@ -11,6 +11,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 		OperatorTest.class,
 
+		CcEvaluationTest.class,
+
 		EpdLcmDerivatesTest.class,
 
 		EdpLcmKnowledgeBaseTest.class, })

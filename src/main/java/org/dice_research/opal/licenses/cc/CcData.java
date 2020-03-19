@@ -68,8 +68,6 @@ public class CcData {
 	public static final String DERIVATIVE_WORKS = "http://creativecommons.org/ns#DerivativeWorks";
 	public static final String SHARE_ALIKE = "http://creativecommons.org/ns#ShareAlike";
 
-	public static boolean print = true;
-
 	private String sourceDirectory;
 	private static List<File> allRdfFiles;
 
@@ -81,20 +79,16 @@ public class CcData {
 		CcData cc = new CcData().setSourceDirectory("../cc.licenserdf/cc/licenserdf/licenses/").readDirectory();
 
 		List<File> rdfFiles = cc.getMatixFiles();
-		if (print) {
-			for (File file : rdfFiles) {
-				System.out.println(file);
-			}
-			System.out.println();
+		for (File file : rdfFiles) {
+			System.out.println(file);
 		}
+		System.out.println();
 
 		KnowledgeBase knowledgeBase = cc.createKnowledgeBase(rdfFiles);
-		if (print) {
-			System.out.println(knowledgeBase.getAttributes().toLines());
-			for (License license : knowledgeBase.getLicenses()) {
-				System.out.println(license);
-				System.out.println(Arrays.toString(license.getAttributes().getValuesArray()));
-			}
+		System.out.println(knowledgeBase.getAttributes().toLines());
+		for (License license : knowledgeBase.getLicenses()) {
+			System.out.println(license);
+			System.out.println(Arrays.toString(license.getAttributes().getValuesArray()));
 		}
 	}
 
@@ -105,6 +99,12 @@ public class CcData {
 	 * https://creativecommons.org/ns#Jurisdiction
 	 */
 	public KnowledgeBase createKnowledgeBase(List<File> files) {
+		for (File file : files) {
+			if (!file.exists()) {
+				throw new RuntimeException("File not found: " + file);
+			}
+		}
+
 		KnowledgeBase knowledgeBase = new KnowledgeBase();
 
 		// Get attributes sorted by type and URI. Add them to knowledge base.
@@ -190,6 +190,9 @@ public class CcData {
 
 				if (attribute instanceof Permission) {
 
+					license.getAttributes().addAttribute(new Permission().setUri(attribute.getUri())
+							.setValue(permissions.contains(attribute.getUri())));
+
 					// Special case: http://creativecommons.org/ns#DerivativeWorks (Permission)
 					if (attribute.getUri().equals(DERIVATIVE_WORKS)) {
 						if (license.getAttributes().getAttribute(attribute.getUri()).getValue()) {
@@ -199,11 +202,6 @@ public class CcData {
 						}
 					}
 
-					// TODO: removed from attributes list in this version
-					else {
-						license.getAttributes().addAttribute(new Permission().setUri(attribute.getUri())
-								.setValue(permissions.contains(attribute.getUri())));
-					}
 				}
 
 				else if (attribute instanceof Prohibition) {
@@ -212,6 +210,9 @@ public class CcData {
 				}
 
 				else if (attribute instanceof Requirement) {
+
+					license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
+							.setValue(requirements.contains(attribute.getUri())));
 
 					// Special case: http://creativecommons.org/ns#ShareAlike (Requirement)
 					if (attribute.getUri().equals(SHARE_ALIKE)) {
@@ -222,11 +223,6 @@ public class CcData {
 						}
 					}
 
-					// TODO: removed from attributes list in this version
-					else {
-						license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
-								.setValue(requirements.contains(attribute.getUri())));
-					}
 				}
 
 				else {

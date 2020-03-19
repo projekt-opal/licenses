@@ -20,7 +20,7 @@ import org.junit.Test;
  * 
  * @author Adrian Wilke
  */
-public class CcExperimentTest {
+public class CcEvaluationTest {
 
 	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
 	public static final String DATA_REPOSITORY = "https://github.com/projekt-opal/cc.licenserdf";
