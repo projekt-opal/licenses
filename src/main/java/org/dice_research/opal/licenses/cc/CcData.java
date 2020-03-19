@@ -189,8 +189,6 @@ public class CcData {
 			for (Attribute attribute : knowledgeBase.getAttributes().getObjects()) {
 
 				if (attribute instanceof Permission) {
-					license.getAttributes().addAttribute(new Permission().setUri(attribute.getUri())
-							.setValue(permissions.contains(attribute.getUri())));
 
 					// Special case: http://creativecommons.org/ns#DerivativeWorks (Permission)
 					if (attribute.getUri().equals(DERIVATIVE_WORKS)) {
@@ -200,6 +198,12 @@ public class CcData {
 							license.derivatesAllowed = false;
 						}
 					}
+
+					// TODO: removed from attributes list in this version
+					else {
+						license.getAttributes().addAttribute(new Permission().setUri(attribute.getUri())
+								.setValue(permissions.contains(attribute.getUri())));
+					}
 				}
 
 				else if (attribute instanceof Prohibition) {
@@ -208,8 +212,6 @@ public class CcData {
 				}
 
 				else if (attribute instanceof Requirement) {
-					license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
-							.setValue(requirements.contains(attribute.getUri())));
 
 					// Special case: http://creativecommons.org/ns#ShareAlike (Requirement)
 					if (attribute.getUri().equals(SHARE_ALIKE)) {
@@ -218,6 +220,12 @@ public class CcData {
 						} else {
 							license.shareAlike = false;
 						}
+					}
+
+					// TODO: removed from attributes list in this version
+					else {
+						license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
+								.setValue(requirements.contains(attribute.getUri())));
 					}
 				}
 
