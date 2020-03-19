@@ -14,6 +14,31 @@ import java.util.Objects;
  */
 public abstract class Attribute {
 
+	/**
+	 * Gets boolean representation of binary value.
+	 * 
+	 * @throws ParseException if not 0 or 1
+	 */
+	public static final boolean binaryToBoolean(int binary) throws ParseException {
+		if (binary == 0) {
+			return false;
+		} else if (binary == 1) {
+			return true;
+		} else {
+			throw new ParseException(Integer.toString(binary), 0);
+		}
+	}
+	/**
+	 * Gets binary representation of boolean value.
+	 */
+	public static final int booleanToBinary(boolean bool) {
+		if (bool == false) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+
 	private String uri = null;
 	private Boolean value = null;
 
@@ -42,49 +67,16 @@ public abstract class Attribute {
 	}
 
 	/**
-	 * Gets URI identifying this attribute.
+	 * Maps attribute value to binary representation.
 	 * 
 	 * @throws NullPointerException if not set
 	 */
-	public String getUri() throws NullPointerException {
-		if (uri == null) {
+	public int getBinaryValue() throws NullPointerException {
+		if (getValue() == null) {
 			throw new NullPointerException();
+		} else {
+			return booleanToBinary(getValue());
 		}
-		return uri;
-	}
-
-	/**
-	 * Checks, if the value is not null.
-	 */
-	public boolean hasValue() throws NullPointerException {
-		return (value != null);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(uri);
-	}
-
-	/**
-	 * Gets type of attribute.
-	 */
-	public abstract String getType();
-
-	/**
-	 * Gets type of attribute.
-	 */
-	public abstract boolean invertForComputation();
-
-	/**
-	 * Gets value of this attribute.
-	 * 
-	 * @throws NullPointerException if not set
-	 */
-	public Boolean getValue() throws NullPointerException {
-		if (value == null) {
-			throw new NullPointerException();
-		}
-		return value;
 	}
 
 	/**
@@ -101,35 +93,50 @@ public abstract class Attribute {
 	}
 
 	/**
-	 * Maps attribute value to binary representation.
+	 * Gets type of attribute.
+	 */
+	public abstract String getType();
+
+	/**
+	 * Gets URI identifying this attribute.
 	 * 
 	 * @throws NullPointerException if not set
 	 */
-	public int getBinaryValue() throws NullPointerException {
-		if (getValue() == null) {
+	public String getUri() throws NullPointerException {
+		if (uri == null) {
 			throw new NullPointerException();
-		} else {
-			return booleanToBinary(getValue());
 		}
+		return uri;
 	}
 
 	/**
-	 * Parses binary value and returns instance.
+	 * Gets value of this attribute.
 	 * 
-	 * @throws ParseException if not 0 or 1
+	 * @throws NullPointerException if not set
 	 */
-	public Attribute setValue(int binary) throws ParseException {
-		setValue(binaryToBoolean(binary));
-		return this;
+	public Boolean getValue() throws NullPointerException {
+		if (value == null) {
+			throw new NullPointerException();
+		}
+		return value;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(uri);
 	}
 
 	/**
-	 * Sets value of this attribute.
+	 * Checks, if the value is not null.
 	 */
-	public Attribute setValue(boolean value) {
-		this.value = value;
-		return this;
+	public boolean hasValue() throws NullPointerException {
+		return (value != null);
 	}
+
+	/**
+	 * Gets type of attribute.
+	 */
+	public abstract boolean invertForComputation();
 
 	/**
 	 * Sets URI identifying this attribute.
@@ -144,35 +151,27 @@ public abstract class Attribute {
 		return this;
 	}
 
-	@Override
-	public String toString() {
-		return getUri() + (value == null ? "" : "=" + value) + " (" + getType() + ")";
+	/**
+	 * Sets value of this attribute.
+	 */
+	public Attribute setValue(boolean value) {
+		this.value = value;
+		return this;
 	}
 
 	/**
-	 * Gets boolean representation of binary value.
+	 * Parses binary value and returns instance.
 	 * 
 	 * @throws ParseException if not 0 or 1
 	 */
-	public static final boolean binaryToBoolean(int binary) throws ParseException {
-		if (binary == 0) {
-			return false;
-		} else if (binary == 1) {
-			return true;
-		} else {
-			throw new ParseException(Integer.toString(binary), 0);
-		}
+	public Attribute setValue(int binary) throws ParseException {
+		setValue(binaryToBoolean(binary));
+		return this;
 	}
 
-	/**
-	 * Gets binary representation of boolean value.
-	 */
-	public static final int booleanToBinary(boolean bool) {
-		if (bool == false) {
-			return 0;
-		} else {
-			return 1;
-		}
+	@Override
+	public String toString() {
+		return getUri() + (value == null ? "" : "=" + value) + " (" + getType() + ")";
 	}
 
 }

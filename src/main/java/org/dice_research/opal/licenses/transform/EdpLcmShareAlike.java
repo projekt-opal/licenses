@@ -46,7 +46,7 @@ public class EdpLcmShareAlike {
 		// Extract licenses with share-alike attribute
 		List<License> shareAlikeLicenses = new LinkedList<>();
 		for (License license : knowledgeBase.getLicenses()) {
-			for (Attribute attribute : license.getAttributes().getObjects()) {
+			for (Attribute attribute : license.getAttributes().getList()) {
 				if (attribute.getUri().equals(URI_SHARE_ALIKE) && attribute.getValue()) {
 					shareAlikeLicenses.add(license);
 				}

@@ -1,7 +1,5 @@
 package org.dice_research.opal.licenses;
 
-import java.util.ArrayList;
-
 /**
  * License identified by its URI and related attributes.
  *
@@ -44,19 +42,6 @@ public class License {
 			throw new NullPointerException();
 		}
 		return uri;
-	}
-
-	/**
-	 * Gets the attributes specified in configuration and maps the attributes to
-	 * boolean values.
-	 */
-	public boolean[] mapToBoolean(Configuration configuration) {
-		ArrayList<String> attributeUris = new ArrayList<String>(configuration.getAttributes().getUris());
-		boolean[] bool = new boolean[attributeUris.size()];
-		for (int i = 0; i < attributeUris.size(); i++) {
-			bool[i] = attributes.getUriToAttributeMap().get(attributeUris.get(i)).getValue();
-		}
-		return bool;
 	}
 
 	public License setAttributes(Attributes attributes) {

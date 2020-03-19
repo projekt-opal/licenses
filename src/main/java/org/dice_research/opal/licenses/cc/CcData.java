@@ -186,7 +186,7 @@ public class CcData {
 
 			// Add true/false
 
-			for (Attribute attribute : knowledgeBase.getAttributes().getObjects()) {
+			for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
 
 				if (attribute instanceof Permission) {
 

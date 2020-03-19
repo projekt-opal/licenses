@@ -84,7 +84,7 @@ public class EdpLcmExperiment {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
-		for (Attribute attribute : kb.getAttributes().getObjects()) {
+		for (Attribute attribute : kb.getAttributes().getList()) {
 			System.out.println(attribute.getClass().getSimpleName());
 			System.out.println(attribute.getUri());
 			System.out.println();
@@ -109,7 +109,7 @@ public class EdpLcmExperiment {
 	protected void addResult(StringBuilder stringBuilder, License licenseA, License licenseB, boolean[] result,
 			List<License> resultingLicenses) throws NullPointerException, IOException {
 
-		for (Attribute license : licenseA.getAttributes().getObjects()) {
+		for (Attribute license : licenseA.getAttributes().getList()) {
 			if (license instanceof Permission) {
 				stringBuilder.append("Per ");
 			} else if (license instanceof Prohibition) {

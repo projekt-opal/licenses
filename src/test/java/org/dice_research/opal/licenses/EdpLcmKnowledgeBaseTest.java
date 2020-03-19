@@ -94,7 +94,7 @@ public class EdpLcmKnowledgeBaseTest {
 		}
 
 		// Values
-		for (Attribute attribute : attributes.getObjects()) {
+		for (Attribute attribute : attributes.getList()) {
 			Assert.assertNotNull(attribute.getUri());
 			Assert.assertFalse(attribute.getUri().isEmpty());
 			if (hasValue) {

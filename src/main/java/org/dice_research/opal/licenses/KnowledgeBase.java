@@ -180,7 +180,7 @@ public class KnowledgeBase {
 
 		// Check single attributes
 		List<License> resultingLicenses = new LinkedList<>();
-		List<Attribute> attributes = getAttributes().getObjects();
+		List<Attribute> attributes = getAttributes().getList();
 		licenseLoop: for (License license : getLicenses()) {
 			boolean[] licenseInternalValues = license.getAttributes().getInternalValuesArray();
 			for (int i = 0; i < internalValues.length; i++) {
@@ -215,7 +215,7 @@ public class KnowledgeBase {
 
 	public String toLines() {
 		StringBuilder stringBuilder = new StringBuilder();
-		for (Attribute attribute : getAttributes().getObjects()) {
+		for (Attribute attribute : getAttributes().getList()) {
 			stringBuilder.append(attribute);
 			stringBuilder.append(System.lineSeparator());
 		}
