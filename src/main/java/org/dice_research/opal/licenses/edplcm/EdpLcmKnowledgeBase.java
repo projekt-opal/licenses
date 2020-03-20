@@ -148,12 +148,12 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 				License license = new License().setUri(uri).setName(csvRecord.get(csvRecord.size() - 1))
 						.setAttributes(attributes);
 
-				if (!derivatesAllowed) {
-					license.derivatesAllowed = false;
-				}
-				if (shareAlike) {
-					license.shareAlike = true;
-				}
+//				if (!derivatesAllowed) {
+//					license.derivatesAllowed = false;
+//				}
+//				if (shareAlike) {
+//					license.shareAlike = true;
+//				}
 
 				addLicense(license);
 			}

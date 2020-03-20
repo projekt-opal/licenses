@@ -10,6 +10,7 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 import org.dice_research.opal.licenses.Attribute;
+import org.dice_research.opal.licenses.BackMapping;
 import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.Operator;
 import org.dice_research.opal.licenses.Permission;
@@ -55,7 +56,7 @@ public class EdpLcmExperiment {
 
 		for (License license : kb.getLicenses()) {
 			List<String> compatible = derivates.getCompatibleUris(license.getUri());
-			List<License> matching = kb.getMatchingLicensesOLDEDP(license);
+			List<License> matching = new BackMapping().getMatchingLicensesOLDEDP(license);
 
 			// Skip equal lists
 			List<String> matchingUris = matching.stream().map(m -> m.getUri()).collect(Collectors.toList());
@@ -63,13 +64,13 @@ public class EdpLcmExperiment {
 				continue;
 			}
 
-			System.out.print(license.getName());
-			if (license.shareAlike) {
-				System.out.print("  shareAlike");
-			}
-			if (!license.derivatesAllowed) {
-				System.out.print("  noDerivates");
-			}
+//			System.out.print(license.getName());
+//			if (license.shareAlike) {
+//				System.out.print("  shareAlike");
+//			}
+//			if (!license.derivatesAllowed) {
+//				System.out.print("  noDerivates");
+//			}
 			System.out.println();
 			System.out.println(license.getUri());
 			System.out.println("Comp (EDP): " + compatible);
@@ -96,7 +97,7 @@ public class EdpLcmExperiment {
 				License licenseB = kb.getUrisToLicenses().get(uriLicenseB);
 				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalValuesArray(),
 						licenseB.getAttributes().getInternalValuesArray());
-				List<License> resultingLicenses = kb.getMatchingLicensesOLDEDP(result);
+				List<License> resultingLicenses = new BackMapping().getMatchingLicensesOLDEDP(result);
 				addResult(stringBuilder, licenseA, licenseB, result, resultingLicenses);
 			}
 		}

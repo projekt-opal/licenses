@@ -2,6 +2,7 @@ package org.dice_research.opal.licenses;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,18 +50,36 @@ public class CcEvaluationTest {
 
 		// Combine licenses to check every cell in matrix
 		for (License licenseA : knowledgeBase.getLicenses()) {
+
+			// TODO
+//			if (!licenseA.getUri().equals("http://creativecommons.org/licenses/by-sa/4.0/"))
+//				continue;
 			for (License licenseB : knowledgeBase.getLicenses()) {
+
+				// TODO
+//				if (!licenseB.getUri().equals("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
+//					continue;
 
 				List<License> inputLicenses = new ArrayList<>(2);
 				inputLicenses.add(licenseA);
 				inputLicenses.add(licenseB);
 
 				// Operator used to compute array of internal values
-				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalValuesArray(),
-						licenseB.getAttributes().getInternalValuesArray());
+				Execution execution = new Execution().setKnowledgeBase(knowledgeBase);
+				Attributes resultAttributes = execution.applyOperator(inputLicenses);
+				boolean[] result = resultAttributes.getInternalValuesArray();
+
+				// TODO
+				if (licenseA.getUri().equals("http://creativecommons.org/licenses/by-sa/4.0/")
+						&& licenseB.getUri().equals("http://creativecommons.org/licenses/by-nc/4.0/")) {
+					System.err.println(Arrays.toString(licenseA.getAttributes().getInternalValuesArray()));
+					System.err.println(Arrays.toString(licenseB.getAttributes().getInternalValuesArray()));
+					System.err.println(Arrays.toString(result));
+				}
 
 				// Back-mapping
-				List<License> resultingLicenses = knowledgeBase.getMatchingLicenses(inputLicenses, result);
+				List<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses, resultAttributes,
+						knowledgeBase);
 
 				// Check license combination and update result status
 				status = status & checkResults(licenseA, licenseB, resultingLicenses, stringBuilder);
@@ -101,12 +120,16 @@ public class CcEvaluationTest {
 			stringBuilder.append("Missing: ");
 			stringBuilder.append(ArrayUtil.intString(mostRestrictive.getAttributes().getValuesArray()));
 			stringBuilder.append(" ");
+			stringBuilder.append(ArrayUtil.intString(mostRestrictive.getAttributes().getInternalValuesArray()));
+			stringBuilder.append(" ");
 			stringBuilder.append(mostRestrictive.getUri());
 			stringBuilder.append(System.lineSeparator());
 			status = false;
 		} else if (!matrixValue && resultingUris.contains(mostRestrictive.getUri())) {
 			stringBuilder.append("Wrong:   ");
 			stringBuilder.append(ArrayUtil.intString(mostRestrictive.getAttributes().getValuesArray()));
+			stringBuilder.append(" ");
+			stringBuilder.append(ArrayUtil.intString(mostRestrictive.getAttributes().getInternalValuesArray()));
 			stringBuilder.append(" ");
 			stringBuilder.append(mostRestrictive.getUri());
 			stringBuilder.append(System.lineSeparator());
@@ -118,10 +141,14 @@ public class CcEvaluationTest {
 			stringBuilder.append("Checked: ");
 			stringBuilder.append(ArrayUtil.intString(licenseA.getAttributes().getValuesArray()));
 			stringBuilder.append(" ");
+			stringBuilder.append(ArrayUtil.intString(licenseA.getAttributes().getInternalValuesArray()));
+			stringBuilder.append(" ");
 			stringBuilder.append(licenseA.toString());
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append("         ");
 			stringBuilder.append(ArrayUtil.intString(licenseB.getAttributes().getValuesArray()));
+			stringBuilder.append(" ");
+			stringBuilder.append(ArrayUtil.intString(licenseB.getAttributes().getInternalValuesArray()));
 			stringBuilder.append(" ");
 			stringBuilder.append(licenseB.toString());
 			stringBuilder.append(System.lineSeparator());

@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Adrian Wilke
  */
-public abstract class Attribute {
+public abstract class Attribute extends MetaAttribute {
 
 	/**
 	 * Gets boolean representation of binary value.
@@ -28,6 +28,7 @@ public abstract class Attribute {
 			throw new ParseException(Integer.toString(binary), 0);
 		}
 	}
+
 	/**
 	 * Gets binary representation of boolean value.
 	 */
@@ -169,9 +170,18 @@ public abstract class Attribute {
 		return this;
 	}
 
+	/**
+	 * Sets value of by parsing the given internal value.
+	 */
+	public Attribute setValueByInternal(boolean internalValue) {
+		this.value = invertForComputation() ? !internalValue : internalValue;
+		return this;
+	}
+
 	@Override
 	public String toString() {
-		return getUri() + (value == null ? "" : "=" + value) + " (" + getType() + ")";
+		return getUri() + (value == null ? "" : "=" + value) + " (" + (isMetaAttribute() ? "Meta-" : "") + getType()
+				+ ")";
 	}
 
 }

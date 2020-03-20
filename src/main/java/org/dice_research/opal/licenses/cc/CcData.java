@@ -116,13 +116,30 @@ public class CcData {
 			extractAttributes(file, permissions, prohibitions, requirements);
 		}
 		for (String attribute : permissions) {
-			knowledgeBase.addAttribute(new Permission().setUri(attribute));
+
+			Attribute permission = new Permission().setUri(attribute);
+
+			// Special case: http://creativecommons.org/ns#DerivativeWorks (Permission)
+			if (permission.getUri().equals(DERIVATIVE_WORKS)) {
+				permission.setIsPermissionOfDerivates(true);
+			}
+
+			knowledgeBase.addAttribute(permission);
+
 		}
 		for (String attribute : prohibitions) {
 			knowledgeBase.addAttribute(new Prohibition().setUri(attribute));
 		}
 		for (String attribute : requirements) {
-			knowledgeBase.addAttribute(new Requirement().setUri(attribute));
+
+			Attribute requirement = new Requirement().setUri(attribute);
+
+			// Special case: http://creativecommons.org/ns#ShareAlike (Requirement)
+			if (requirement.getUri().equals(SHARE_ALIKE)) {
+				requirement.setIsRequirementShareAlike(true);
+			}
+
+			knowledgeBase.addAttribute(requirement);
 		}
 
 		// Add licenses
@@ -190,17 +207,15 @@ public class CcData {
 
 				if (attribute instanceof Permission) {
 
-					license.getAttributes().addAttribute(new Permission().setUri(attribute.getUri())
-							.setValue(permissions.contains(attribute.getUri())));
+					Attribute permission = new Permission().setUri(attribute.getUri())
+							.setValue(permissions.contains(attribute.getUri()));
 
 					// Special case: http://creativecommons.org/ns#DerivativeWorks (Permission)
 					if (attribute.getUri().equals(DERIVATIVE_WORKS)) {
-						if (license.getAttributes().getAttribute(attribute.getUri()).getValue()) {
-							license.derivatesAllowed = true;
-						} else {
-							license.derivatesAllowed = false;
-						}
+						permission.setIsPermissionOfDerivates(true);
 					}
+
+					license.getAttributes().addAttribute(permission);
 
 				}
 
@@ -211,17 +226,15 @@ public class CcData {
 
 				else if (attribute instanceof Requirement) {
 
-					license.getAttributes().addAttribute(new Requirement().setUri(attribute.getUri())
-							.setValue(requirements.contains(attribute.getUri())));
+					Attribute requirement = new Requirement().setUri(attribute.getUri())
+							.setValue(requirements.contains(attribute.getUri()));
 
 					// Special case: http://creativecommons.org/ns#ShareAlike (Requirement)
 					if (attribute.getUri().equals(SHARE_ALIKE)) {
-						if (license.getAttributes().getAttribute(attribute.getUri()).getValue()) {
-							license.shareAlike = true;
-						} else {
-							license.shareAlike = false;
-						}
+						requirement.setIsRequirementShareAlike(true);
 					}
+
+					license.getAttributes().addAttribute(requirement);
 
 				}
 

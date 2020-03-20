@@ -7,9 +7,11 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dice_research.opal.licenses.Attributes;
+import org.dice_research.opal.licenses.BackMapping;
+import org.dice_research.opal.licenses.Execution;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
-import org.dice_research.opal.licenses.Operator;
 
 public class CcExperiment {
 
@@ -42,11 +44,12 @@ public class CcExperiment {
 				inputLicenses.add(licenseB);
 
 				// Operator used to compute array of internal values
-				boolean[] result = new Operator().compute(licenseA.getAttributes().getInternalValuesArray(),
-						licenseB.getAttributes().getInternalValuesArray());
+				Execution execution = new Execution().setKnowledgeBase(knowledgeBase);
+				Attributes resultAttributes = execution.applyOperator(inputLicenses);
 
 				// Back-mapping
-				List<License> resultingLicenses = knowledgeBase.getMatchingLicenses(inputLicenses, result);
+				List<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses, resultAttributes,
+						knowledgeBase);
 
 				results.add(new ResultContainer(licenseA, licenseB, resultingLicenses));
 			}
