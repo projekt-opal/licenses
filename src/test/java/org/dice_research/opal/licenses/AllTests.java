@@ -11,11 +11,15 @@ import org.junit.runners.Suite.SuiteClasses;
 
 		OperatorTest.class,
 
-		CcEvaluationTest.class,
+		CcBackMappingTest.class,
 
-		EpdLcmDerivatesTest.class,
+//		CcEvaluationTest.class,
 
-		EdpLcmKnowledgeBaseTest.class, })
+//		EpdLcmDerivatesTest.class,
+
+//		EdpLcmKnowledgeBaseTest.class, 
+
+})
 
 public class AllTests {
 }

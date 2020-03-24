@@ -3,14 +3,13 @@ package org.dice_research.opal.licenses;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BackMapping {
 
 	/**
 	 * Gets matching licenses based on internal values.
 	 */
-	private List<License> removeMoreRestrictive(Attributes setting, List<License> licenses,
+	protected List<License> removeLessRestrictive(Attributes setting, List<License> licenses,
 			boolean includeMetaAttributes) {
 		List<License> results = new LinkedList<>();
 		List<Attribute> settingAttributes = setting.getList();
@@ -54,7 +53,7 @@ public class BackMapping {
 	/**
 	 * Gets matching licenses based on internal values.
 	 */
-	private List<License> removeLessRestrictive(Attributes setting, List<License> licenses,
+	protected List<License> removeMoreRestrictive(Attributes setting, List<License> licenses,
 			boolean includeMetaAttributes) {
 		List<License> results = new LinkedList<>();
 		List<Attribute> settingAttributes = setting.getList();
@@ -128,15 +127,11 @@ public class BackMapping {
 		}
 
 		// Filter by attributes
-		List<License> resultingLicenses = removeMoreRestrictive(setting, inputLicenses, false);
+		List<License> resultingLicenses = removeLessRestrictive(setting, inputLicenses, false);
 
 		// Share-alike
 		for (License license : resultingLicenses) {
-			List<License> compatible = removeMoreRestrictive(license.getAttributes(), resultingLicenses, true);
-			// TODO
-			if (license.getUri().equals("http://creativecommons.org/licenses/by-nc/4.0/")) {
-				System.out.println(compatible);
-			}
+			List<License> compatible = removeLessRestrictive(license.getAttributes(), resultingLicenses, true);
 			resultingLicenses.retainAll(compatible);
 		}
 		// Does not work
@@ -149,18 +144,12 @@ public class BackMapping {
 //						System.err.println(removeLessRestrictive(inputLicense.getAttributes(), licenseList, false));
 //						resultingLicenses
 //								.retainAll(removeLessRestrictive(inputLicense.getAttributes(), licenseList, false));
-						if (removeLessRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
-resultingLicenses.remove(license);
+						if (removeMoreRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
+							resultingLicenses.remove(license);
 						}
 					}
 				}
 			}
-
-		// TODO
-		List<String> tmp = inputLicenses.stream().map(l -> l.getUri()).collect(Collectors.toList());
-		if (tmp.contains("http://creativecommons.org/licenses/by-nc/4.0/")) {
-			System.err.println(resultingLicenses);
-		}
 
 		return resultingLicenses;
 	}

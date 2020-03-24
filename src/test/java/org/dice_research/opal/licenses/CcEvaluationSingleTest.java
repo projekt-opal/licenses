@@ -1,6 +1,7 @@
 package org.dice_research.opal.licenses;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,13 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests Creative Commons license compatibility.
+ * Tests single pair of Creative Commons license compatibility.
  * 
  * @see https://wiki.creativecommons.org/index.php?title=Wiki/cc_license_compatibility&oldid=70058
  * 
  * @author Adrian Wilke
  */
-public class CcEvaluationTest {
+public class CcEvaluationSingleTest {
 
 	public KnowledgeBase knowledgeBase;
 	public CcMatrix matrix;
@@ -37,12 +38,30 @@ public class CcEvaluationTest {
 	@Test
 	public void testCreativeCommonsCompatibility() {
 		boolean status = true;
+
+		String licenseUriA = CcTestUtils.BY_SA;
+		String licenseUriB = CcTestUtils.BY_NC;
+		System.out.println(licenseUriA);
+		System.out.println(
+				Arrays.toString(knowledgeBase.getLicense(licenseUriA).getAttributes().getInternalValuesArray()));
+		System.out.println(licenseUriB);
+		System.out.println(
+				Arrays.toString(knowledgeBase.getLicense(licenseUriB).getAttributes().getInternalValuesArray()));
+		System.out.println();
+
 		StringBuilder stringBuilder = new StringBuilder();
+		List<License> resultingLicenses = new ArrayList<>(0);
 
 		// Combine licenses to check every cell in matrix
 		for (License licenseA : knowledgeBase.getLicenses()) {
 
+			if (!licenseA.getUri().equals(licenseUriA))
+				continue;
+
 			for (License licenseB : knowledgeBase.getLicenses()) {
+
+				if (!licenseB.getUri().equals(licenseUriB))
+					continue;
 
 				List<License> inputLicenses = new ArrayList<>(2);
 				inputLicenses.add(licenseA);
@@ -51,15 +70,24 @@ public class CcEvaluationTest {
 				// Operator used to compute array of internal values
 				Execution execution = new Execution().setKnowledgeBase(knowledgeBase);
 				Attributes resultAttributes = execution.applyOperator(inputLicenses);
+//				boolean[] result = resultAttributes.getInternalValuesArray();O
 
 				// Back-mapping
-				List<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses,
-						resultAttributes, knowledgeBase);
+				resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses, resultAttributes,
+						knowledgeBase);
 
 				// Check license combination and update result status
 				status = status & checkResults(licenseA, licenseB, resultingLicenses, stringBuilder);
 			}
 		}
+
+		// Print
+		System.out.println("Resulting licenses: ");
+		for (License resultingLicense : resultingLicenses) {
+			System.out.println(resultingLicense);
+		}
+		System.out.println();
+		System.out.println();
 
 		// Print debugging info, if test failed
 		if (!status) {

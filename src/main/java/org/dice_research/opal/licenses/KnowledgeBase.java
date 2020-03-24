@@ -43,6 +43,10 @@ public class KnowledgeBase {
 		return attributes;
 	}
 
+	public License getLicense(String uri) {
+		return urisToLicenses.get(uri);
+	}
+
 	public List<License> getLicenses() {
 		return new ArrayList<License>(urisToLicenses.values());
 	}
