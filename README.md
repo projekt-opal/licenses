@@ -4,7 +4,7 @@ OPAL component managing DCAT licenses.
 
 ## Notes
 
-* [Version 0.0.1](https://github.com/projekt-opal/licenses/releases/tag/0.0.1) contains a KnowledgeGraph based on the European Data Portal Licence Compatibility Matrix. It uses the Open Digital Rights Language (ODRL). Additionally, that version contains code to clean licenses, a first LicenseCombinator version, and SPARQL tools for EDP.
+* [Version 0.0.1](https://github.com/projekt-opal/licenses/tree/0.0.1) contains a KnowledgeGraph based on the European Data Portal Licence Compatibility Matrix. It uses the Open Digital Rights Language (ODRL). Additionally, that version contains code to clean licenses, a first LicenseCombinator version, and SPARQL tools for EDP.
 
 ## Credits
 
