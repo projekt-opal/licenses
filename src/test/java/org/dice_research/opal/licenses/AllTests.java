@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		AttributeTest.class,
 
 		OperatorTest.class,
-		
+
 		CcDataTest.class,
 
 		CcBackMappingTest.class,
@@ -19,9 +19,9 @@ import org.junit.runners.Suite.SuiteClasses;
 
 		CcEvaluationTest.class,
 
-//		EpdLcmDerivatesTest.class,
+		EdpLcmKnowledgeBaseTest.class,
 
-//		EdpLcmKnowledgeBaseTest.class, 
+		EpdLcmDerivatesTest.class,
 
 })
 

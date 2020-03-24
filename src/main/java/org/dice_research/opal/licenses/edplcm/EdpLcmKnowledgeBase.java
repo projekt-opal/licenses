@@ -51,7 +51,16 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 	public static final String ATTRIBUTE_ID_ALIKE = attributeIdToUri("Share Alike");
 
 	protected boolean isLoaded = false;
-	protected boolean skipSublicensing = true;
+
+	/**
+	 * Skip column
+	 */
+	public boolean skipSublicensing = false;
+
+	/**
+	 * Skip row
+	 */
+	public boolean skipCcPdm = true;
 
 	@Override
 	public Attributes getAttributes() {
@@ -114,8 +123,13 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 				typesParsed = true;
 			}
 
+			// Skip row
+			else if (skipCcPdm && csvRecord.get(csvRecord.size() - 1).equals("CC-PDM 1.0")) {
+			}
+
 			// Values
 			else {
+
 				Attributes attributes = new Attributes();
 				for (int i = 0; i < csvRecord.size() - 2; i++) {
 					// Create new attribute based on KB

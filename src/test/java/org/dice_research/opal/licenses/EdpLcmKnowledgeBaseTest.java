@@ -19,10 +19,10 @@ public class EdpLcmKnowledgeBaseTest {
 	/**
 	 * Config: Execute {@link #print()}.
 	 */
-	public static final boolean PRINT = true;
+	public static final boolean PRINT = false;
 
 	// Does not include attribute 'Sublicensing' as it contains a 'N.A.' value.
-	public static final int NUMBER_OF_ATTRIBUTES = 13 - 1;
+	public static final int NUMBER_OF_ATTRIBUTES = 13;
 	public static final int NUMBER_OF_LICENSES = 32;
 
 	@Test
@@ -33,8 +33,21 @@ public class EdpLcmKnowledgeBaseTest {
 
 	@Test
 	public void testLicenses() {
-		Collection<License> licenses = new EdpLcmKnowledgeBase().getUrisToLicenses().values();
-		Assert.assertEquals(NUMBER_OF_LICENSES, licenses.size());
+		EdpLcmKnowledgeBase knowledgeBase = new EdpLcmKnowledgeBase();
+		Collection<License> licenses = knowledgeBase.getUrisToLicenses().values();
+
+		if (knowledgeBase.skipCcPdm) {
+			Assert.assertEquals(NUMBER_OF_LICENSES - 1, licenses.size());
+		} else {
+			Assert.assertEquals(NUMBER_OF_LICENSES, licenses.size());
+		}
+
+		if (knowledgeBase.skipSublicensing) {
+			Assert.assertEquals(NUMBER_OF_ATTRIBUTES - 1, knowledgeBase.getAttributes().getUriToAttributeMap().size());
+		} else {
+			Assert.assertEquals(NUMBER_OF_ATTRIBUTES, knowledgeBase.getAttributes().getUriToAttributeMap().size());
+		}
+
 		for (License license : licenses) {
 			Assert.assertNotNull(license.getUri());
 			Assert.assertFalse(license.getUri().isEmpty());
@@ -61,8 +74,6 @@ public class EdpLcmKnowledgeBaseTest {
 	}
 
 	protected void checkAttributes(Attributes attributes, boolean hasValue) {
-
-		Assert.assertEquals(NUMBER_OF_ATTRIBUTES, attributes.getUriToAttributeMap().size());
 
 		// Keys
 		for (String key : attributes.getUris()) {
