@@ -1,7 +1,6 @@
 package org.dice_research.opal.licenses;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.dice_research.opal.licenses.cc.CcMatrix;
@@ -34,10 +33,6 @@ public class CcEvaluationSingleTest {
 	public void test_SA_NC() {
 		String licenseUriA = CcMatrix.I3_BY_SA;
 		String licenseUriB = CcMatrix.I4_BY_NC;
-
-		licenseUriA = CcMatrix.I0_MARK;
-		licenseUriB = CcMatrix.I2_BY;
-
 		check(licenseUriA, licenseUriB);
 	}
 
@@ -46,14 +41,6 @@ public class CcEvaluationSingleTest {
 	 */
 	public void check(String licenseUriA, String licenseUriB) {
 		boolean status = true;
-
-		System.out.println(licenseUriA);
-		System.out.println(
-				Arrays.toString(knowledgeBase.getLicense(licenseUriA).getAttributes().getInternalValuesArray()));
-		System.out.println(licenseUriB);
-		System.out.println(
-				Arrays.toString(knowledgeBase.getLicense(licenseUriB).getAttributes().getInternalValuesArray()));
-		System.out.println();
 
 		StringBuilder stringBuilder = new StringBuilder();
 		List<License> resultingLicenses = new ArrayList<>(0);
@@ -76,10 +63,9 @@ public class CcEvaluationSingleTest {
 				// Operator used to compute array of internal values
 				Execution execution = new Execution().setKnowledgeBase(knowledgeBase);
 				Attributes resultAttributes = execution.applyOperator(inputLicenses);
-//				boolean[] result = resultAttributes.getInternalValuesArray();O
 
 				// Back-mapping
-				resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses, resultAttributes,
+				resultingLicenses = new BackMapping().getCompatibleLicensesList(inputLicenses, resultAttributes,
 						knowledgeBase);
 
 				// Check license combination and update result status
@@ -87,14 +73,6 @@ public class CcEvaluationSingleTest {
 						& CcEvaluationTest.checkResults(licenseA, licenseB, resultingLicenses, matrix, stringBuilder);
 			}
 		}
-
-		// Print
-		System.out.println("Resulting licenses: ");
-		for (License resultingLicense : resultingLicenses) {
-			System.out.println(resultingLicense);
-		}
-		System.out.println();
-		System.out.println();
 
 		// Print debugging info, if test failed
 		if (!status) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,8 +49,8 @@ public class CcExperiment {
 				Attributes resultAttributes = execution.applyOperator(inputLicenses);
 
 				// Back-mapping
-				List<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses, resultAttributes,
-						knowledgeBase);
+				Set<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses,
+						resultAttributes, knowledgeBase);
 
 				results.add(new ResultContainer(licenseA, licenseB, resultingLicenses));
 			}
@@ -63,12 +64,12 @@ public class CcExperiment {
 	public class ResultContainer {
 		public License licenseA;
 		public License licenseB;
-		public List<License> resultingLicenses;
+		public Set<License> resultingLicenses;
 
-		public ResultContainer(License licenseA, License licenseB, List<License> resultingLicenses) {
+		public ResultContainer(License licenseA, License licenseB, Set<License> resultingLicenses2) {
 			this.licenseA = licenseA;
 			this.licenseB = licenseB;
-			this.resultingLicenses = resultingLicenses;
+			this.resultingLicenses = resultingLicenses2;
 		}
 
 		@Override

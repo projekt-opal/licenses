@@ -10,10 +10,14 @@ import org.junit.runners.Suite.SuiteClasses;
 		AttributeTest.class,
 
 		OperatorTest.class,
+		
+		CcDataTest.class,
 
 		CcBackMappingTest.class,
 
-//		CcEvaluationTest.class,
+		CcEvaluationSingleTest.class,
+
+		CcEvaluationTest.class,
 
 //		EpdLcmDerivatesTest.class,
 

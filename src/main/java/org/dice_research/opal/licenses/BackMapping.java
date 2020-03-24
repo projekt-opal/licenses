@@ -1,8 +1,10 @@
 package org.dice_research.opal.licenses;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class BackMapping {
 
@@ -97,17 +99,27 @@ public class BackMapping {
 	/**
 	 * Gets compatible licenses.
 	 * 
+	 * Creates set of call of
+	 * {@link #getCompatibleLicensesList(List, Attributes, KnowledgeBase)}.
+	 */
+	public Set<License> getCompatibleLicenses(List<License> inputLicenses, Attributes setting,
+			KnowledgeBase knowledgeBase) {
+		return new HashSet<License>(getCompatibleLicensesList(inputLicenses, setting, knowledgeBase));
+	}
+
+	/**
+	 * Gets compatible licenses.
+	 * 
 	 * @param inputLicenses Combination of licenses for which other compatible
-	 *                      licenses are requested.
+	 *                      licenses are requested
 	 * @param setting       Attributes, based on internal values, typically computed
 	 *                      by operator
 	 * @param knowledgeBase Knowledgebase with all known licenses
 	 *
 	 * @return List of compatible licenses
 	 */
-	public List<License> getCompatibleLicenses(List<License> inputLicenses, Attributes setting,
+	public List<License> getCompatibleLicensesList(List<License> inputLicenses, Attributes setting,
 			KnowledgeBase knowledgeBase) {
-		boolean[] internalValues = setting.getInternalValuesArray();
 
 		// No license to check -> no result
 		if (inputLicenses.isEmpty()) {
@@ -129,29 +141,18 @@ public class BackMapping {
 		// Filter by attributes
 		List<License> resultingLicenses = removeLessRestrictive(setting, inputLicenses, false);
 
-		// Share-alike
-//		for (License license : resultingLicenses) {
-//			List<License> compatible = removeLessRestrictive(license.getAttributes(), resultingLicenses, true);
-//			resultingLicenses.retainAll(compatible);
-//		}
-		// Does not work
-		if (Boolean.TRUE)
-			for (License inputLicense : inputLicenses) {
-				for (License license : knowledgeBase.getLicenses()) {
-					if (inputLicense.isShareAlike() && license.isShareAlike()) {
-						List<License> licenseList = new LinkedList<>();
-						licenseList.add(license);
-//						System.err.println(removeLessRestrictive(inputLicense.getAttributes(), licenseList, false));
-//						resultingLicenses
-//								.retainAll(removeLessRestrictive(inputLicense.getAttributes(), licenseList, false));
-						if (removeMoreRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
-							
-//							System.out.println(" " + inputLicense + "  REM: " + license);
-							resultingLicenses.remove(license);
-						}
+		// Check share-alike restrictions
+		for (License inputLicense : inputLicenses) {
+			for (License license : knowledgeBase.getLicenses()) {
+				if (inputLicense.isShareAlike()) {
+					List<License> licenseList = new LinkedList<>();
+					licenseList.add(license);
+					if (removeMoreRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
+						resultingLicenses.remove(license);
 					}
 				}
 			}
+		}
 
 		return resultingLicenses;
 	}

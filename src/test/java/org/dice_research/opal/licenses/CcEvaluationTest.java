@@ -53,7 +53,7 @@ public class CcEvaluationTest {
 				Attributes resultAttributes = execution.applyOperator(inputLicenses);
 
 				// Back-mapping
-				List<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses,
+				List<License> resultingLicenses = new BackMapping().getCompatibleLicensesList(inputLicenses,
 						resultAttributes, knowledgeBase);
 
 				// Check license combination and update result status
