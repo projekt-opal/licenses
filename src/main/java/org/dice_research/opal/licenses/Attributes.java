@@ -13,6 +13,15 @@ import java.util.Set;
  */
 public class Attributes {
 
+	public boolean isRequirementShareAlike() {
+		for (Attribute attribute : getList()) {
+			if (attribute.isRequirementShareAlike()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Insertion-ordered map: Attribute-URI to Attribute.
 	 */

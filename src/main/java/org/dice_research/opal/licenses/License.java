@@ -7,6 +7,10 @@ package org.dice_research.opal.licenses;
  */
 public class License {
 
+	public boolean isRequirementShareAlike() {
+		return getAttributes().isRequirementShareAlike();
+	}
+
 	private Attributes attributes = new Attributes();
 	private String name;
 	private String uri;

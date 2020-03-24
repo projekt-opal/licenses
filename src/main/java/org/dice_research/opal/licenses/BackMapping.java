@@ -3,38 +3,84 @@ package org.dice_research.opal.licenses;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BackMapping {
 
 	/**
 	 * Gets matching licenses based on internal values.
 	 */
-	private List<License> getMatching(Attributes setting, List<License> licenses, boolean includeMetaAttributes) {
+	private List<License> removeMoreRestrictive(Attributes setting, List<License> licenses,
+			boolean includeMetaAttributes) {
 		List<License> results = new LinkedList<>();
-		List<Attribute> attributes = setting.getList();
-		boolean[] internalValues = setting.getInternalValuesArray();
+		List<Attribute> settingAttributes = setting.getList();
+		boolean[] settingValues = setting.getValuesArray();
 		licenseLoop: for (License license : licenses) {
-			boolean[] licenseInternalValues = license.getAttributes().getInternalValuesArray();
-			valueLoop: for (int i = 0; i < internalValues.length; i++) {
+			boolean[] licenseValues = license.getAttributes().getValuesArray();
+			valueLoop: for (int i = 0; i < settingValues.length; i++) {
 
-				if (!includeMetaAttributes && attributes.get(i).isMetaAttribute()) {
+				if (!includeMetaAttributes && settingAttributes.get(i).isMetaAttribute()) {
 					continue valueLoop;
 				}
 
-				if (attributes.get(i).getType().equals(Permission.TYPE)) {
-					if (internalValues[i] != licenseInternalValues[i]) {
+				if (settingAttributes.get(i).getType().equals(Permission.TYPE)) {
+					// TODO
+				}
+
+				else if (settingAttributes.get(i).getType().equals(Prohibition.TYPE)) {
+					// Not compatible: Setting restricted and license open
+					if (settingValues[i] && !licenseValues[i]) {
 						continue licenseLoop;
 					}
 				}
 
-				else if (attributes.get(i).getType().equals(Prohibition.TYPE)) {
-					if (internalValues[i] && !licenseInternalValues[i]) {
+				else if (settingAttributes.get(i).getType().equals(Requirement.TYPE)) {
+					// Not compatible: Setting restricted and license open
+					if (settingValues[i] && !licenseValues[i]) {
 						continue licenseLoop;
 					}
 				}
 
-				else if (attributes.get(i).getType().equals(Requirement.TYPE)) {
-					if (internalValues[i] && !licenseInternalValues[i]) {
+				else {
+					throw new RuntimeException("Unknown type");
+				}
+			}
+
+			results.add(license);
+		}
+		return results;
+	}
+
+	/**
+	 * Gets matching licenses based on internal values.
+	 */
+	private List<License> removeLessRestrictive(Attributes setting, List<License> licenses,
+			boolean includeMetaAttributes) {
+		List<License> results = new LinkedList<>();
+		List<Attribute> settingAttributes = setting.getList();
+		boolean[] settingValues = setting.getValuesArray();
+		licenseLoop: for (License license : licenses) {
+			boolean[] licenseValues = license.getAttributes().getValuesArray();
+			valueLoop: for (int i = 0; i < settingValues.length; i++) {
+
+				if (!includeMetaAttributes && settingAttributes.get(i).isMetaAttribute()) {
+					continue valueLoop;
+				}
+
+				if (settingAttributes.get(i).getType().equals(Permission.TYPE)) {
+					// TODO
+				}
+
+				else if (settingAttributes.get(i).getType().equals(Prohibition.TYPE)) {
+					// Not compatible: Setting restricted and license open
+					if (!settingValues[i] && licenseValues[i]) {
+						continue licenseLoop;
+					}
+				}
+
+				else if (settingAttributes.get(i).getType().equals(Requirement.TYPE)) {
+					// Not compatible: Setting restricted and license open
+					if (!settingValues[i] && licenseValues[i]) {
 						continue licenseLoop;
 					}
 				}
@@ -81,28 +127,40 @@ public class BackMapping {
 			}
 		}
 
-		// Check, if there is a share-alike attribute
-		// TODO
-//		String shareAlikeAttribute = null;
-//		for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
-//			if (attribute.isRequirementShareAlike()) {
-//				shareAlikeAttribute = attribute.getUri();
-//				break;
-//			}
-//		}
-//		// TODO
-//		ArrayList<License> listCopy = new ArrayList<>(inputLicenses);
-//		if (shareAlikeAttribute != null) {
-//			for (License inputLicense : inputLicenses) {
-//				if (inputLicense.getAttributes().getAttribute(shareAlikeAttribute).getValue()) {
-//					List<License> compatible = shareAlikeCompatibility(inputLicense, inputLicenses);
-//					listCopy.retainAll(compatible);
-//				}
-//			}
-//		}
+		// Filter by attributes
+		List<License> resultingLicenses = removeMoreRestrictive(setting, inputLicenses, false);
 
-		// TODO do not include meta attributes
-		List<License> resultingLicenses = getMatching(setting, knowledgeBase.getLicenses(), true);
+		// Share-alike
+		for (License license : resultingLicenses) {
+			List<License> compatible = removeMoreRestrictive(license.getAttributes(), resultingLicenses, true);
+			// TODO
+			if (license.getUri().equals("http://creativecommons.org/licenses/by-nc/4.0/")) {
+				System.out.println(compatible);
+			}
+			resultingLicenses.retainAll(compatible);
+		}
+		// Does not work
+		if (Boolean.FALSE)
+			for (License inputLicense : inputLicenses) {
+				for (License license : knowledgeBase.getLicenses()) {
+					if (inputLicense.isRequirementShareAlike() && license.isRequirementShareAlike()) {
+						List<License> licenseList = new LinkedList<>();
+						licenseList.add(license);
+//						System.err.println(removeLessRestrictive(inputLicense.getAttributes(), licenseList, false));
+//						resultingLicenses
+//								.retainAll(removeLessRestrictive(inputLicense.getAttributes(), licenseList, false));
+						if (removeLessRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
+resultingLicenses.remove(license);
+						}
+					}
+				}
+			}
+
+		// TODO
+		List<String> tmp = inputLicenses.stream().map(l -> l.getUri()).collect(Collectors.toList());
+		if (tmp.contains("http://creativecommons.org/licenses/by-nc/4.0/")) {
+			System.err.println(resultingLicenses);
+		}
 
 		return resultingLicenses;
 	}

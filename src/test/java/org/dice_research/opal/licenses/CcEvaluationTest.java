@@ -52,13 +52,15 @@ public class CcEvaluationTest {
 		for (License licenseA : knowledgeBase.getLicenses()) {
 
 			// TODO
-//			if (!licenseA.getUri().equals("http://creativecommons.org/licenses/by-sa/4.0/"))
-//				continue;
+			if (Boolean.FALSE)
+				if (!licenseA.getUri().equals("http://creativecommons.org/licenses/by-sa/4.0/"))
+					continue;
 			for (License licenseB : knowledgeBase.getLicenses()) {
 
 				// TODO
-//				if (!licenseB.getUri().equals("http://creativecommons.org/licenses/by-nc-sa/4.0/"))
-//					continue;
+				if (Boolean.FALSE)
+					if (!licenseB.getUri().equals("http://creativecommons.org/licenses/by-sa/4.0/"))
+						continue;
 
 				List<License> inputLicenses = new ArrayList<>(2);
 				inputLicenses.add(licenseA);
@@ -78,8 +80,8 @@ public class CcEvaluationTest {
 				}
 
 				// Back-mapping
-				List<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses, resultAttributes,
-						knowledgeBase);
+				List<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses,
+						resultAttributes, knowledgeBase);
 
 				// Check license combination and update result status
 				status = status & checkResults(licenseA, licenseB, resultingLicenses, stringBuilder);
