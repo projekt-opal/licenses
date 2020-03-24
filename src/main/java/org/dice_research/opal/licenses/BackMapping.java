@@ -157,12 +157,4 @@ public class BackMapping {
 		return resultingLicenses;
 	}
 
-	public List<License> getMatchingLicensesOLDEDP(License license) {
-		throw new RuntimeException("code removed");
-	}
-
-	public List<License> getMatchingLicensesOLDEDP(boolean[] result) {
-		throw new RuntimeException("code removed");
-	}
-
 }

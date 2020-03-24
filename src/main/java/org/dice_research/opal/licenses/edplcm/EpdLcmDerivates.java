@@ -13,6 +13,9 @@ import java.util.Vector;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.dice_research.opal.licenses.Attribute;
 import org.dice_research.opal.licenses.transform.EdpLcmUriMapping;
 
 /**
@@ -23,6 +26,8 @@ import org.dice_research.opal.licenses.transform.EdpLcmUriMapping;
  * @author Adrian Wilke
  */
 public class EpdLcmDerivates {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final String RESOURCE_CSV = "edp-licence-compatibility-matrix-simple-derivative.csv";
 	protected Vector<Vector<Boolean>> matrix = new Vector<>();
@@ -112,4 +117,29 @@ public class EpdLcmDerivates {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		List<String> uris = new ArrayList<>();
+		try {
+			uris = getUris();
+		} catch (IOException e) {
+			LOGGER.error(e);
+		}
+		stringBuilder.append(uris);
+		stringBuilder.append(System.lineSeparator());
+		for (String uriA : uris) {
+			for (String uriB : uris) {
+				try {
+					stringBuilder.append(Attribute.booleanToBinary(getValue(uriA, uriB)));
+				} catch (IOException e) {
+					LOGGER.error(e);
+				}
+				stringBuilder.append(" ");
+			}
+			stringBuilder.append(uriA);
+			stringBuilder.append(System.lineSeparator());
+		}
+		return stringBuilder.toString();
+	}
 }
