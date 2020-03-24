@@ -13,9 +13,9 @@ import java.util.Set;
  */
 public class Attributes {
 
-	public boolean isRequirementShareAlike() {
+	public boolean isShareAlike() {
 		for (Attribute attribute : getList()) {
-			if (attribute.isRequirementShareAlike()) {
+			if (attribute.isTypeRequirementShareAlike() && attribute.getValue()) {
 				return true;
 			}
 		}

@@ -121,7 +121,7 @@ public class CcData {
 
 			// Special case: http://creativecommons.org/ns#DerivativeWorks (Permission)
 			if (permission.getUri().equals(DERIVATIVE_WORKS)) {
-				permission.setIsPermissionOfDerivates(true);
+				permission.setIsTypePermissionOfDerivates(true);
 			}
 
 			knowledgeBase.addAttribute(permission);
@@ -136,7 +136,7 @@ public class CcData {
 
 			// Special case: http://creativecommons.org/ns#ShareAlike (Requirement)
 			if (requirement.getUri().equals(SHARE_ALIKE)) {
-				requirement.setIsRequirementShareAlike(true);
+				requirement.setIsTypeRequirementShareAlike(true);
 			}
 
 			knowledgeBase.addAttribute(requirement);
@@ -201,7 +201,7 @@ public class CcData {
 				requirements.add(stmtIterator.next().getObject().asResource().getURI());
 			}
 
-			// Add true/false
+			// Add value true/false
 
 			for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
 
@@ -212,7 +212,7 @@ public class CcData {
 
 					// Special case: http://creativecommons.org/ns#DerivativeWorks (Permission)
 					if (attribute.getUri().equals(DERIVATIVE_WORKS)) {
-						permission.setIsPermissionOfDerivates(true);
+						permission.setIsTypePermissionOfDerivates(true);
 					}
 
 					license.getAttributes().addAttribute(permission);
@@ -231,7 +231,7 @@ public class CcData {
 
 					// Special case: http://creativecommons.org/ns#ShareAlike (Requirement)
 					if (attribute.getUri().equals(SHARE_ALIKE)) {
-						requirement.setIsRequirementShareAlike(true);
+						requirement.setIsTypeRequirementShareAlike(true);
 					}
 
 					license.getAttributes().addAttribute(requirement);

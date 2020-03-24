@@ -3,6 +3,7 @@ package org.dice_research.opal.licenses;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.dice_research.opal.licenses.cc.CcMatrix;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +24,10 @@ public class CcBackMappingTest extends BackMapping {
 	@Before
 	public void setUp() {
 		knowledgeBase = CcTestUtils.getKnowledgeBase();
-		BY = knowledgeBase.getLicense(CcTestUtils.BY);
-		BY_NC = knowledgeBase.getLicense(CcTestUtils.BY_NC);
-		BY_SA = knowledgeBase.getLicense(CcTestUtils.BY_SA);
-		BY_NC_SA = knowledgeBase.getLicense(CcTestUtils.BY_NC_SA);
+		BY = knowledgeBase.getLicense(CcMatrix.I2_BY);
+		BY_NC = knowledgeBase.getLicense(CcMatrix.I4_BY_NC);
+		BY_SA = knowledgeBase.getLicense(CcMatrix.I3_BY_SA);
+		BY_NC_SA = knowledgeBase.getLicense(CcMatrix.I6_BY_NC_SA);
 	}
 
 	/**
@@ -35,9 +36,6 @@ public class CcBackMappingTest extends BackMapping {
 	 */
 	@Test
 	public void testRemoveLessRestrictive() {
-		License BY = knowledgeBase.getLicense(CcTestUtils.BY);
-		License BY_NC = knowledgeBase.getLicense(CcTestUtils.BY_NC);
-
 		Attributes setting = BY_NC.getAttributes();
 		List<License> licenses = new LinkedList<>();
 		licenses.add(BY);

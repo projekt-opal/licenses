@@ -116,7 +116,7 @@ public class BackMapping {
 
 		// Check, if there is a derivates-allowed attribute
 		for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
-			if (attribute.isPermissionOfDerivates()) {
+			if (attribute.isTypePermissionOfDerivates()) {
 				// If there is one license not allowing derivates -> no result
 				for (License license : inputLicenses) {
 					if (!license.getAttributes().getAttribute(attribute.getUri()).getValue()) {
@@ -130,21 +130,23 @@ public class BackMapping {
 		List<License> resultingLicenses = removeLessRestrictive(setting, inputLicenses, false);
 
 		// Share-alike
-		for (License license : resultingLicenses) {
-			List<License> compatible = removeLessRestrictive(license.getAttributes(), resultingLicenses, true);
-			resultingLicenses.retainAll(compatible);
-		}
+//		for (License license : resultingLicenses) {
+//			List<License> compatible = removeLessRestrictive(license.getAttributes(), resultingLicenses, true);
+//			resultingLicenses.retainAll(compatible);
+//		}
 		// Does not work
-		if (Boolean.FALSE)
+		if (Boolean.TRUE)
 			for (License inputLicense : inputLicenses) {
 				for (License license : knowledgeBase.getLicenses()) {
-					if (inputLicense.isRequirementShareAlike() && license.isRequirementShareAlike()) {
+					if (inputLicense.isShareAlike() && license.isShareAlike()) {
 						List<License> licenseList = new LinkedList<>();
 						licenseList.add(license);
 //						System.err.println(removeLessRestrictive(inputLicense.getAttributes(), licenseList, false));
 //						resultingLicenses
 //								.retainAll(removeLessRestrictive(inputLicense.getAttributes(), licenseList, false));
 						if (removeMoreRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
+							
+//							System.out.println(" " + inputLicense + "  REM: " + license);
 							resultingLicenses.remove(license);
 						}
 					}

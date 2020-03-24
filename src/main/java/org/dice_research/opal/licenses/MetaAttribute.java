@@ -9,28 +9,28 @@ package org.dice_research.opal.licenses;
  */
 public abstract class MetaAttribute {
 
-	private boolean isPermissionOfDerivates = false;
-	private boolean isRequirementShareAlike = false;
+	private boolean isTypePermissionOfDerivates = false;
+	private boolean isTypeRequirementShareAlike = false;
 
 	public boolean isMetaAttribute() {
-		return isPermissionOfDerivates || isRequirementShareAlike;
+		return isTypePermissionOfDerivates || isTypeRequirementShareAlike;
 	}
 
-	public boolean isPermissionOfDerivates() {
-		return isPermissionOfDerivates;
+	public boolean isTypePermissionOfDerivates() {
+		return isTypePermissionOfDerivates;
 	}
 
-	public boolean isRequirementShareAlike() {
-		return isRequirementShareAlike;
+	public boolean isTypeRequirementShareAlike() {
+		return isTypeRequirementShareAlike;
 	}
 
-	public MetaAttribute setIsPermissionOfDerivates(boolean isPermissionOfDerivates) {
-		this.isPermissionOfDerivates = isPermissionOfDerivates;
+	public MetaAttribute setIsTypePermissionOfDerivates(boolean isPermissionOfDerivates) {
+		this.isTypePermissionOfDerivates = isPermissionOfDerivates;
 		return this;
 	}
 
-	public MetaAttribute setIsRequirementShareAlike(boolean isRequirementShareAlike) {
-		this.isRequirementShareAlike = isRequirementShareAlike;
+	public MetaAttribute setIsTypeRequirementShareAlike(boolean isRequirementShareAlike) {
+		this.isTypeRequirementShareAlike = isRequirementShareAlike;
 		return this;
 	}
 

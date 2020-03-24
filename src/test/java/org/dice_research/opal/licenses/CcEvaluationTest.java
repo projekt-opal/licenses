@@ -57,7 +57,7 @@ public class CcEvaluationTest {
 						resultAttributes, knowledgeBase);
 
 				// Check license combination and update result status
-				status = status & checkResults(licenseA, licenseB, resultingLicenses, stringBuilder);
+				status = status & checkResults(licenseA, licenseB, resultingLicenses, matrix, stringBuilder);
 			}
 		}
 
@@ -78,8 +78,8 @@ public class CcEvaluationTest {
 	/**
 	 * Checks single license. Used in {@link #testCreativeCommonsCompatibility()}.
 	 */
-	private boolean checkResults(License licenseA, License licenseB, List<License> resultingLicenses,
-			StringBuilder stringBuilder) {
+	public static boolean checkResults(License licenseA, License licenseB, List<License> resultingLicenses,
+			CcMatrix matrix, StringBuilder stringBuilder) {
 		boolean status = true;
 		List<String> resultingUris = resultingLicenses.stream().map(l -> l.getUri()).collect(Collectors.toList());
 		boolean matrixValue = matrix.getBoolean(licenseA.getUri(), licenseB.getUri());
