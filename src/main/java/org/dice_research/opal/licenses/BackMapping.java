@@ -25,7 +25,7 @@ public class BackMapping {
 				}
 
 				if (settingAttributes.get(i).getType().equals(Permission.TYPE)) {
-					// TODO
+					// TODO Map permissions
 				}
 
 				else if (settingAttributes.get(i).getType().equals(Prohibition.TYPE)) {
@@ -69,7 +69,7 @@ public class BackMapping {
 				}
 
 				if (settingAttributes.get(i).getType().equals(Permission.TYPE)) {
-					// TODO
+					// TODO Map permissions
 				}
 
 				else if (settingAttributes.get(i).getType().equals(Prohibition.TYPE)) {

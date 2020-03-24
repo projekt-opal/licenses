@@ -17,12 +17,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dice_research.opal.licenses.Attribute;
+import org.dice_research.opal.licenses.AttributeFactory;
 import org.dice_research.opal.licenses.Attributes;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
-import org.dice_research.opal.licenses.Permission;
-import org.dice_research.opal.licenses.Prohibition;
-import org.dice_research.opal.licenses.Requirement;
 
 /**
  * EDP License Compatibility Matrix - Knowledge base.
@@ -89,9 +87,6 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 		Iterable<CSVRecord> csvRecords = CSVFormat.DEFAULT.parse(bufferedReader);
 		for (CSVRecord csvRecord : csvRecords) {
 
-			boolean derivatesAllowed = true;
-			boolean shareAlike = false;
-
 			// First line: Collect IDs
 			if (!idsParsed) {
 				for (int i = 0; i < csvRecord.size() - 2; i++) {
@@ -106,7 +101,15 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 					if (skipSublicensing && attributeUris.get(i).equals(ATTRIBUTE_ID_SUBLICENSING)) {
 						continue;
 					}
-					addAttribute(createAttribute(attributeUris.get(i), csvRecord.get(i)));
+
+					Attribute attribute = AttributeFactory.get().createAttribute(csvRecord.get(i),
+							attributeUris.get(i));
+					if (attributeUris.get(i).equals(ATTRIBUTE_ID_ALIKE)) {
+						attribute.setIsTypeRequirementShareAlike(true);
+					} else if (attributeUris.get(i).equals(ATTRIBUTE_ID_DERIVATES)) {
+						attribute.setIsTypePermissionOfDerivates(true);
+					}
+					addAttribute(attribute);
 				}
 				typesParsed = true;
 			}
@@ -120,19 +123,9 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 						continue;
 					}
 
-					if (attributeUris.get(i).equals(ATTRIBUTE_ID_DERIVATES)) {
-						if (csvRecord.get(i).equals("0")) {
-							derivatesAllowed = false;
-						}
-					}
-					if (attributeUris.get(i).equals(ATTRIBUTE_ID_ALIKE)) {
-						if (csvRecord.get(i).equals("1")) {
-							shareAlike = true;
-						}
-					}
+					Attribute attribute = AttributeFactory.get().createAttribute(
+							super.getAttributes().getUriToAttributeMap().get(attributeUris.get(i)), false);
 
-					Attribute attribute = createAttribute(
-							super.getAttributes().getUriToAttributeMap().get(attributeUris.get(i)));
 					try {
 						addAttributeValue(attribute, csvRecord.get(i));
 					} catch (IllegalArgumentException e) {
@@ -148,18 +141,12 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 				License license = new License().setUri(uri).setName(csvRecord.get(csvRecord.size() - 1))
 						.setAttributes(attributes);
 
-//				if (!derivatesAllowed) {
-//					license.derivatesAllowed = false;
-//				}
-//				if (shareAlike) {
-//					license.shareAlike = true;
-//				}
-
 				addLicense(license);
 			}
 		}
 
 		// Load share-alike
+		// TODO: Check EDP, if this can be removed
 
 		inputStream = getClass().getClassLoader().getResourceAsStream(RESOURCE_TXT);
 		String licenseUri = null;
@@ -183,47 +170,6 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 
 		isLoaded = true;
 		return this;
-	}
-
-	/**
-	 * Creates Attribute based on type.
-	 * 
-	 * @throws IllegalArgumentException if the given type is unknown
-	 */
-	protected Attribute createAttribute(String uri, String type) {
-		Attribute attribute;
-		if (type.equals(Permission.TYPE)) {
-			attribute = new Permission();
-		} else if (type.equals(Prohibition.TYPE)) {
-			attribute = new Prohibition();
-		} else if (type.equals(Requirement.TYPE)) {
-			attribute = new Requirement();
-		} else {
-			throw new IllegalArgumentException("Unkown type: " + type + ", URI: " + uri);
-		}
-		return attribute.setUri(uri);
-	}
-
-	/**
-	 * Creates new attribute instance based on given attribute.
-	 * 
-	 * @throws IllegalArgumentException if the given type is unknown
-	 */
-	protected Attribute createAttribute(Attribute attribute) {
-		Attribute newAttribute;
-		if (attribute instanceof Permission) {
-			newAttribute = new Permission();
-		} else if (attribute instanceof Prohibition) {
-			newAttribute = new Prohibition();
-		} else if (attribute instanceof Requirement) {
-			newAttribute = new Requirement();
-		} else {
-			throw new IllegalArgumentException("Unkown type: " + attribute);
-		}
-		if (attribute.hasValue()) {
-			newAttribute.setValue(attribute.getValue());
-		}
-		return newAttribute.setUri(attribute.getUri());
 	}
 
 	/**
