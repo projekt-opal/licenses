@@ -94,6 +94,11 @@ public abstract class Attribute extends MetaAttribute {
 	}
 
 	/**
+	 * Gets short representation of attribute.
+	 */
+	public abstract String getShortForm();
+
+	/**
 	 * Gets type of attribute.
 	 */
 	public abstract String getType();

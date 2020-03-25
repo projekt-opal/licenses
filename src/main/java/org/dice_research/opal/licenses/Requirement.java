@@ -14,6 +14,15 @@ public class Requirement extends Attribute {
 
 	public static final String TYPE = Requirement.class.getSimpleName();
 
+	@Override
+	public String getShortForm() {
+		if (isMetaAttribute()) {
+			return "Q";
+		} else {
+			return "q";
+		}
+	}
+
 	/**
 	 * Gets type of attribute.
 	 */

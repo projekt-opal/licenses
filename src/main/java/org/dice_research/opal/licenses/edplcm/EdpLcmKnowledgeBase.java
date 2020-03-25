@@ -151,7 +151,7 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 				}
 
 				String uri = csvRecord.get(csvRecord.size() - 2);
-
+				attributes.sort();
 				License license = new License().setUri(uri).setName(csvRecord.get(csvRecord.size() - 1))
 						.setAttributes(attributes);
 

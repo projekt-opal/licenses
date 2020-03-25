@@ -9,6 +9,67 @@ import java.util.Set;
 public class BackMapping {
 
 	/**
+	 * Gets compatible licenses.
+	 * 
+	 * Creates set of call of
+	 * {@link #getCompatibleLicensesList(List, Attributes, KnowledgeBase)}.
+	 */
+	public Set<License> getCompatibleLicenses(List<License> inputLicenses, Attributes setting,
+			KnowledgeBase knowledgeBase) {
+		return new HashSet<License>(getCompatibleLicensesList(inputLicenses, setting, knowledgeBase));
+	}
+
+	/**
+	 * Gets compatible licenses.
+	 * 
+	 * @param inputLicenses Combination of licenses for which other compatible
+	 *                      licenses are requested
+	 * @param setting       Attributes, based on internal values, typically computed
+	 *                      by operator
+	 * @param knowledgeBase Knowledgebase with all known licenses
+	 *
+	 * @return List of compatible licenses
+	 */
+	public List<License> getCompatibleLicensesList(List<License> inputLicenses, Attributes setting,
+			KnowledgeBase knowledgeBase) {
+
+		// No license to check -> no result
+		if (inputLicenses.isEmpty()) {
+			return new ArrayList<>(0);
+		}
+
+		// Check, if there is a derivates-allowed attribute
+		for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
+			if (attribute.isTypePermissionOfDerivates()) {
+				// If there is one license not allowing derivates -> no result
+				for (License license : inputLicenses) {
+					if (!license.getAttributes().getAttribute(attribute.getUri()).getValue()) {
+						return new ArrayList<>(0);
+					}
+				}
+			}
+		}
+
+		// Filter by attributes
+		List<License> resultingLicenses = removeLessRestrictive(setting, inputLicenses, false);
+
+		// Check share-alike restrictions
+		for (License inputLicense : inputLicenses) {
+			for (License license : knowledgeBase.getLicenses()) {
+				if (inputLicense.isShareAlike()) {
+					List<License> licenseList = new LinkedList<>();
+					licenseList.add(license);
+					if (removeMoreRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
+						resultingLicenses.remove(license);
+					}
+				}
+			}
+		}
+
+		return resultingLicenses;
+	}
+
+	/**
 	 * Gets matching licenses based on internal values.
 	 */
 	protected List<License> removeLessRestrictive(Attributes setting, List<License> licenses,
@@ -94,67 +155,6 @@ public class BackMapping {
 			results.add(license);
 		}
 		return results;
-	}
-
-	/**
-	 * Gets compatible licenses.
-	 * 
-	 * Creates set of call of
-	 * {@link #getCompatibleLicensesList(List, Attributes, KnowledgeBase)}.
-	 */
-	public Set<License> getCompatibleLicenses(List<License> inputLicenses, Attributes setting,
-			KnowledgeBase knowledgeBase) {
-		return new HashSet<License>(getCompatibleLicensesList(inputLicenses, setting, knowledgeBase));
-	}
-
-	/**
-	 * Gets compatible licenses.
-	 * 
-	 * @param inputLicenses Combination of licenses for which other compatible
-	 *                      licenses are requested
-	 * @param setting       Attributes, based on internal values, typically computed
-	 *                      by operator
-	 * @param knowledgeBase Knowledgebase with all known licenses
-	 *
-	 * @return List of compatible licenses
-	 */
-	public List<License> getCompatibleLicensesList(List<License> inputLicenses, Attributes setting,
-			KnowledgeBase knowledgeBase) {
-
-		// No license to check -> no result
-		if (inputLicenses.isEmpty()) {
-			return new ArrayList<>(0);
-		}
-
-		// Check, if there is a derivates-allowed attribute
-		for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
-			if (attribute.isTypePermissionOfDerivates()) {
-				// If there is one license not allowing derivates -> no result
-				for (License license : inputLicenses) {
-					if (!license.getAttributes().getAttribute(attribute.getUri()).getValue()) {
-						return new ArrayList<>(0);
-					}
-				}
-			}
-		}
-
-		// Filter by attributes
-		List<License> resultingLicenses = removeLessRestrictive(setting, inputLicenses, false);
-
-		// Check share-alike restrictions
-		for (License inputLicense : inputLicenses) {
-			for (License license : knowledgeBase.getLicenses()) {
-				if (inputLicense.isShareAlike()) {
-					List<License> licenseList = new LinkedList<>();
-					licenseList.add(license);
-					if (removeMoreRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
-						resultingLicenses.remove(license);
-					}
-				}
-			}
-		}
-
-		return resultingLicenses;
 	}
 
 }

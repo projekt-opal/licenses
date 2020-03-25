@@ -14,6 +14,15 @@ public class Prohibition extends Attribute {
 
 	public static final String TYPE = Prohibition.class.getSimpleName();
 
+	@Override
+	public String getShortForm() {
+		if (isMetaAttribute()) {
+			return "H";
+		} else {
+			return "h";
+		}
+	}
+
 	/**
 	 * Gets type of attribute.
 	 */

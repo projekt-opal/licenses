@@ -14,6 +14,15 @@ public class Permission extends Attribute {
 
 	public static final String TYPE = Permission.class.getSimpleName();
 
+	@Override
+	public String getShortForm() {
+		if (isMetaAttribute()) {
+			return "M";
+		} else {
+			return "m";
+		}
+	}
+
 	/**
 	 * Gets type of attribute.
 	 */

@@ -2,7 +2,6 @@ package org.dice_research.opal.licenses;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,8 +42,6 @@ public class Attributes {
 	}
 
 	/**
-	 * TODO: old implementation including meta attributes
-	 * 
 	 * Gets array of internal attribute values for computation. (E.g. values of
 	 * permissions are inverted.)
 	 */
@@ -60,27 +57,12 @@ public class Attributes {
 	/**
 	 * Gets array of internal attribute values for computation. (E.g. values of
 	 * permissions are inverted.)
-	 * 
-	 * Does not include special attributes definded in {@link MetaAttribute}.
 	 */
-	public boolean[] getInternalValuesArrayNew() {
-		// Sort attributes to maintain same order for each license
-		List<Attribute> attributesList = getList();
-		attributesList.sort(new AttributeComparator());
-
-		// Get non-meta attributes
-		List<Boolean> values = new LinkedList<>();
-		for (Attribute attribute : attributesList) {
-			if (!attribute.isMetaAttribute()) {
-				values.add(attribute.getInternalValue());
-			}
-		}
-
-		// Put values to array
-		boolean[] array = new boolean[values.size()];
+	public String[] getShortFormArray() {
+		String[] array = new String[attributes.size()];
 		int counter = 0;
-		for (Boolean value : values) {
-			array[counter++] = value;
+		for (Attribute attribute : attributes.values()) {
+			array[counter++] = attribute.getShortForm();
 		}
 		return array;
 	}

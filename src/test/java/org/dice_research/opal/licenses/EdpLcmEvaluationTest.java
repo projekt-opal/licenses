@@ -2,6 +2,7 @@ package org.dice_research.opal.licenses;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class EdpLcmEvaluationTest {
 	@Test
 	public void test() throws IOException {
 		boolean status = true;
+		int errorCounter = 0;
 		StringBuilder stringBuilder = new StringBuilder();
 
 		// Combine licenses to check every cell in matrix
@@ -55,7 +57,11 @@ public class EdpLcmEvaluationTest {
 						resultAttributes, knowledgeBase);
 
 				// Check license combination and update result status
-				status = status & checkResults(licenseA, licenseB, resultingLicenses, derivates, stringBuilder);
+				boolean result = checkResults(licenseA, licenseB, resultingLicenses, derivates, stringBuilder);
+				if (!result) {
+					errorCounter++;
+				}
+				status = status & result;
 			}
 		}
 
@@ -68,6 +74,9 @@ public class EdpLcmEvaluationTest {
 			stringBuilder.append("KnowledgeBase attributes:");
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append(knowledgeBase.toLines());
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append("Errors: ");
+			stringBuilder.append(errorCounter);
 			System.out.println(stringBuilder.toString());
 		}
 		Assert.assertTrue("Creative Commons compatibility", status);
@@ -118,6 +127,11 @@ public class EdpLcmEvaluationTest {
 			stringBuilder.append(ArrayUtil.intString(licenseB.getAttributes().getInternalValuesArray()));
 			stringBuilder.append(" ");
 			stringBuilder.append(licenseB.toString());
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append("         ");
+			stringBuilder.append(Arrays.toString(licenseB.getAttributes().getShortFormArray()));
+			stringBuilder.append(" ");
+			stringBuilder.append(Arrays.toString(licenseB.getAttributes().getShortFormArray()));
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append(System.lineSeparator());
 		}
