@@ -3,7 +3,10 @@ package org.dice_research.opal.licenses;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.dice_research.opal.licenses.edplcm.EdpLcmKnowledgeBase;
@@ -148,5 +151,41 @@ public class EdpLcmEvaluationTest {
 		}
 
 		return status;
+	}
+
+	/**
+	 * Gets sets of licenses which have the same restrictions and the same
+	 * prohibitions. The licenses in one set may differ in permissions.
+	 */
+	public void listDiffInPermission() {
+		Map<String, List<License>> map = new HashMap<>();
+		for (License licenseA : knowledgeBase.getLicenses()) {
+			List<License> list = new LinkedList<>();
+			String keyUri = licenseA.getUri();
+			loopB: for (License licenseB : knowledgeBase.getLicenses()) {
+				for (int i = 0; i < licenseA.getAttributes().getList().size(); i++) {
+					Attribute attributeA = licenseA.getAttributes().getList().get(i);
+					Attribute attributeB = licenseB.getAttributes().getList().get(i);
+					if (!attributeA.getType().equals(Permission.TYPE)) {
+						if (attributeA.getValue() != attributeB.getValue()) {
+							continue loopB;
+						}
+					}
+				}
+				list.add(licenseB);
+				if (licenseA.getUri().compareTo(licenseB.getUri()) < 0) {
+					keyUri = licenseA.getUri();
+				} else {
+					keyUri = licenseB.getUri();
+				}
+			}
+			map.put(keyUri, list);
+		}
+		for (List<License> licenses : map.values()) {
+			for (License license : licenses) {
+				System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+			}
+			System.out.println();
+		}
 	}
 }
