@@ -2,9 +2,11 @@ package org.dice_research.opal.licenses;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.dice_research.opal.licenses.edplcm.EdpLcmKnowledgeBase;
+import org.dice_research.opal.licenses.edplcm.EdpLcmUris;
 import org.dice_research.opal.licenses.edplcm.EpdLcmDerivates;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,12 +30,22 @@ public class EdpLcmEvaluationSingleTest {
 
 	@Test
 	public void test() throws IOException {
-		String licenseUriA = EdpLcmTestUris.CC0_1;
-		String licenseUriB = EdpLcmTestUris.CC_BY_4;
-		check(licenseUriA, licenseUriB);
+		List<String> uris = new LinkedList<>();
+		uris.add(EdpLcmUris.CC_BY_3_0_Austria);
+		uris.add(EdpLcmUris.CC_BY_3_0_NL);
+		uris.add(EdpLcmUris.CC_BY_4_0);
+		check(uris);
 	}
 
-	public void check(String licenseUriA, String licenseUriB) throws IOException {
+	@Test
+	public void testWorking() throws IOException {
+		List<String> uris = new LinkedList<>();
+		uris.add(EdpLcmUris.CC0_1_0);
+		uris.add(EdpLcmUris.CC_BY_4_0);
+		check(uris);
+	}
+
+	public void check(List<String> licenseUris) throws IOException {
 		boolean status = true;
 		int errorCounter = 0;
 		StringBuilder stringBuilder = new StringBuilder();
@@ -41,12 +53,12 @@ public class EdpLcmEvaluationSingleTest {
 		// Combine licenses to check every cell in matrix
 		for (License licenseA : knowledgeBase.getLicenses()) {
 
-			if (!licenseA.getUri().equals(licenseUriA))
+			if (!licenseUris.contains(licenseA.getUri()))
 				continue;
 
 			for (License licenseB : knowledgeBase.getLicenses()) {
 
-				if (!licenseB.getUri().equals(licenseUriB))
+				if (!licenseUris.contains(licenseB.getUri()))
 					continue;
 
 				List<License> inputLicenses = new ArrayList<>(2);
