@@ -15,6 +15,7 @@ public abstract class EdpLcmUris {
 	public static final String CC_BY_ND_4_0 = "http://creativecommons.org/licenses/by-nd/4.0/legalcode";
 	public static final String CC_BY_SA_3_0_NL = "http://creativecommons.org/licenses/by-sa/3.0/nl/legalcode";
 	public static final String CC_BY_SA_4_0 = "http://creativecommons.org/licenses/by-sa/4.0/legalcode";
+	public static final String CC_PDM_1_0 = "http://creativecommons.org/publicdomain/mark/1.0/";
 	public static final String CC0_1_0 = "https://creativecommons.org/publicdomain/zero/1.0/legalcode";
 	public static final String DL_DE_BY_1_0 = "https://www.govdata.de/dl-de/by-1-0";
 	public static final String DL_DE_BY_2_0 = "https://www.govdata.de/dl-de/by-2-0";

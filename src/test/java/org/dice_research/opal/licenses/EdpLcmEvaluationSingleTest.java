@@ -48,6 +48,7 @@ public class EdpLcmEvaluationSingleTest {
 	public void check(List<String> licenseUris) throws IOException {
 		boolean status = true;
 		int errorCounter = 0;
+		int successCounter = 0;
 		StringBuilder stringBuilder = new StringBuilder();
 
 		// Combine licenses to check every cell in matrix
@@ -76,7 +77,9 @@ public class EdpLcmEvaluationSingleTest {
 				// Check license combination and update result status
 				boolean result = EdpLcmEvaluationTest.checkResults(licenseA, licenseB, resultingLicenses, derivates,
 						stringBuilder);
-				if (!result) {
+				if (result) {
+					successCounter++;
+				} else {
 					errorCounter++;
 				}
 				status = status & result;
@@ -85,6 +88,17 @@ public class EdpLcmEvaluationSingleTest {
 
 		// Print debugging info, if test failed
 		if (!status) {
+			stringBuilder.append("Success: ");
+			stringBuilder.append(successCounter);
+			stringBuilder.append("  ");
+			stringBuilder.append(1.0 * successCounter / (successCounter + errorCounter));
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append("Errors:  ");
+			stringBuilder.append(errorCounter);
+			stringBuilder.append("  ");
+			stringBuilder.append(1.0 * errorCounter / (successCounter + errorCounter));
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append("Expected compatibility results:");
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append(derivates);
@@ -92,9 +106,6 @@ public class EdpLcmEvaluationSingleTest {
 			stringBuilder.append("KnowledgeBase attributes:");
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append(knowledgeBase.toLines());
-			stringBuilder.append(System.lineSeparator());
-			stringBuilder.append("Errors: ");
-			stringBuilder.append(errorCounter);
 			System.out.println(stringBuilder.toString());
 		}
 		Assert.assertTrue("Creative Commons compatibility", status);

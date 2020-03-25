@@ -126,8 +126,6 @@ public class EpdLcmDerivates {
 		} catch (IOException e) {
 			LOGGER.error(e);
 		}
-		stringBuilder.append(uris);
-		stringBuilder.append(System.lineSeparator());
 		for (String uriA : uris) {
 			for (String uriB : uris) {
 				try {
@@ -137,7 +135,7 @@ public class EpdLcmDerivates {
 				}
 				stringBuilder.append(" ");
 			}
-			stringBuilder.append(uriA);
+			stringBuilder.append(uriA == null ? "-" : uriA);
 			stringBuilder.append(System.lineSeparator());
 		}
 		return stringBuilder.toString();

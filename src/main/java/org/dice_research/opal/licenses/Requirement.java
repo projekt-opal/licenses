@@ -17,9 +17,9 @@ public class Requirement extends Attribute {
 	@Override
 	public String getShortForm() {
 		if (isMetaAttribute()) {
-			return "Q";
+			return "R";
 		} else {
-			return "q";
+			return "r";
 		}
 	}
 
