@@ -1,9 +1,0 @@
-CONSTRUCT {
-  ?dataset ?p ?o .
-  ?o ?p2 ?o2
-} WHERE {
-  GRAPH ?g {
-    ?dataset ?p ?o .
-    ?o ?p2 ?o2 
-  } 
-}
