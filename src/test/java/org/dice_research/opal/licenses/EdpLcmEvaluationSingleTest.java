@@ -30,13 +30,30 @@ public class EdpLcmEvaluationSingleTest {
 
 	@Test
 	public void test() throws IOException {
+		//TODO
+//		List<String> uris = new LinkedList<>();
+//		uris.add(EdpLcmUris.CC_BY_3_0_Austria);
+//		uris.add(EdpLcmUris.CC_BY_3_0_NL);
+//		uris.add(EdpLcmUris.CC_BY_4_0);
+//		check(uris);
+	}
+
+	/**
+	 * Difference in PatentGrant (Permission) and Sublicensing (Permission).
+	 * 
+	 * Is Share-Alike (Meta-Requirement) is also set.
+	 */
+	@Test
+	public void testDifferentPermissions() throws IOException {
 		List<String> uris = new LinkedList<>();
-		uris.add(EdpLcmUris.CC_BY_3_0_Austria);
-		uris.add(EdpLcmUris.CC_BY_3_0_NL);
-		uris.add(EdpLcmUris.CC_BY_4_0);
+		uris.add(EdpLcmUris.ODC_BY);
+		uris.add(EdpLcmUris.EUPL_1_1);
 		check(uris);
 	}
 
+	/**
+	 * Case also worked in CC evaluation.
+	 */
 	@Test
 	public void testWorking() throws IOException {
 		List<String> uris = new LinkedList<>();
@@ -108,7 +125,7 @@ public class EdpLcmEvaluationSingleTest {
 			stringBuilder.append(knowledgeBase.toLines());
 			System.out.println(stringBuilder.toString());
 		}
-		Assert.assertTrue("Creative Commons compatibility", status);
+		Assert.assertTrue("EDP LCM compatibility", status);
 	}
 
 }

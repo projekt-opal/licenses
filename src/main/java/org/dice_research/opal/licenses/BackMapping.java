@@ -115,6 +115,8 @@ public class BackMapping {
 
 	/**
 	 * Gets matching licenses based on internal values.
+	 * 
+	 * Used for share-alike comparison.
 	 */
 	protected List<License> removeMoreRestrictive(Attributes setting, List<License> licenses,
 			boolean includeMetaAttributes) {
@@ -130,7 +132,10 @@ public class BackMapping {
 				}
 
 				if (settingAttributes.get(i).getType().equals(Permission.TYPE)) {
-					// TODO Map permissions
+					// Not compatible: Difference in permission
+					if (settingValues[i] != licenseValues[i]) {
+						continue licenseLoop;
+					}
 				}
 
 				else if (settingAttributes.get(i).getType().equals(Prohibition.TYPE)) {

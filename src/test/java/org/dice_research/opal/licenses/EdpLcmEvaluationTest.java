@@ -93,7 +93,7 @@ public class EdpLcmEvaluationTest {
 			stringBuilder.append(knowledgeBase.toLines());
 			System.out.println(stringBuilder.toString());
 		}
-		Assert.assertTrue("Creative Commons compatibility", status);
+		Assert.assertTrue("EDP LCM compatibility", status);
 	}
 
 	/**
@@ -173,9 +173,7 @@ public class EdpLcmEvaluationTest {
 					}
 				}
 				list.add(licenseB);
-				if (licenseA.getUri().compareTo(licenseB.getUri()) < 0) {
-					keyUri = licenseA.getUri();
-				} else {
+				if (keyUri.compareTo(licenseB.getUri()) < 0) {
 					keyUri = licenseB.getUri();
 				}
 			}
