@@ -13,8 +13,8 @@ import org.dice_research.opal.licenses.exceptions.UnknownLicenseException;
 
 public class Example {
 	
-		LicenseCombinatorInterface lc = new LicenseCombinator();
-		
+	LicenseCombinatorInterface lc = new LicenseCombinator();
+	
 	public void combineLicenses() throws UnknownLicenseException {
 		// Put some license-URIs in a collection
 		Collection<String> licenses = new LinkedList<>();
