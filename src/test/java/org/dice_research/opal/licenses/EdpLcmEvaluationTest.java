@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.dice_research.opal.licenses.edplcm.EdpLcmKnowledgeBase;
 import org.dice_research.opal.licenses.edplcm.EpdLcmDerivates;
 import org.dice_research.opal.licenses.utils.ArrayUtil;
+import org.dice_research.opal.licenses.utils.F1Score;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,9 +40,8 @@ public class EdpLcmEvaluationTest {
 	@Test
 	public void test() throws IOException {
 		boolean status = true;
-		int errorCounter = 0;
-		int successCounter = 0;
 		StringBuilder stringBuilder = new StringBuilder();
+		F1Score f1Score = new F1Score();
 
 		// Combine licenses to check every cell in matrix
 		for (License licenseA : knowledgeBase.getLicenses()) {
@@ -61,28 +61,52 @@ public class EdpLcmEvaluationTest {
 						resultAttributes, knowledgeBase);
 
 				// Check license combination and update result status
-				boolean result = checkResults(licenseA, licenseB, resultingLicenses, derivates, stringBuilder);
-				if (result) {
-					successCounter++;
-				} else {
-					errorCounter++;
-				}
+				boolean result = checkResults(licenseA, licenseB, resultingLicenses, derivates, stringBuilder, f1Score);
 				status = status & result;
 			}
 		}
 
 		// Print debugging info, if test failed
 		if (!status) {
-			stringBuilder.append("Success: ");
-			stringBuilder.append(successCounter);
+			stringBuilder.append("Tests:     ");
+			stringBuilder.append(f1Score.getAll());
 			stringBuilder.append("  ");
-			stringBuilder.append(1.0 * successCounter / (successCounter + errorCounter));
 			stringBuilder.append(System.lineSeparator());
-			stringBuilder.append("Errors:  ");
-			stringBuilder.append(errorCounter);
-			stringBuilder.append("  ");
-			stringBuilder.append(1.0 * errorCounter / (successCounter + errorCounter));
+
+			stringBuilder.append("Success:   ");
+			stringBuilder.append(f1Score.getTrue());
+			stringBuilder.append(" (");
+			stringBuilder.append(f1Score.getPercentageTrue());
+			stringBuilder.append(")");
 			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append("Errors:    ");
+			stringBuilder.append(f1Score.getFalse());
+			stringBuilder.append(" (");
+			stringBuilder.append(f1Score.getPercentageFalse());
+			stringBuilder.append(")");
+			stringBuilder.append(System.lineSeparator());
+
+			stringBuilder.append("F1 score:  ");
+			stringBuilder.append(f1Score.getF1score());
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append("Precision: ");
+			stringBuilder.append(f1Score.getPrecision());
+			stringBuilder.append(System.lineSeparator());
+			stringBuilder.append("Recall:    ");
+			stringBuilder.append(f1Score.getRecall());
+			stringBuilder.append(System.lineSeparator());
+
+			stringBuilder.append("Cases:     ");
+			stringBuilder.append("TP: ");
+			stringBuilder.append(f1Score.getTruePositive());
+			stringBuilder.append(", TN: ");
+			stringBuilder.append(f1Score.getTrueNegative());
+			stringBuilder.append(", FP: ");
+			stringBuilder.append(f1Score.getFalsePositive());
+			stringBuilder.append(", FN: ");
+			stringBuilder.append(f1Score.getFalseNegative());
+			stringBuilder.append(System.lineSeparator());
+
 			stringBuilder.append(System.lineSeparator());
 			stringBuilder.append("Expected compatibility results:");
 			stringBuilder.append(System.lineSeparator());
@@ -100,7 +124,8 @@ public class EdpLcmEvaluationTest {
 	 * Checks single license.
 	 */
 	public static boolean checkResults(License licenseA, License licenseB, List<License> resultingLicenses,
-			EpdLcmDerivates derivates, StringBuilder stringBuilder) throws NullPointerException, IOException {
+			EpdLcmDerivates derivates, StringBuilder stringBuilder, F1Score f1Score)
+			throws NullPointerException, IOException {
 		boolean status = true;
 		List<String> resultingUris = resultingLicenses.stream().map(l -> l.getUri()).collect(Collectors.toList());
 		boolean derivatesValue = derivates.getValue(licenseA.getUri(), licenseB.getUri());
@@ -115,6 +140,7 @@ public class EdpLcmEvaluationTest {
 			stringBuilder.append(licenseB.getUri());
 			stringBuilder.append(System.lineSeparator());
 			status = false;
+			f1Score.falseNegative();
 		} else if (!derivatesValue && resultingUris.contains(licenseB.getUri())) {
 			stringBuilder.append("Wrong:   ");
 			stringBuilder.append(ArrayUtil.intString(licenseB.getAttributes().getValuesArray()));
@@ -124,8 +150,12 @@ public class EdpLcmEvaluationTest {
 			stringBuilder.append(licenseB.getUri());
 			stringBuilder.append(System.lineSeparator());
 			status = false;
+			f1Score.falsePositive();
+		} else if (derivatesValue && resultingUris.contains(licenseB.getUri())) {
+			f1Score.truePositive();
+		} else {
+			f1Score.trueNegative();
 		}
-
 		// Add debugging information if test failed
 		if (!status) {
 			stringBuilder.append("Checked: ");

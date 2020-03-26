@@ -8,6 +8,7 @@ import java.util.List;
 import org.dice_research.opal.licenses.edplcm.EdpLcmKnowledgeBase;
 import org.dice_research.opal.licenses.edplcm.EdpLcmUris;
 import org.dice_research.opal.licenses.edplcm.EpdLcmDerivates;
+import org.dice_research.opal.licenses.utils.F1Score;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class EdpLcmEvaluationSingleTest {
 
 	@Test
 	public void test() throws IOException {
-		//TODO
+		// TODO
 //		List<String> uris = new LinkedList<>();
 //		uris.add(EdpLcmUris.CC_BY_3_0_Austria);
 //		uris.add(EdpLcmUris.CC_BY_3_0_NL);
@@ -67,6 +68,7 @@ public class EdpLcmEvaluationSingleTest {
 		int errorCounter = 0;
 		int successCounter = 0;
 		StringBuilder stringBuilder = new StringBuilder();
+		F1Score f1Score = new F1Score();
 
 		// Combine licenses to check every cell in matrix
 		for (License licenseA : knowledgeBase.getLicenses()) {
@@ -93,7 +95,7 @@ public class EdpLcmEvaluationSingleTest {
 
 				// Check license combination and update result status
 				boolean result = EdpLcmEvaluationTest.checkResults(licenseA, licenseB, resultingLicenses, derivates,
-						stringBuilder);
+						stringBuilder, f1Score);
 				if (result) {
 					successCounter++;
 				} else {
