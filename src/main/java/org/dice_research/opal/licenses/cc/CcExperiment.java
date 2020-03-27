@@ -2,9 +2,11 @@ package org.dice_research.opal.licenses.cc;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,6 +61,85 @@ public class CcExperiment {
 		for (ResultContainer result : results) {
 			System.out.println(result);
 		}
+
+		System.out.println();
+		System.out.println(toTable(results));
+	}
+
+	private String toTable(List<ResultContainer> results) {
+		StringBuilder stringBuilder = new StringBuilder();
+		String divider = "\t";
+
+		stringBuilder.append("-");
+		stringBuilder.append(divider);
+		ResultContainer lastResult = new ResultContainer(null, null, null);
+		for (ResultContainer result : results) {
+			if (result.licenseA != lastResult.licenseA) {
+				stringBuilder.append(replaceName(result.licenseA.getName()));
+				stringBuilder.append(divider);
+				lastResult = result;
+			}
+		}
+
+		lastResult = new ResultContainer(null, null, null);
+		for (ResultContainer result : results) {
+			if (result.licenseA != lastResult.licenseA) {
+				stringBuilder.append(System.lineSeparator());
+				stringBuilder.append(replaceName(result.licenseA.getName()));
+				stringBuilder.append(divider);
+			}
+			if (result.resultingLicenses.isEmpty()) {
+				stringBuilder.append("-");
+			} else {
+				stringBuilder.append(setToString(result.resultingLicenses, divider));
+			}
+			stringBuilder.append(divider);
+
+			lastResult = result;
+		}
+		stringBuilder.append(System.lineSeparator());
+
+		return stringBuilder.toString();
+	}
+
+	private StringBuilder setToString(Set<License> licenses, String divider) {
+		TreeSet<License> orderdLicenses = new TreeSet<>(new Comparator<License>() {
+
+			@Override
+			public int compare(License o1, License o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		orderdLicenses.addAll(licenses);
+
+		StringBuilder stringBuilder = new StringBuilder();
+		boolean first = true;
+		for (License license : orderdLicenses) {
+			if (first) {
+				first = false;
+			} else {
+				stringBuilder.append(", ");
+			}
+			stringBuilder.append(replaceName(license.getName()));
+		}
+		return stringBuilder;
+	}
+
+	private String replaceName(String name) {
+		if (name.equals("mark")) {
+			return "PD";
+		}
+		return name.toUpperCase();
+//		Map<String, String> map = new HashMap<>();
+//		map.put("mark", "");
+//		map.put("CC0", "");
+//		map.put("by", "CC BY");
+//		map.put("by-sa", "");
+//		map.put("by-nc", "");
+//		map.put("by-nd", "");
+//		map.put("by-nc-sa", "");
+//		map.put("by-nc-nd", "");
+//		return map.get(name);
 	}
 
 	public class ResultContainer {
