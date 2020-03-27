@@ -346,7 +346,7 @@ public class CcData {
 	/**
 	 * Gets RDF files in directory.
 	 */
-	private CcData readDirectory() throws IOException {
+	public CcData readDirectory() throws IOException {
 
 		if (sourceDirectory == null) {
 			throw new NullPointerException("Source directory not set.");

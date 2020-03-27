@@ -23,7 +23,7 @@ public class CcBackMappingTest extends BackMapping {
 	 */
 	@Before
 	public void setUp() {
-		knowledgeBase = CcTestUtils.getKnowledgeBase();
+		knowledgeBase = CcTestUtils.getKnowledgeBase(CcTestUtils.getCcData());
 		BY = knowledgeBase.getLicense(CcMatrix.I2_BY);
 		BY_NC = knowledgeBase.getLicense(CcMatrix.I4_BY_NC);
 		BY_NC_SA = knowledgeBase.getLicense(CcMatrix.I6_BY_NC_SA);

@@ -19,10 +19,14 @@ public abstract class CcTestUtils {
 
 	public static final String DATA_REPOSITORY = "https://github.com/projekt-opal/cc.licenserdf";
 
-	public static KnowledgeBase getKnowledgeBase() {
+	public static KnowledgeBase getKnowledgeBase(CcData ccDdata) {
 		Assume.assumeTrue("Please make available: " + DATA_REPOSITORY, new File(DATA_DIRECTORY).exists());
-		CcData data = new CcData();
-		return data.setSourceDirectory(DATA_DIRECTORY).createKnowledgeBase(data.getMatixFiles());
+		return ccDdata.createKnowledgeBase(ccDdata.getMatixFiles());
+	}
+
+	public static CcData getCcData() {
+		Assume.assumeTrue("Please make available: " + DATA_REPOSITORY, new File(DATA_DIRECTORY).exists());
+		return new CcData().setSourceDirectory(DATA_DIRECTORY);
 	}
 
 }

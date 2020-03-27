@@ -25,7 +25,7 @@ public class CcEvaluationSingleTest {
 	 */
 	@Before
 	public void setUp() {
-		knowledgeBase = CcTestUtils.getKnowledgeBase();
+		knowledgeBase = CcTestUtils.getKnowledgeBase(CcTestUtils.getCcData());
 		matrix = new CcMatrix();
 	}
 

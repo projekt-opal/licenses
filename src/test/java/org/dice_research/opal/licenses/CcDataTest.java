@@ -1,5 +1,7 @@
 package org.dice_research.opal.licenses;
 
+import java.io.IOException;
+
 import org.dice_research.opal.licenses.cc.CcData;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,6 +14,9 @@ import org.junit.Test;
  */
 public class CcDataTest {
 
+	public static final boolean PRINT_ATTRIBUTES = false;
+
+	private CcData ccData;
 	private KnowledgeBase knowledgeBase;
 
 	/**
@@ -19,14 +24,31 @@ public class CcDataTest {
 	 */
 	@Before
 	public void setUp() {
-		knowledgeBase = CcTestUtils.getKnowledgeBase();
+		ccData = CcTestUtils.getCcData();
+		knowledgeBase = CcTestUtils.getKnowledgeBase(ccData);
 	}
 
 	@Test
-	public void test() {
+	public void testCcData() throws IOException {
+		Assert.assertEquals(614, ccData.readDirectory().getAllRdfFiles().size());
+	}
+
+	@Test
+	public void testKnowledgeBase() {
+
 		for (License license : knowledgeBase.getLicenses()) {
 			Assert.assertEquals(license.toString(), license.getAttributes().getAttribute(CcData.SHARE_ALIKE).getValue(),
 					license.isShareAlike());
+		}
+
+		Assert.assertEquals(8, knowledgeBase.getLicenses().size());
+
+		Assert.assertEquals(7, knowledgeBase.getAttributes().getList().size());
+
+		if (PRINT_ATTRIBUTES) {
+			for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
+				System.out.println(attribute);
+			}
 		}
 	}
 
