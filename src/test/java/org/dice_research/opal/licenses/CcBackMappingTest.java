@@ -16,7 +16,7 @@ import org.junit.Test;
 public class CcBackMappingTest extends BackMapping {
 
 	private KnowledgeBase knowledgeBase;
-	private License BY, BY_NC, BY_SA, BY_NC_SA;
+	private License BY, BY_NC, BY_NC_SA;
 
 	/**
 	 * Checks data directory. Creates objects.
@@ -26,7 +26,6 @@ public class CcBackMappingTest extends BackMapping {
 		knowledgeBase = CcTestUtils.getKnowledgeBase();
 		BY = knowledgeBase.getLicense(CcMatrix.I2_BY);
 		BY_NC = knowledgeBase.getLicense(CcMatrix.I4_BY_NC);
-		BY_SA = knowledgeBase.getLicense(CcMatrix.I3_BY_SA);
 		BY_NC_SA = knowledgeBase.getLicense(CcMatrix.I6_BY_NC_SA);
 	}
 
@@ -51,14 +50,14 @@ public class CcBackMappingTest extends BackMapping {
 	 * contain 1.
 	 */
 	@Test
-	public void testRemoveMoreRestrictive() {
+	public void testRemoveNotShareAlike() {
 
 		Attributes setting = BY.getAttributes();
 		List<License> licenses = new LinkedList<>();
 		licenses.add(BY);
 		licenses.add(BY_NC);
 		licenses.add(BY_NC_SA);
-		List<License> resultingLicenses = removeMoreRestrictive(setting, licenses, false);
+		List<License> resultingLicenses = removeNotShareAlike(setting, licenses, false);
 
 		Assert.assertTrue("BY", resultingLicenses.contains(BY));
 		Assert.assertFalse("not BY NC", resultingLicenses.contains(BY_NC));
@@ -66,11 +65,11 @@ public class CcBackMappingTest extends BackMapping {
 
 		// Test meta attributes
 
-		licenses.add(BY_SA);
-		resultingLicenses = removeMoreRestrictive(setting, licenses, false);
-		Assert.assertTrue("BY SA", resultingLicenses.contains(BY_SA));
-		resultingLicenses = removeMoreRestrictive(setting, licenses, true);
-		Assert.assertFalse("not BY SA", resultingLicenses.contains(BY_SA));
+		setting = BY_NC_SA.getAttributes();
+		resultingLicenses = removeNotShareAlike(setting, licenses, true);
+		Assert.assertFalse("not BY", resultingLicenses.contains(BY));
+		Assert.assertFalse("not BY NC", resultingLicenses.contains(BY_NC));
+		Assert.assertTrue("BY NC SA", resultingLicenses.contains(BY_NC_SA));
 	}
 
 }

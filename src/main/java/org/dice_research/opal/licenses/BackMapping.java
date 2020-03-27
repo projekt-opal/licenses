@@ -59,7 +59,7 @@ public class BackMapping {
 				if (inputLicense.isShareAlike()) {
 					List<License> licenseList = new LinkedList<>();
 					licenseList.add(license);
-					if (removeMoreRestrictive(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
+					if (removeNotShareAlike(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
 						resultingLicenses.remove(license);
 					}
 				}
@@ -118,7 +118,7 @@ public class BackMapping {
 	 * 
 	 * Used for share-alike comparison.
 	 */
-	protected List<License> removeMoreRestrictive(Attributes setting, List<License> licenses,
+	protected List<License> removeNotShareAlike(Attributes setting, List<License> licenses,
 			boolean includeMetaAttributes) {
 		List<License> results = new LinkedList<>();
 		List<Attribute> settingAttributes = setting.getList();
@@ -127,7 +127,9 @@ public class BackMapping {
 			boolean[] licenseValues = license.getAttributes().getValuesArray();
 			valueLoop: for (int i = 0; i < settingValues.length; i++) {
 
-				if (!includeMetaAttributes && settingAttributes.get(i).isMetaAttribute()) {
+				// Ignore meta attributes except of share-alike
+				if (!includeMetaAttributes && settingAttributes.get(i).isMetaAttribute()
+						&& !settingAttributes.get(i).isTypeRequirementShareAlike()) {
 					continue valueLoop;
 				}
 
@@ -139,15 +141,15 @@ public class BackMapping {
 				}
 
 				else if (settingAttributes.get(i).getType().equals(Prohibition.TYPE)) {
-					// Not compatible: Setting restricted and license open
-					if (!settingValues[i] && licenseValues[i]) {
+					// Not compatible: Difference in prohibition
+					if (settingValues[i] != licenseValues[i]) {
 						continue licenseLoop;
 					}
 				}
 
 				else if (settingAttributes.get(i).getType().equals(Requirement.TYPE)) {
-					// Not compatible: Setting restricted and license open
-					if (!settingValues[i] && licenseValues[i]) {
+					// Not compatible: Difference in requirement
+					if (settingValues[i] != licenseValues[i]) {
 						continue licenseLoop;
 					}
 				}
