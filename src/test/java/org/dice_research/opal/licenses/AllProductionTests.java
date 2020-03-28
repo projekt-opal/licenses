@@ -11,6 +11,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 		OperatorTest.class,
 
+		ExecutionTest.class,
+
 		CcDataTest.class,
 
 		CcBackMappingTest.class,
@@ -25,5 +27,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 })
 
-public class AllTests {
+/**
+ * Contains alls tests except of @link{EdpLcmEvaluationTest}.
+ * 
+ * @author Adrian Wilke
+ */
+public class AllProductionTests {
 }

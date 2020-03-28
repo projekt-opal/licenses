@@ -20,6 +20,7 @@ public class CcExperiment {
 
 	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
 	private static final Logger LOGGER = LogManager.getLogger();
+	public static final boolean LIMIT_OUTPUT_TO_INPUT = true;
 
 	public static void main(String[] args) {
 		new CcExperiment().execute();
@@ -91,6 +92,12 @@ public class CcExperiment {
 			if (result.resultingLicenses.isEmpty()) {
 				stringBuilder.append("-");
 			} else {
+				if (LIMIT_OUTPUT_TO_INPUT) {
+					List<License> inputLicenses = new LinkedList<>();
+					inputLicenses.add(result.licenseA);
+					inputLicenses.add(result.licenseB);
+					result.resultingLicenses.retainAll(inputLicenses);
+				}
 				stringBuilder.append(setToString(result.resultingLicenses, divider));
 			}
 			stringBuilder.append(divider);

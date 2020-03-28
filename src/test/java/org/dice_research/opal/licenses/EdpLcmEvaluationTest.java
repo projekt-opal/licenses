@@ -33,10 +33,6 @@ public class EdpLcmEvaluationTest {
 		knowledgeBase = new EdpLcmKnowledgeBase().load();
 	}
 
-	// TODO old code
-//	Set<String> compatibleUris = derivates.getCompatibleUris(licenseA.getUri()).stream().distinct()
-//			.filter(derivates.getCompatibleUris(licenseB.getUri())::contains).collect(Collectors.toSet());
-
 	@Test
 	public void test() throws IOException {
 		boolean status = true;
@@ -48,13 +44,25 @@ public class EdpLcmEvaluationTest {
 
 			for (License licenseB : knowledgeBase.getLicenses()) {
 
+				// Use only one input license
 				List<License> inputLicenses = new ArrayList<>(2);
 				inputLicenses.add(licenseA);
-				inputLicenses.add(licenseB);
 
 				// Operator used to compute array of internal values
 				Execution execution = new Execution().setKnowledgeBase(knowledgeBase);
 				Attributes resultAttributes = execution.applyOperator(inputLicenses);
+
+				// Result attributes should equal attributes of license
+				for (int i = 0; i < resultAttributes.getList().size(); i++) {
+					if (!resultAttributes.getList().get(i).equals(licenseA.getAttributes().getList().get(i))) {
+						System.err.println(ArrayUtil.intString(resultAttributes.getValuesArray()));
+						System.err.println(ArrayUtil.intString(licenseA.getAttributes().getValuesArray()));
+						throw new RuntimeException("Different values for index " + i);
+					}
+				}
+
+				// For the check, add a second license
+				inputLicenses.add(licenseB);
 
 				// Back-mapping
 				List<License> resultingLicenses = new BackMapping().getCompatibleLicensesList(inputLicenses,

@@ -38,7 +38,7 @@ public class BackMapping {
 			return new ArrayList<>(0);
 		}
 
-		// Check, if there is a derivates-allowed attribute
+		// If a derivates-allowed permission is not set for an input license -> no result
 		for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
 			if (attribute.isTypePermissionOfDerivates()) {
 				// If there is one license not allowing derivates -> no result
@@ -51,9 +51,9 @@ public class BackMapping {
 		}
 
 		// Filter by attributes
-		List<License> resultingLicenses = removeLessRestrictive(setting, inputLicenses, false);
+		List<License> resultingLicenses = removeLessRestrictive(setting, knowledgeBase.getLicenses(), false);
 
-		// Check share-alike restrictions
+		// Remove incompatible share-alike restrictions
 		for (License inputLicense : inputLicenses) {
 			for (License license : knowledgeBase.getLicenses()) {
 				if (inputLicense.isShareAlike()) {
