@@ -3,6 +3,7 @@ package org.dice_research.opal.licenses.cc;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,6 @@ public class CcExperiment {
 
 	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
 	private static final Logger LOGGER = LogManager.getLogger();
-	public static final boolean LIMIT_OUTPUT_TO_INPUT = true;
 
 	public static void main(String[] args) {
 		new CcExperiment().execute();
@@ -64,17 +64,24 @@ public class CcExperiment {
 		}
 
 		System.out.println();
-		System.out.println(toTable(results));
+		System.out.println(toTable(results, true));
+
+		System.out.println();
+		System.out.println(toTable(results, false));
 	}
 
-	private String toTable(List<ResultContainer> results) {
+	private String toTable(List<ResultContainer> results, boolean limitToInput) {
 		StringBuilder stringBuilder = new StringBuilder();
 		String divider = "\t";
 
+		// Header
 		stringBuilder.append("-");
 		stringBuilder.append(divider);
 		ResultContainer lastResult = new ResultContainer(null, null, null);
 		for (ResultContainer result : results) {
+			if (!limitToInput && result.inputContainsNd()) {
+				continue;
+			}
 			if (result.licenseA != lastResult.licenseA) {
 				stringBuilder.append(replaceName(result.licenseA.getName()));
 				stringBuilder.append(divider);
@@ -82,8 +89,12 @@ public class CcExperiment {
 			}
 		}
 
+		// Value rows
 		lastResult = new ResultContainer(null, null, null);
 		for (ResultContainer result : results) {
+			if (!limitToInput && result.inputContainsNd()) {
+				continue;
+			}
 			if (result.licenseA != lastResult.licenseA) {
 				stringBuilder.append(System.lineSeparator());
 				stringBuilder.append(replaceName(result.licenseA.getName()));
@@ -92,13 +103,18 @@ public class CcExperiment {
 			if (result.resultingLicenses.isEmpty()) {
 				stringBuilder.append("-");
 			} else {
-				if (LIMIT_OUTPUT_TO_INPUT) {
+				Set<License> resultingLicenses = new HashSet<License>(result.resultingLicenses);
+				if (limitToInput) {
 					List<License> inputLicenses = new LinkedList<>();
 					inputLicenses.add(result.licenseA);
 					inputLicenses.add(result.licenseB);
-					result.resultingLicenses.retainAll(inputLicenses);
+					resultingLicenses.retainAll(inputLicenses);
 				}
-				stringBuilder.append(setToString(result.resultingLicenses, divider));
+				if (resultingLicenses.size() == 8) {
+					stringBuilder.append("all");
+				} else {
+					stringBuilder.append(setToString(resultingLicenses, divider));
+				}
 			}
 			stringBuilder.append(divider);
 
@@ -137,16 +153,6 @@ public class CcExperiment {
 			return "PD";
 		}
 		return name.toUpperCase();
-//		Map<String, String> map = new HashMap<>();
-//		map.put("mark", "");
-//		map.put("CC0", "");
-//		map.put("by", "CC BY");
-//		map.put("by-sa", "");
-//		map.put("by-nc", "");
-//		map.put("by-nd", "");
-//		map.put("by-nc-sa", "");
-//		map.put("by-nc-nd", "");
-//		return map.get(name);
 	}
 
 	public class ResultContainer {
@@ -178,6 +184,14 @@ public class CcExperiment {
 				stringBuilder.append("-");
 			}
 			return stringBuilder.toString();
+		}
+
+		private boolean inputContainsNd() {
+			if (licenseA.getName().toLowerCase().contains("nd") || licenseB.getName().toLowerCase().contains("nd")) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 }

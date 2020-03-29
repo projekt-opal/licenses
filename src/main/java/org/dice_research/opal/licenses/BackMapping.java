@@ -5,8 +5,15 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BackMapping {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Gets compatible licenses.
@@ -38,7 +45,8 @@ public class BackMapping {
 			return new ArrayList<>(0);
 		}
 
-		// If a derivates-allowed permission is not set for an input license -> no result
+		// If a derivates-allowed permission is not set for an input license -> no
+		// result
 		for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
 			if (attribute.isTypePermissionOfDerivates()) {
 				// If there is one license not allowing derivates -> no result
@@ -54,12 +62,12 @@ public class BackMapping {
 		List<License> resultingLicenses = removeLessRestrictive(setting, knowledgeBase.getLicenses(), false);
 
 		// Remove incompatible share-alike restrictions
-		for (License inputLicense : inputLicenses) {
+		for (License shareAlikeInputLicense : inputLicenses) {
 			for (License license : knowledgeBase.getLicenses()) {
-				if (inputLicense.isShareAlike()) {
+				if (shareAlikeInputLicense.isShareAlike()) {
 					List<License> licenseList = new LinkedList<>();
 					licenseList.add(license);
-					if (removeNotShareAlike(inputLicense.getAttributes(), licenseList, false).isEmpty()) {
+					if (removeNotCompatibleShareAlike(shareAlikeInputLicense, licenseList, false).isEmpty()) {
 						resultingLicenses.remove(license);
 					}
 				}
@@ -118,11 +126,12 @@ public class BackMapping {
 	 * 
 	 * Used for share-alike comparison.
 	 */
-	protected List<License> removeNotShareAlike(Attributes setting, List<License> licenses,
+	protected List<License> removeNotCompatibleShareAlike(License shareAlikeLicense, List<License> licenses,
 			boolean includeMetaAttributes) {
 		List<License> results = new LinkedList<>();
-		List<Attribute> settingAttributes = setting.getList();
-		boolean[] settingValues = setting.getValuesArray();
+		List<Attribute> settingAttributes = shareAlikeLicense.getAttributes().getList();
+		boolean[] settingValues = shareAlikeLicense.getAttributes().getValuesArray();
+		short ccVersion = extractCreativeCommonsVersion(shareAlikeLicense.getUri());
 		licenseLoop: for (License license : licenses) {
 			boolean[] licenseValues = license.getAttributes().getValuesArray();
 			valueLoop: for (int i = 0; i < settingValues.length; i++) {
@@ -133,29 +142,19 @@ public class BackMapping {
 					continue valueLoop;
 				}
 
-				if (settingAttributes.get(i).getType().equals(Permission.TYPE)) {
-					// Not compatible: Difference in permission
-					if (settingValues[i] != licenseValues[i]) {
-						continue licenseLoop;
-					}
+				// Not compatible: Difference in permission / prohibition / requirement
+				if (settingValues[i] != licenseValues[i]) {
+					continue licenseLoop;
 				}
+			}
 
-				else if (settingAttributes.get(i).getType().equals(Prohibition.TYPE)) {
-					// Not compatible: Difference in prohibition
-					if (settingValues[i] != licenseValues[i]) {
-						continue licenseLoop;
-					}
-				}
-
-				else if (settingAttributes.get(i).getType().equals(Requirement.TYPE)) {
-					// Not compatible: Difference in requirement
-					if (settingValues[i] != licenseValues[i]) {
-						continue licenseLoop;
-					}
-				}
-
-				else {
-					throw new RuntimeException("Unknown type");
+			// CC SA*: Also exclude, if input-license version is lower
+			if (ccVersion != -1) {
+				short licenseCcVersion = extractCreativeCommonsVersion(license.getUri());
+				if (licenseCcVersion != -1 && ccVersion < licenseCcVersion) {
+					// TODO: Until now, no such case found in real data
+					LOGGER.info("CC SA case discovered");
+					continue licenseLoop;
 				}
 			}
 
@@ -164,4 +163,17 @@ public class BackMapping {
 		return results;
 	}
 
+	/**
+	 * Searches for 'creativecommons' string and extracts major version.
+	 */
+	private short extractCreativeCommonsVersion(String uri) {
+		Pattern pattern = Pattern.compile(".*creativecommons.*(\\d)\\.\\d.*");
+		Matcher matcher = pattern.matcher(uri);
+		if (matcher.matches()) {
+			return Short.parseShort(matcher.group(1));
+		} else {
+			return -1;
+		}
+
+	}
 }

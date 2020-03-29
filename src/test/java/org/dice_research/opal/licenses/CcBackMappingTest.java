@@ -16,7 +16,7 @@ import org.junit.Test;
 public class CcBackMappingTest extends BackMapping {
 
 	private KnowledgeBase knowledgeBase;
-	private License BY, BY_NC, BY_NC_SA;
+	private License BY, BY_NC, BY_SA, BY_NC_SA;
 
 	/**
 	 * Checks data directory. Creates objects.
@@ -25,6 +25,7 @@ public class CcBackMappingTest extends BackMapping {
 	public void setUp() {
 		knowledgeBase = CcTestUtils.getKnowledgeBase(CcTestUtils.getCcData());
 		BY = knowledgeBase.getLicense(CcMatrix.I2_BY);
+		BY_SA = knowledgeBase.getLicense(CcMatrix.I3_BY_SA);
 		BY_NC = knowledgeBase.getLicense(CcMatrix.I4_BY_NC);
 		BY_NC_SA = knowledgeBase.getLicense(CcMatrix.I6_BY_NC_SA);
 	}
@@ -52,12 +53,12 @@ public class CcBackMappingTest extends BackMapping {
 	@Test
 	public void testRemoveNotShareAlike() {
 
-		Attributes setting = BY.getAttributes();
+		License shareAlikeLicense = BY;
 		List<License> licenses = new LinkedList<>();
 		licenses.add(BY);
 		licenses.add(BY_NC);
 		licenses.add(BY_NC_SA);
-		List<License> resultingLicenses = removeNotShareAlike(setting, licenses, false);
+		List<License> resultingLicenses = removeNotCompatibleShareAlike(shareAlikeLicense, licenses, false);
 
 		Assert.assertTrue("BY", resultingLicenses.contains(BY));
 		Assert.assertFalse("not BY NC", resultingLicenses.contains(BY_NC));
@@ -65,11 +66,37 @@ public class CcBackMappingTest extends BackMapping {
 
 		// Test meta attributes
 
-		setting = BY_NC_SA.getAttributes();
-		resultingLicenses = removeNotShareAlike(setting, licenses, true);
+		shareAlikeLicense = BY_NC_SA;
+		resultingLicenses = removeNotCompatibleShareAlike(shareAlikeLicense, licenses, true);
 		Assert.assertFalse("not BY", resultingLicenses.contains(BY));
 		Assert.assertFalse("not BY NC", resultingLicenses.contains(BY_NC));
 		Assert.assertTrue("BY NC SA", resultingLicenses.contains(BY_NC_SA));
+	}
+
+	@Test
+	public void testCcSaVersions() {
+
+		// Create new CC SA with lower version
+		Attributes attributes = new Attributes();
+		for (Attribute attribute : BY_SA.getAttributes().getList()) {
+			attributes.addAttribute(AttributeFactory.get().createAttribute(attribute, true));
+		}
+		License license = new License().setName("by-sa-3").setUri("http://creativecommons.org/licenses/by-sa/3.0/")
+				.setAttributes(attributes);
+
+		Assert.assertFalse(BY_SA.getUri().equals(license.getUri()));
+
+		List<License> licenses = new LinkedList<>();
+		licenses.add(BY_SA);
+		licenses.add(license);
+
+		List<License> resultingLicenses = removeNotCompatibleShareAlike(license, licenses, false);
+		Assert.assertTrue("BY SA 3", resultingLicenses.contains(license));
+		Assert.assertFalse("not BY SA 4", resultingLicenses.contains(BY_SA));
+
+		resultingLicenses = removeNotCompatibleShareAlike(BY_SA, licenses, false);
+		Assert.assertTrue("BY SA 3", resultingLicenses.contains(license));
+		Assert.assertTrue("BY SA 4", resultingLicenses.contains(BY_SA));
 	}
 
 }
