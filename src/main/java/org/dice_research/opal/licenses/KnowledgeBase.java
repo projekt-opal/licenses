@@ -39,6 +39,7 @@ public class KnowledgeBase {
 	public Attributes getAttributes() {
 		if (!attributesSorted) {
 			attributes.sort();
+			attributesSorted = true;
 		}
 		return attributes;
 	}
