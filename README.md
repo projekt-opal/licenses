@@ -1,6 +1,12 @@
 # OPAL Licenses
 
-OPAL component managing DCAT licenses.
+OPAL component managing licenses.
+
+## Evaluation and experiments
+
+- To run the evaluation of the **Creative Commons** License Compatibility Chart, clone [cc.licenserdf](https://github.com/projekt-opal/cc.licenserdf) and run [CcExperiment](src/main/java/org/dice_research/opal/licenses/cc/CcExperiment.java).
+- To run the evaluation of the **European Data Portal** License Compatibility Matrix, run [EdpLcmEvaluationTest](src/test/java/org/dice_research/opal/licenses/EdpLcmEvaluationTest.java).
+
 
 ## Notes
 

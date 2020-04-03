@@ -44,6 +44,7 @@ public class EdpLcmEvaluationTest {
 
 			for (License licenseB : knowledgeBase.getLicenses()) {
 
+				// IMORTANT
 				// Use only one input license
 				List<License> inputLicenses = new ArrayList<>(2);
 				inputLicenses.add(licenseA);
