@@ -95,7 +95,7 @@ public class EdpLcmEvaluationSingleTest {
 
 				// Check license combination and update result status
 				boolean result = EdpLcmEvaluationTest.checkResults(licenseA, licenseB, resultingLicenses, derivates,
-						stringBuilder, f1Score);
+						stringBuilder, f1Score, null);
 				if (result) {
 					successCounter++;
 				} else {

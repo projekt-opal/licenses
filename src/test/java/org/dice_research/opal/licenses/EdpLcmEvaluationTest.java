@@ -1,5 +1,6 @@
 package org.dice_research.opal.licenses;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,8 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dice_research.opal.licenses.edplcm.EdpLcmKnowledgeBase;
 import org.dice_research.opal.licenses.edplcm.EpdLcmDerivates;
+import org.dice_research.opal.licenses.transform.GraphExport;
 import org.dice_research.opal.licenses.utils.ArrayUtil;
 import org.dice_research.opal.licenses.utils.F1Score;
 import org.junit.Assert;
@@ -24,6 +28,7 @@ import org.junit.Test;
  */
 public class EdpLcmEvaluationTest {
 
+	private static final Logger LOGGER = LogManager.getLogger();
 	private EpdLcmDerivates derivates;
 	private EdpLcmKnowledgeBase knowledgeBase;
 
@@ -38,6 +43,7 @@ public class EdpLcmEvaluationTest {
 		boolean status = true;
 		StringBuilder stringBuilder = new StringBuilder();
 		F1Score f1Score = new F1Score();
+		GraphExport graph = new GraphExport();
 
 		// Combine licenses to check every cell in matrix
 		for (License licenseA : knowledgeBase.getLicenses()) {
@@ -70,7 +76,8 @@ public class EdpLcmEvaluationTest {
 						resultAttributes, knowledgeBase);
 
 				// Check license combination and update result status
-				boolean result = checkResults(licenseA, licenseB, resultingLicenses, derivates, stringBuilder, f1Score);
+				boolean result = checkResults(licenseA, licenseB, resultingLicenses, derivates, stringBuilder, f1Score,
+						graph);
 				status = status & result;
 			}
 		}
@@ -126,6 +133,11 @@ public class EdpLcmEvaluationTest {
 			stringBuilder.append(knowledgeBase.toLines());
 			System.out.println(stringBuilder.toString());
 		}
+
+		File file = File.createTempFile(getClass().getName() + ".", ".csv");
+		graph.export(file);
+		LOGGER.info("Wrote file: " + file.getAbsolutePath());
+
 		Assert.assertTrue("EDP LCM compatibility", status);
 	}
 
@@ -133,7 +145,7 @@ public class EdpLcmEvaluationTest {
 	 * Checks single license.
 	 */
 	public static boolean checkResults(License licenseA, License licenseB, List<License> resultingLicenses,
-			EpdLcmDerivates derivates, StringBuilder stringBuilder, F1Score f1Score)
+			EpdLcmDerivates derivates, StringBuilder stringBuilder, F1Score f1Score, GraphExport graph)
 			throws NullPointerException, IOException {
 		boolean status = true;
 		List<String> resultingUris = resultingLicenses.stream().map(l -> l.getUri()).collect(Collectors.toList());
@@ -150,6 +162,9 @@ public class EdpLcmEvaluationTest {
 			stringBuilder.append(System.lineSeparator());
 			status = false;
 			f1Score.falseNegative();
+			if (graph != null) {
+				graph.addEdge(licenseA.getName(), licenseB.getName(), "FN");
+			}
 		} else if (!derivatesValue && resultingUris.contains(licenseB.getUri())) {
 			stringBuilder.append("Wrong:   ");
 			stringBuilder.append(ArrayUtil.intString(licenseB.getAttributes().getValuesArray()));
@@ -160,10 +175,19 @@ public class EdpLcmEvaluationTest {
 			stringBuilder.append(System.lineSeparator());
 			status = false;
 			f1Score.falsePositive();
+			if (graph != null) {
+				graph.addEdge(licenseA.getName(), licenseB.getName(), "FP");
+			}
 		} else if (derivatesValue && resultingUris.contains(licenseB.getUri())) {
 			f1Score.truePositive();
+			if (graph != null) {
+				graph.addEdge(licenseA.getName(), licenseB.getName(), "TP");
+			}
 		} else {
 			f1Score.trueNegative();
+			if (graph != null) {
+				graph.addEdge(licenseA.getName(), licenseB.getName(), "TN");
+			}
 		}
 		// Add debugging information if test failed
 		if (!status) {
