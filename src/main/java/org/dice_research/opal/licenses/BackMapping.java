@@ -94,7 +94,10 @@ public class BackMapping {
 				}
 
 				if (settingAttributes.get(i).getType().equals(Permission.TYPE)) {
-					// TODO Map permissions
+					// Not compatible: Setting restricted and license open
+					if (!settingValues[i] && licenseValues[i]) {
+						continue licenseLoop;
+					}
 				}
 
 				else if (settingAttributes.get(i).getType().equals(Prohibition.TYPE)) {
