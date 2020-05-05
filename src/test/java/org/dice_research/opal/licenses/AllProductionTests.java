@@ -28,7 +28,8 @@ import org.junit.runners.Suite.SuiteClasses;
 })
 
 /**
- * Contains alls tests except of @link{EdpLcmEvaluationTest}.
+ * Contains alls tests except of @link{EdpLcmEvaluationTest}
+ * and @link{EdpLcmEvaluationSingleTest}.
  * 
  * @author Adrian Wilke
  */

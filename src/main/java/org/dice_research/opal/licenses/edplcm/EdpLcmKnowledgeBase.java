@@ -6,14 +6,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dice_research.opal.licenses.Attribute;
@@ -43,7 +41,6 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final String RESOURCE_CSV = "edp-licence-compatibility-matrix-licence-descriptions.csv";
-	public static final String RESOURCE_TXT = "edp-licence-compatibility-matrix-share-alike.txt";
 	public static final String URI_PREFIX = "http://example.org/";
 
 	public static final String ATTRIBUTE_ID_SUBLICENSING = attributeIdToUri("Sublicensing");
@@ -158,29 +155,6 @@ public class EdpLcmKnowledgeBase extends KnowledgeBase {
 				addLicense(license);
 			}
 		}
-
-		// Load share-alike
-		// TODO: Check EDP, if this can be removed
-
-		inputStream = getClass().getClassLoader().getResourceAsStream(RESOURCE_TXT);
-		String licenseUri = null;
-		List<String> shareAlike = new LinkedList<>();
-		for (String line : IOUtils.readLines(inputStream, StandardCharsets.UTF_8)) {
-			if (line.trim().isEmpty()) {
-				if (licenseUri != null && !shareAlike.isEmpty()) {
-					putShareAlike(licenseUri, shareAlike);
-				}
-				licenseUri = null;
-				shareAlike = new LinkedList<>();
-			} else {
-				if (licenseUri == null) {
-					licenseUri = line;
-				} else {
-					shareAlike.add(line);
-				}
-			}
-		}
-		inputStream.close();
 
 		isLoaded = true;
 		return this;

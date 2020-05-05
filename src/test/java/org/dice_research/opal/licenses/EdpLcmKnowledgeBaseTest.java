@@ -1,8 +1,6 @@
 package org.dice_research.opal.licenses;
 
-import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 import org.dice_research.opal.licenses.edplcm.EdpLcmKnowledgeBase;
 import org.junit.Assert;
@@ -55,12 +53,6 @@ public class EdpLcmKnowledgeBaseTest {
 			Assert.assertFalse(license.getName().isEmpty());
 			checkAttributes(license.getAttributes(), true);
 		}
-	}
-
-	@Test
-	public void testShareAlike() throws IOException {
-		List<String> uris = new EdpLcmKnowledgeBase().load().getShareAlikeLicenses("http://www.formez.it/iodl/");
-		Assert.assertEquals(4, uris.size());
 	}
 
 	@Test
