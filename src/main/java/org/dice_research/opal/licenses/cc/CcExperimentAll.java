@@ -3,6 +3,7 @@ package org.dice_research.opal.licenses.cc;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.dice_research.opal.licenses.BackMapping;
 import org.dice_research.opal.licenses.Execution;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
+import org.dice_research.opal.licenses.utils.ArrayUtil;
 
 /**
  * Experiment to evaluate the compatibility results of 8 CC licenses.
@@ -29,10 +31,72 @@ public class CcExperimentAll {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static void main(String[] args) throws IOException {
-		new CcExperimentAll().execute();
+		CcExperimentAll experiment = new CcExperimentAll();
+		experiment.loadData();
+		if (Boolean.TRUE)
+			experiment.execute();
+		else
+			experiment.printSpecialCases();
 	}
 
-	public void execute() throws IOException {
+	private KnowledgeBase knowledgeBase;
+
+	/**
+	 * Prints special cases for investigation: Why can't 'CC0' be used for
+	 * 'sampling+'?
+	 * 
+	 * Only difference between 'sampling' and 'sampling+': Permission Sharing is set
+	 * in 'sampling+'.
+	 */
+	public void printSpecialCases() {
+		String licenseUri;
+		License license;
+
+		licenseUri = "http://creativecommons.org/licenses/by/3.0/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		licenseUri = "http://creativecommons.org/licenses/sampling/1.0/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		System.out.println();
+
+		licenseUri = "http://creativecommons.org/publicdomain/zero/1.0/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		licenseUri = "http://creativecommons.org/licenses/publicdomain/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		licenseUri = "http://creativecommons.org/publicdomain/mark/1.0/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		System.out.println();
+
+		licenseUri = "http://creativecommons.org/licenses/sampling+/1.0/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		licenseUri = "http://creativecommons.org/licenses/sampling+/1.0/de/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		licenseUri = "http://creativecommons.org/licenses/sampling+/1.0/tw/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		licenseUri = "http://creativecommons.org/licenses/sampling+/1.0/br/";
+		license = knowledgeBase.getLicense(licenseUri);
+		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
+
+		System.out.println(Arrays.toString(knowledgeBase.getAttributes().getShortFormArray()));
+		System.out.println(knowledgeBase.toLines());
+	}
+
+	public CcExperimentAll loadData() throws IOException {
 
 		// Check availability of data
 		if (!new File(DATA_DIRECTORY).exists()) {
@@ -42,10 +106,13 @@ public class CcExperimentAll {
 		// Get data
 		CcData data = new CcData().setSourceDirectory(DATA_DIRECTORY).readDirectory();
 		List<File> files = data.getAllRdfFiles();
-		KnowledgeBase knowledgeBase = data.createKnowledgeBase(files);
-		LOGGER.info("Created knowledge base, number of licenses: " + knowledgeBase.getLicenses().size());
+		knowledgeBase = data.createKnowledgeBase(files);
 
-		// Execute
+		LOGGER.info("Created knowledge base, number of licenses: " + knowledgeBase.getLicenses().size());
+		return this;
+	}
+
+	public void execute() throws IOException {
 		int progressCounter = 0;
 		List<ResultContainer> results = new LinkedList<>();
 		for (License licenseA : knowledgeBase.getLicenses()) {
