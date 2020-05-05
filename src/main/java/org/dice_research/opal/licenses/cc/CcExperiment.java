@@ -17,6 +17,11 @@ import org.dice_research.opal.licenses.Execution;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
 
+/**
+ * Experiment to evaluate the compatibility results of 8 CC licenses.
+ * 
+ * @author Adrian Wilke
+ */
 public class CcExperiment {
 
 	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
@@ -160,10 +165,10 @@ public class CcExperiment {
 		public License licenseB;
 		public Set<License> resultingLicenses;
 
-		public ResultContainer(License licenseA, License licenseB, Set<License> resultingLicenses2) {
+		public ResultContainer(License licenseA, License licenseB, Set<License> resultingLicenses) {
 			this.licenseA = licenseA;
 			this.licenseB = licenseB;
-			this.resultingLicenses = resultingLicenses2;
+			this.resultingLicenses = resultingLicenses;
 		}
 
 		@Override

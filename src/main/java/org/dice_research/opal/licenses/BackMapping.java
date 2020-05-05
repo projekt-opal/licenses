@@ -8,12 +8,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class BackMapping {
-
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Gets compatible licenses.
@@ -155,8 +150,6 @@ public class BackMapping {
 			if (ccVersion != -1) {
 				short licenseCcVersion = extractCreativeCommonsVersion(license.getUri());
 				if (licenseCcVersion != -1 && ccVersion < licenseCcVersion) {
-					// TODO: Until now, no such case found in real data
-					LOGGER.info("CC SA case discovered");
 					continue licenseLoop;
 				}
 			}
