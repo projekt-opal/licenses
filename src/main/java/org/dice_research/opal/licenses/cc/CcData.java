@@ -23,6 +23,8 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dice_research.opal.licenses.Attribute;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
@@ -55,6 +57,7 @@ import org.dice_research.opal.licenses.utils.LineStorage;
  * @author Adrian Wilke
  */
 public class CcData {
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final String CC_NS = "http://creativecommons.org/ns#";
 	public static final Resource LICENSE = ResourceFactory.createResource(CC_NS + "License");
@@ -242,6 +245,11 @@ public class CcData {
 					throw new RuntimeException("Unknown type of attribute");
 				}
 
+			}
+
+			// Check duplicate license URIs
+			if (knowledgeBase.getLicenseUris().contains(license.getUri())) {
+				LOGGER.warn("URI already contained: " + license.getUri() + " " + file.getAbsolutePath());
 			}
 
 			knowledgeBase.addLicense(license);

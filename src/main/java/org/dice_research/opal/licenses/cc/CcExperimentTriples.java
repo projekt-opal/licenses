@@ -3,7 +3,6 @@ package org.dice_research.opal.licenses.cc;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,85 +17,26 @@ import org.dice_research.opal.licenses.BackMapping;
 import org.dice_research.opal.licenses.Execution;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
-import org.dice_research.opal.licenses.utils.ArrayUtil;
 
 /**
- * Experiment to evaluate the compatibility results of 8 CC licenses.
+ * Experiment to evaluate the compatibility results of CC license triples.
  * 
  * @author Adrian Wilke
  */
-public class CcExperimentAll {
+public class CcExperimentTriples {
 
 	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static void main(String[] args) throws IOException {
-		CcExperimentAll experiment = new CcExperimentAll();
+		CcExperimentTriples experiment = new CcExperimentTriples();
 		experiment.loadData();
-		if (Boolean.TRUE)
-			experiment.execute();
-		else
-			experiment.printSpecialCases();
+		experiment.execute();
 	}
 
 	private KnowledgeBase knowledgeBase;
 
-	/**
-	 * Prints special cases for investigation: Why can't 'CC0' be used for
-	 * 'sampling+'?
-	 * 
-	 * Only difference between 'sampling' and 'sampling+': Permission Sharing is set
-	 * in 'sampling+'.
-	 */
-	public void printSpecialCases() {
-		String licenseUri;
-		License license;
-
-		licenseUri = "http://creativecommons.org/licenses/by/3.0/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		licenseUri = "http://creativecommons.org/licenses/sampling/1.0/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		System.out.println();
-
-		licenseUri = "http://creativecommons.org/publicdomain/zero/1.0/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		licenseUri = "http://creativecommons.org/licenses/publicdomain/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		licenseUri = "http://creativecommons.org/publicdomain/mark/1.0/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		System.out.println();
-
-		licenseUri = "http://creativecommons.org/licenses/sampling+/1.0/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		licenseUri = "http://creativecommons.org/licenses/sampling+/1.0/de/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		licenseUri = "http://creativecommons.org/licenses/sampling+/1.0/tw/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		licenseUri = "http://creativecommons.org/licenses/sampling+/1.0/br/";
-		license = knowledgeBase.getLicense(licenseUri);
-		System.out.println(ArrayUtil.intString(license.getAttributes().getValuesArray()) + " " + license);
-
-		System.out.println(Arrays.toString(knowledgeBase.getAttributes().getShortFormArray()));
-		System.out.println(knowledgeBase.toLines());
-	}
-
-	public CcExperimentAll loadData() throws IOException {
+	public CcExperimentTriples loadData() throws IOException {
 
 		// Check availability of data
 		if (!new File(DATA_DIRECTORY).exists()) {
@@ -117,31 +57,43 @@ public class CcExperimentAll {
 		List<ResultContainer> results = new LinkedList<>();
 		for (License licenseA : knowledgeBase.getLicenses()) {
 			for (License licenseB : knowledgeBase.getLicenses()) {
+				for (License licenseC : knowledgeBase.getLicenses()) {
 
-				// Only compare pairs once.
-				if (licenseA.getUri().compareTo(licenseB.getUri()) > 0) {
-					continue;
+					// Only compare triples once.
+					if (licenseA.getUri().compareTo(licenseB.getUri()) > 0) {
+						continue;
+					}
+					if (licenseA.getUri().compareTo(licenseC.getUri()) > 0) {
+						continue;
+					}
+					if (licenseB.getUri().compareTo(licenseC.getUri()) > 0) {
+						continue;
+					}
+
+					List<License> inputLicenses = new ArrayList<>(2);
+					inputLicenses.add(licenseA);
+					inputLicenses.add(licenseB);
+					inputLicenses.add(licenseC);
+
+					// Operator used to compute array of internal values
+					Execution execution = new Execution().setKnowledgeBase(knowledgeBase);
+					Attributes resultAttributes = execution.applyOperator(inputLicenses);
+
+					// Back-mapping
+					Set<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses,
+							resultAttributes, knowledgeBase);
+
+					results.add(new ResultContainer(licenseA, licenseB, licenseC, resultingLicenses));
 				}
-
-				List<License> inputLicenses = new ArrayList<>(2);
-				inputLicenses.add(licenseA);
-				inputLicenses.add(licenseB);
-
-				// Operator used to compute array of internal values
-				Execution execution = new Execution().setKnowledgeBase(knowledgeBase);
-				Attributes resultAttributes = execution.applyOperator(inputLicenses);
-
-				// Back-mapping
-				Set<License> resultingLicenses = new BackMapping().getCompatibleLicenses(inputLicenses,
-						resultAttributes, knowledgeBase);
-
-				results.add(new ResultContainer(licenseA, licenseB, resultingLicenses));
 			}
 
 			// Print progress
 			progressCounter++;
-			if (progressCounter % 25 == 0) {
+			// TODO: pc was set from 25 to 10 for testing
+			if (progressCounter % 10 == 0) {
 				LOGGER.info(progressCounter + " / " + knowledgeBase.getLicenses().size());
+				// TODO: loop break is for testing
+				break;
 			}
 		}
 
@@ -181,6 +133,8 @@ public class CcExperimentAll {
 					stringBuilder.append("\t");
 					stringBuilder.append(resultContainer.licenseB.getUri());
 					stringBuilder.append("\t");
+					stringBuilder.append(resultContainer.licenseC.getUri());
+					stringBuilder.append("\t");
 					List<License> nonCompatible = knowledgeBase.getLicenses();
 					nonCompatible.removeAll(resultContainer.resultingLicenses);
 					stringBuilder.append(nonCompatible.toString());
@@ -193,11 +147,13 @@ public class CcExperimentAll {
 	public class ResultContainer {
 		public License licenseA;
 		public License licenseB;
+		public License licenseC;
 		public Set<License> resultingLicenses;
 
-		public ResultContainer(License licenseA, License licenseB, Set<License> resultingLicenses) {
+		public ResultContainer(License licenseA, License licenseB, License licenseC, Set<License> resultingLicenses) {
 			this.licenseA = licenseA;
 			this.licenseB = licenseB;
+			this.licenseC = licenseC;
 			this.resultingLicenses = resultingLicenses;
 		}
 
@@ -209,6 +165,8 @@ public class CcExperimentAll {
 			stringBuilder.append(licenseA.getUri());
 			stringBuilder.append("\t");
 			stringBuilder.append(licenseB.getUri());
+			stringBuilder.append("\t");
+			stringBuilder.append(licenseC.getUri());
 			stringBuilder.append("\t");
 			stringBuilder.append(resultingLicenses);
 			return stringBuilder.toString();
