@@ -29,16 +29,6 @@ public class EdpLcmEvaluationSingleTest {
 		knowledgeBase = new EdpLcmKnowledgeBase().load();
 	}
 
-	@Test
-	public void test() throws IOException {
-		// TODO
-//		List<String> uris = new LinkedList<>();
-//		uris.add(EdpLcmUris.CC_BY_3_0_Austria);
-//		uris.add(EdpLcmUris.CC_BY_3_0_NL);
-//		uris.add(EdpLcmUris.CC_BY_4_0);
-//		check(uris);
-	}
-
 	/**
 	 * Difference in PatentGrant (Permission) and Sublicensing (Permission).
 	 * 
