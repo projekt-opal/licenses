@@ -88,11 +88,13 @@ public class CcExperimentAll {
 			resultStats.get(size).add(result);
 		}
 
-		// Print results
+		// Print number of results (pairs)
 		System.out.println("Results:" + results.size());
+		// Print overview: No. of compatible licenses ; no. of pairs
 		for (Entry<Integer, List<ResultContainer>> entry : resultStats.entrySet()) {
 			System.out.println(entry.getKey() + "\t" + entry.getValue().size());
 		}
+		// Print license URIs for small result sets
 		for (Entry<Integer, List<ResultContainer>> entry : resultStats.entrySet()) {
 			if (entry.getValue().size() < 50) {
 				for (ResultContainer resultContainer : entry.getValue()) {
@@ -100,7 +102,25 @@ public class CcExperimentAll {
 				}
 			}
 		}
-
+		// Print non-compatible license URIs
+		for (Entry<Integer, List<ResultContainer>> entry : resultStats.entrySet()) {
+			if (entry.getKey() > 600) {
+				for (ResultContainer resultContainer : entry.getValue()) {
+					StringBuilder stringBuilder = new StringBuilder();
+					stringBuilder.append(entry.getKey());
+					stringBuilder.append("*");
+					stringBuilder.append("\t");
+					stringBuilder.append(resultContainer.licenseA.getUri());
+					stringBuilder.append("\t");
+					stringBuilder.append(resultContainer.licenseB.getUri());
+					stringBuilder.append("\t");
+					List<License> nonCompatible = knowledgeBase.getLicenses();
+					nonCompatible.removeAll(resultContainer.resultingLicenses);
+					stringBuilder.append(nonCompatible.toString());
+					System.out.println(stringBuilder.toString());
+				}
+			}
+		}
 	}
 
 	public class ResultContainer {
