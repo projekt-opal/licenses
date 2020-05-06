@@ -2,7 +2,9 @@ package org.dice_research.opal.licenses.cc;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dice_research.opal.licenses.Attributes;
@@ -25,8 +28,12 @@ import org.dice_research.opal.licenses.License;
  */
 public class CcExperimentTriples {
 
+	// Will generate several GB of data
+	public static final boolean WRITE_OUTPUT_LISTS = false;
+
 	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
 	private static final Logger LOGGER = LogManager.getLogger();
+	private Map<String, Integer> licenceIndex = new HashMap<>();
 
 	public static void main(String[] args) throws IOException {
 		CcExperimentTriples experiment = new CcExperimentTriples();
@@ -53,8 +60,22 @@ public class CcExperimentTriples {
 	}
 
 	public void execute() throws IOException {
-		int progressCounter = 0;
+		int progressCounter = 1;
 		List<ResultContainer> results = new LinkedList<>();
+
+		// Write URI index
+		File indexFile = new File("index.txt");
+		int counter = 1;
+		for (License license : knowledgeBase.getLicenses()) {
+			licenceIndex.put(license.getUri(), counter++);
+		}
+		for (Entry<String, Integer> entry : licenceIndex.entrySet()) {
+			FileUtils.writeStringToFile(indexFile, entry.getKey() + "\t" + entry.getValue() + "\n",
+					StandardCharsets.UTF_8, true);
+		}
+		LOGGER.info("Wrote: " + indexFile.getAbsolutePath());
+
+		// Go through triples
 		for (License licenseA : knowledgeBase.getLicenses()) {
 			for (License licenseB : knowledgeBase.getLicenses()) {
 				for (License licenseC : knowledgeBase.getLicenses()) {
@@ -70,7 +91,7 @@ public class CcExperimentTriples {
 						continue;
 					}
 
-					List<License> inputLicenses = new ArrayList<>(2);
+					List<License> inputLicenses = new ArrayList<>(3);
 					inputLicenses.add(licenseA);
 					inputLicenses.add(licenseB);
 					inputLicenses.add(licenseC);
@@ -87,14 +108,12 @@ public class CcExperimentTriples {
 				}
 			}
 
-			// Print progress
-			progressCounter++;
-			// TODO: pc was set from 25 to 10 for testing
-			if (progressCounter % 10 == 0) {
-				LOGGER.info(progressCounter + " / " + knowledgeBase.getLicenses().size());
-				// TODO: loop break is for testing
-				break;
+			// Write results of iteration to file
+			File file = new File("result" + progressCounter++ + ".txt");
+			for (ResultContainer resultContainer : results) {
+				FileUtils.write(file, resultContainer.toString() + "\n", StandardCharsets.UTF_8, true);
 			}
+			LOGGER.info("Wrote: " + file.getAbsolutePath());
 		}
 
 		// Collect number of compatible licenses
@@ -107,41 +126,6 @@ public class CcExperimentTriples {
 			resultStats.get(size).add(result);
 		}
 
-		// Print number of results (pairs)
-		System.out.println("Results:" + results.size());
-		// Print overview: No. of compatible licenses ; no. of pairs
-		for (Entry<Integer, List<ResultContainer>> entry : resultStats.entrySet()) {
-			System.out.println(entry.getKey() + "\t" + entry.getValue().size());
-		}
-		// Print license URIs for small result sets
-		for (Entry<Integer, List<ResultContainer>> entry : resultStats.entrySet()) {
-			if (entry.getValue().size() < 50) {
-				for (ResultContainer resultContainer : entry.getValue()) {
-					System.out.println(resultContainer);
-				}
-			}
-		}
-		// Print non-compatible license URIs
-		for (Entry<Integer, List<ResultContainer>> entry : resultStats.entrySet()) {
-			if (entry.getKey() > 600) {
-				for (ResultContainer resultContainer : entry.getValue()) {
-					StringBuilder stringBuilder = new StringBuilder();
-					stringBuilder.append(entry.getKey());
-					stringBuilder.append("*");
-					stringBuilder.append("\t");
-					stringBuilder.append(resultContainer.licenseA.getUri());
-					stringBuilder.append("\t");
-					stringBuilder.append(resultContainer.licenseB.getUri());
-					stringBuilder.append("\t");
-					stringBuilder.append(resultContainer.licenseC.getUri());
-					stringBuilder.append("\t");
-					List<License> nonCompatible = knowledgeBase.getLicenses();
-					nonCompatible.removeAll(resultContainer.resultingLicenses);
-					stringBuilder.append(nonCompatible.toString());
-					System.out.println(stringBuilder.toString());
-				}
-			}
-		}
 	}
 
 	public class ResultContainer {
@@ -162,13 +146,18 @@ public class CcExperimentTriples {
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append(resultingLicenses.size());
 			stringBuilder.append("\t");
-			stringBuilder.append(licenseA.getUri());
+			stringBuilder.append(licenceIndex.get(licenseA.getUri()));
 			stringBuilder.append("\t");
-			stringBuilder.append(licenseB.getUri());
+			stringBuilder.append(licenceIndex.get(licenseB.getUri()));
 			stringBuilder.append("\t");
-			stringBuilder.append(licenseC.getUri());
-			stringBuilder.append("\t");
-			stringBuilder.append(resultingLicenses);
+			stringBuilder.append(licenceIndex.get(licenseC.getUri()));
+			if (WRITE_OUTPUT_LISTS) {
+				stringBuilder.append("\t");
+				for (License license : resultingLicenses) {
+					stringBuilder.append(licenceIndex.get(license.getUri()));
+					stringBuilder.append(" ");
+				}
+			}
 			return stringBuilder.toString();
 		}
 	}
