@@ -1,6 +1,7 @@
 package org.dice_research.opal.licenses.cc;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +25,9 @@ import org.dice_research.opal.licenses.License;
 /**
  * Experiment to evaluate the compatibility results of CC license triples.
  * 
+ * This experiment runs for around 9 hours 30 minutes and generates 612+1 files,
+ * around 523 MB all together.
+ * 
  * @author Adrian Wilke
  */
 public class CcExperimentTriples {
@@ -31,6 +36,7 @@ public class CcExperimentTriples {
 	public static final boolean WRITE_OUTPUT_LISTS = false;
 
 	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
+	public static final String RESULTS_DIRECTORY = "../..//DATA/License-Paper/opal-licence-experiment-triples/";
 	private static final Logger LOGGER = LogManager.getLogger();
 	private Map<String, Integer> licenceIndex = new HashMap<>();
 
@@ -38,6 +44,7 @@ public class CcExperimentTriples {
 		CcExperimentTriples experiment = new CcExperimentTriples();
 		experiment.loadData();
 		experiment.execute();
+		experiment.printResults(RESULTS_DIRECTORY);
 	}
 
 	private KnowledgeBase knowledgeBase;
@@ -47,6 +54,7 @@ public class CcExperimentTriples {
 		// Check availability of data
 		if (!new File(DATA_DIRECTORY).exists()) {
 			LOGGER.error("Directory not found: " + new File(DATA_DIRECTORY).getAbsolutePath());
+			return null;
 		}
 
 		// Get data
@@ -56,6 +64,50 @@ public class CcExperimentTriples {
 
 		LOGGER.info("Created knowledge base, number of licenses: " + knowledgeBase.getLicenses().size());
 		return this;
+	}
+
+	public void printResults(String resultFilesDirectory) throws IOException {
+
+		// Check availability of directory
+		File directory = new File(resultFilesDirectory);
+		if (!directory.exists()) {
+			LOGGER.error("Directory not found: " + directory.getAbsolutePath());
+			return;
+		}
+
+		// Get result files
+		FilenameFilter filter = new FilenameFilter() {
+
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name.startsWith("result") && name.endsWith(".txt"))
+					return true;
+				else
+					return false;
+			}
+		};
+		File[] resultFiles = directory.listFiles(filter);
+
+		// Read results
+		Map<Integer, Integer> resultStats = new TreeMap<>();
+		for (File file : resultFiles) {
+			for (String line : FileUtils.readLines(file, StandardCharsets.UTF_8)) {
+				Integer size = Integer.valueOf(line.substring(0, line.indexOf("\t")));
+				if (!resultStats.containsKey(size)) {
+					resultStats.put(size, 0);
+				}
+				resultStats.put(size, resultStats.get(size) + 1);
+			}
+		}
+
+		// Print results
+		int counter = 0;
+		for (Entry<Integer, Integer> entry : resultStats.entrySet()) {
+			System.out.println(entry.getKey() + "\t" + entry.getValue());
+			counter += entry.getValue();
+		}
+		System.out.println();
+		System.out.println(counter);
 	}
 
 	public void execute() throws IOException {
