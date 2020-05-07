@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -61,9 +60,9 @@ public class CcExperimentTriples {
 
 	public void execute() throws IOException {
 		int progressCounter = 1;
-		List<ResultContainer> results = new LinkedList<>();
 
 		// Write URI index
+
 		File indexFile = new File("index.txt");
 		int counter = 1;
 		for (License license : knowledgeBase.getLicenses()) {
@@ -76,7 +75,17 @@ public class CcExperimentTriples {
 		LOGGER.info("Wrote: " + indexFile.getAbsolutePath());
 
 		// Go through triples
+
 		for (License licenseA : knowledgeBase.getLicenses()) {
+
+			// Do not re-calculate existing results
+			File file = new File("result" + progressCounter++ + ".txt");
+			if (file.exists()) {
+				continue;
+			}
+
+			List<ResultContainer> results = new LinkedList<>();
+
 			for (License licenseB : knowledgeBase.getLicenses()) {
 				for (License licenseC : knowledgeBase.getLicenses()) {
 
@@ -109,21 +118,10 @@ public class CcExperimentTriples {
 			}
 
 			// Write results of iteration to file
-			File file = new File("result" + progressCounter++ + ".txt");
 			for (ResultContainer resultContainer : results) {
 				FileUtils.write(file, resultContainer.toString() + "\n", StandardCharsets.UTF_8, true);
 			}
 			LOGGER.info("Wrote: " + file.getAbsolutePath());
-		}
-
-		// Collect number of compatible licenses
-		Map<Integer, List<ResultContainer>> resultStats = new TreeMap<>();
-		for (ResultContainer result : results) {
-			int size = result.resultingLicenses.size();
-			if (!resultStats.containsKey(size)) {
-				resultStats.put(size, new LinkedList<>());
-			}
-			resultStats.get(size).add(result);
 		}
 
 	}
