@@ -14,7 +14,7 @@ import org.junit.Test;
  */
 public class CcDataTest {
 
-	public static final boolean PRINT_ATTRIBUTES = false;
+	public static final boolean PRINT_KNOWLEDGEBASE = false;
 
 	private CcData ccData;
 	private KnowledgeBase knowledgeBase;
@@ -45,11 +45,10 @@ public class CcDataTest {
 
 		Assert.assertEquals(7, knowledgeBase.getAttributes().getList().size());
 
-		if (PRINT_ATTRIBUTES) {
-			for (Attribute attribute : knowledgeBase.getAttributes().getList()) {
-				System.out.println(attribute);
-			}
+		if (PRINT_KNOWLEDGEBASE) {
+			System.out.println(knowledgeBase.toLines());
 		}
+
 	}
 
 }
