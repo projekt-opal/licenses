@@ -18,6 +18,9 @@ public class CcDataTest {
 
 	public static final boolean PRINT_KNOWLEDGEBASE = false;
 
+	// Two files in the official data contain errors
+	public static final int NUMBER_OF_LICENSE_FILES = 614 - 2;
+
 	private CcData ccData;
 	private KnowledgeBase knowledgeBase;
 
@@ -32,7 +35,7 @@ public class CcDataTest {
 
 	@Test
 	public void testCcData() throws IOException {
-		Assert.assertEquals(614, ccData.readDirectory().getAllRdfFiles().size());
+		Assert.assertEquals(NUMBER_OF_LICENSE_FILES, ccData.readDirectory().getAllRdfFiles().size());
 	}
 
 	@Test

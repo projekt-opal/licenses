@@ -14,8 +14,7 @@ import org.junit.Assume;
  */
 public abstract class CcTestUtils {
 
-	// TODO: Replace for anonymous review
-	public static final String DATA_REPOSITORY = "https://github.com/projekt-opal/cc.licenserdf";
+	public static final String DATA_REPOSITORY = "https://github.com/creativecommons/cc.licenserdf";
 
 	public static KnowledgeBase getKnowledgeBase(CcData ccDdata) {
 		getDataDirectory();

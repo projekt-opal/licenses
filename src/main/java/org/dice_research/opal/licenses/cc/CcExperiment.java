@@ -16,6 +16,7 @@ import org.dice_research.opal.licenses.BackMapping;
 import org.dice_research.opal.licenses.Execution;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
+import org.dice_research.opal.licenses.utils.Cfg;
 
 /**
  * Experiment to evaluate the compatibility results of 8 CC licenses.
@@ -24,22 +25,21 @@ import org.dice_research.opal.licenses.License;
  */
 public class CcExperiment {
 
-	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public static void main(String[] args) {
-		new CcExperiment().execute();
+	public static void main(String[] args) throws Exception {
+		new CcExperiment().execute(Cfg.getCcLicenseRdf());
 	}
 
-	public void execute() {
+	public void execute(String dataDirectory) {
 
 		// Check availability of data
-		if (!new File(DATA_DIRECTORY).exists()) {
-			LOGGER.error("Directory not found: " + new File(DATA_DIRECTORY).getAbsolutePath());
+		if (!new File(dataDirectory).exists()) {
+			LOGGER.error("Directory not found: " + new File(dataDirectory).getAbsolutePath());
 		}
 
 		// Get data
-		CcData data = new CcData().setSourceDirectory(DATA_DIRECTORY);
+		CcData data = new CcData().setSourceDirectory(dataDirectory);
 		List<File> files = data.getMatixFiles();
 		KnowledgeBase knowledgeBase = data.createKnowledgeBase(files);
 

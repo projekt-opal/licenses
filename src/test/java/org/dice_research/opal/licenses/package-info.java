@@ -6,7 +6,7 @@
  * </p>
  * 
  * <p>
- * (2) CC tests: These tests require data of an additonal repository. The
+ * (2) CC tests: These tests require data of an additional repository. The
  * directory to use can be set by the system property 'cc.licenserdf' (VM
  * arguments). For instance:
  * <code>-Dcc.licenserdf=../cc.licenserdf/cc/licenserdf/licenses/</code>

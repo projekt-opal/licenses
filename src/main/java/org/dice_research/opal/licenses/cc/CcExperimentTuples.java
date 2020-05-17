@@ -19,6 +19,7 @@ import org.dice_research.opal.licenses.Execution;
 import org.dice_research.opal.licenses.KnowledgeBase;
 import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.utils.ArrayUtil;
+import org.dice_research.opal.licenses.utils.Cfg;
 
 /**
  * Experiment to evaluate the compatibility results of CC license pairs.
@@ -27,12 +28,11 @@ import org.dice_research.opal.licenses.utils.ArrayUtil;
  */
 public class CcExperimentTuples {
 
-	public static final String DATA_DIRECTORY = "../cc.licenserdf/cc/licenserdf/licenses/";
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		CcExperimentTuples experiment = new CcExperimentTuples();
-		experiment.loadData();
+		experiment.loadData(Cfg.getCcLicenseRdf());
 		if (Boolean.TRUE)
 			experiment.execute();
 		else
@@ -96,15 +96,15 @@ public class CcExperimentTuples {
 		System.out.println(knowledgeBase.toLines());
 	}
 
-	public CcExperimentTuples loadData() throws IOException {
+	public CcExperimentTuples loadData(String dataDirectory) throws IOException {
 
 		// Check availability of data
-		if (!new File(DATA_DIRECTORY).exists()) {
-			LOGGER.error("Directory not found: " + new File(DATA_DIRECTORY).getAbsolutePath());
+		if (!new File(dataDirectory).exists()) {
+			LOGGER.error("Directory not found: " + new File(dataDirectory).getAbsolutePath());
 		}
 
 		// Get data
-		CcData data = new CcData().setSourceDirectory(DATA_DIRECTORY).readDirectory();
+		CcData data = new CcData().setSourceDirectory(dataDirectory).readDirectory();
 		List<File> files = data.getAllRdfFiles();
 		knowledgeBase = data.createKnowledgeBase(files);
 

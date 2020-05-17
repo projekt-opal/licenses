@@ -31,6 +31,7 @@ import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.Permission;
 import org.dice_research.opal.licenses.Prohibition;
 import org.dice_research.opal.licenses.Requirement;
+import org.dice_research.opal.licenses.utils.Cfg;
 import org.dice_research.opal.licenses.utils.LineStorage;
 
 /**
@@ -77,9 +78,9 @@ public class CcData {
 	/**
 	 * Test run.
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
-		CcData cc = new CcData().setSourceDirectory("../cc.licenserdf/cc/licenserdf/licenses/").readDirectory();
+		CcData cc = new CcData().setSourceDirectory(Cfg.getCcLicenseRdf()).readDirectory();
 
 		List<File> rdfFiles = cc.getMatixFiles();
 		for (File file : rdfFiles) {
@@ -97,9 +98,6 @@ public class CcData {
 
 	/**
 	 * Creates knowledge base including data of all files.
-	 * 
-	 * TODO: Is there another predicate, e.g. legal statement?
-	 * https://creativecommons.org/ns#Jurisdiction
 	 */
 	public KnowledgeBase createKnowledgeBase(List<File> files) {
 		for (File file : files) {
@@ -366,7 +364,13 @@ public class CcData {
 		}
 
 		allRdfFiles = Files.list(Paths.get(directory.toURI())).map(p -> p.toFile())
-				.filter(f -> f.getName().endsWith("rdf")).collect(Collectors.toList());
+				.filter(f -> f.getName().endsWith("rdf"))
+
+				// Can be removed, if official cc.licenserdf repository is bugfixed
+				.filter(f -> !f.getName().equals("creativecommons.org_licenses_by-nc-sa_3.0_za_.rdf"))
+				.filter(f -> !f.getName().equals("creativecommons.org_licenses_by-nc_3.0_za_.rdf"))
+
+				.collect(Collectors.toList());
 
 		return this;
 	}
