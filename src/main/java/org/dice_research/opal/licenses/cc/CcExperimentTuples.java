@@ -33,10 +33,8 @@ public class CcExperimentTuples {
 	public static void main(String[] args) throws Exception {
 		CcExperimentTuples experiment = new CcExperimentTuples();
 		experiment.loadData(Cfg.getCcLicenseRdf());
-		if (Boolean.TRUE)
-			experiment.execute();
-		else
-			experiment.printSpecialCases();
+		experiment.execute();
+		experiment.printSpecialCases();
 	}
 
 	private KnowledgeBase knowledgeBase;
@@ -112,7 +110,7 @@ public class CcExperimentTuples {
 		return this;
 	}
 
-	public void execute() throws IOException {
+	public CcExperimentTuples execute() throws IOException {
 		int progressCounter = 0;
 		List<ResultContainer> results = new LinkedList<>();
 		for (License licenseA : knowledgeBase.getLicenses()) {
@@ -188,6 +186,8 @@ public class CcExperimentTuples {
 				}
 			}
 		}
+
+		return this;
 	}
 
 	public class ResultContainer {

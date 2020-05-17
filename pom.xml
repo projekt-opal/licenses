@@ -37,6 +37,12 @@
 										org.dice_research.opal.licenses.Main
 									</mainClass>
 								</manifest>
+
+								<!-- Required to provide classes to logger -->
+								<manifestEntries>
+									<Multi-Release>true</Multi-Release>
+								</manifestEntries>
+
 							</archive>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>

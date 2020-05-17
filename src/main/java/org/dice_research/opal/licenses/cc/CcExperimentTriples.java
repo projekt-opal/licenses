@@ -109,7 +109,7 @@ public class CcExperimentTriples {
 		System.out.println(counter);
 	}
 
-	public void execute() throws IOException {
+	public CcExperimentTriples execute() throws IOException {
 		int progressCounter = 1;
 
 		// Write URI index
@@ -175,6 +175,7 @@ public class CcExperimentTriples {
 			LOGGER.info("Wrote: " + file.getAbsolutePath());
 		}
 
+		return this;
 	}
 
 	public class ResultContainer {

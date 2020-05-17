@@ -1,8 +1,11 @@
 package org.dice_research.opal.licenses;
 
+import java.io.File;
+
 import org.dice_research.opal.licenses.cc.CcExperiment;
 import org.dice_research.opal.licenses.cc.CcExperimentTriples;
 import org.dice_research.opal.licenses.cc.CcExperimentTuples;
+import org.dice_research.opal.licenses.utils.Cfg;
 
 /**
  * Command line interface for integrated experiments.
@@ -17,14 +20,16 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		if (args.length == 1) {
+
 			if (args[0].equals(CC_EXP)) {
-				CcExperiment.main(args);
+				new CcExperiment().execute(Cfg.getCcLicenseRdf());
 
-			} else if (args[0].equals(CC_EXP)) {
-				CcExperimentTuples.main(args);
+			} else if (args[0].equals(CC_EXP_2)) {
+				new CcExperimentTuples().loadData(Cfg.getCcLicenseRdf()).execute().printSpecialCases();
 
-			} else if (args[0].equals(CC_EXP)) {
-				CcExperimentTriples.main(args);
+			} else if (args[0].equals(CC_EXP_3)) {
+				new CcExperimentTriples().loadData(Cfg.getCcLicenseRdf()).execute()
+						.printResults(new File("").getAbsolutePath());
 
 			} else {
 				printInfo();
@@ -55,8 +60,9 @@ public class Main {
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append("Example:");
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append("java -jar licenses.java cc1 -Dcc.licenserdf=../cc.licenserdf/cc/licenserdf/licenses/");
-
+		stringBuilder.append("java -Dcc.licenserdf=../../cc.licenserdf/cc/licenserdf/licenses/ \\");
+		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append(" -jar licenses-jar-with-dependencies.jar cc1");
 		System.out.println(stringBuilder.toString());
 	}
 }
