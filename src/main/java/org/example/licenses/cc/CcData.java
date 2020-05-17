@@ -39,8 +39,7 @@ import org.example.utils.LineStorage;
  * 
  * <p>
  * Data: To get the underlying data, clone
- * https://github.com/projekt-opal/cc.licenserdf (or
- * https://github.com/creativecommons/cc.licenserdf).
+ * https://github.com/creativecommons/cc.licenserdf.
  * </p>
  *
  * <p>
@@ -55,7 +54,7 @@ import org.example.utils.LineStorage;
  * Get a list of non-replaced lices files using {@link #getNonReplacedFiles()}.
  * </p>
  *
- * @author Adrian Wilke
+ * @author 33a1cc8d616a72f953d8e15274194bcd5aac2b78fbe6b4a4d1a911e0f2ef00cd
  */
 public class CcData {
 	private static final Logger LOGGER = LogManager.getLogger();

@@ -27,12 +27,12 @@ import org.example.utils.Io;
  * https://www.europeandataportal.eu/en/content/licence-assistant-european-data-portal-licence-compatibility-matrix
  * http://www.europeandataportal.eu/sites/default/files/edp-licence-compatibility-published_v1_0.xlsx
  *
- * @author Adrian Wilke
+ * @author 33a1cc8d616a72f953d8e15274194bcd5aac2b78fbe6b4a4d1a911e0f2ef00cd
  */
 public class EdpLcmLicenceDescriptions {
 
-	public static final String HOBBIT_OPAL = "https://hobbitdata.informatik.uni-leipzig.de/OPAL/";
-	public static final String URL_LICENSES = HOBBIT_OPAL
+	public static final String ANONYMIZED = "https://ANONYMIZED/";
+	public static final String URL_LICENSES = ANONYMIZED
 			+ "Misc/EDP-Licence-Compatibility-Matrix/Licence-Descriptions.csv";
 	public static final String DIR_RESOURCES = "src/main/resources/";
 	public static final String OUTPUT_FILE = DIR_RESOURCES

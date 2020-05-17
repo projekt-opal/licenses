@@ -3,7 +3,7 @@ package org.example.licenses.edplcm;
 /**
  * EDP LCM URIs.
  * 
- * @author Adrian Wilke
+ * @author 33a1cc8d616a72f953d8e15274194bcd5aac2b78fbe6b4a4d1a911e0f2ef00cd
  */
 public abstract class EdpLcmUris {
 	public static final String CC_BY_3_0_Austria = "https://creativecommons.org/licenses/by/3.0/at/legalcode";

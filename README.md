@@ -1,13 +1,13 @@
-# OPAL Licenses
+# Licenses
 
 This repository contains code to generate a list of compatible licenses based on multiple input licenses to be checked.
 The following main steps are executed:
 
-- Creation of a [KnowledgeBase](src/main/java/org/dice_research/opal/licenses/KnowledgeBase.java) which contains the licenses and attributes.
-- License [Attribute](src/main/java/org/dice_research/opal/licenses/Attribute.java) values are mapped according to their type.
-- The [Operator](src/main/java/org/dice_research/opal/licenses/Operator.java) computes composite attributes of all input licenses.
-- Finally, the [BackMapping](src/main/java/org/dice_research/opal/licenses/BackMapping.java) creates a list of compatible licenses.
-- To add additional Knowledge Bases, the [AttributeFactory](src/main/java/org/dice_research/opal/licenses/AttributeFactory.java) can be utilized and afterwards the [Execution](src/main/java/org/dice_research/opal/licenses/Execution.java) methods help to run an experiment.
+- Creation of a [KnowledgeBase](src/main/java/org/example/licenses/KnowledgeBase.java) which contains the licenses and attributes.
+- License [Attribute](src/main/java/org/example/licenses/Attribute.java) values are mapped according to their type.
+- The [Operator](src/main/java/org/example/licenses/Operator.java) computes composite attributes of all input licenses.
+- Finally, the [BackMapping](src/main/java/org/example/licenses/BackMapping.java) creates a list of compatible licenses.
+- To add additional Knowledge Bases, the [AttributeFactory](src/main/java/org/example/licenses/AttributeFactory.java) can be utilized and afterwards the [Execution](src/main/java/org/example/licenses/Execution.java) methods help to run an experiment.
 
 ## Evaluation and experiments
 
@@ -31,7 +31,7 @@ Example commands to run the experiments are listed below.
 java -Dcc.licenserdf=../../cc.licenserdf/cc/licenserdf/licenses/ -jar licenses-jar-with-dependencies.jar cc1
 ```
 
-This will run the [CcExperiment](src/main/java/org/dice_research/opal/licenses/cc/CcExperiment.java).
+This will run the [CcExperiment](src/main/java/org/example/licenses/cc/CcExperiment.java).
 
 
 **Creative Commons cc.licenserdf with two input licenses**
@@ -40,7 +40,7 @@ This will run the [CcExperiment](src/main/java/org/dice_research/opal/licenses/c
 java -Dcc.licenserdf=../../cc.licenserdf/cc/licenserdf/licenses/ -jar licenses-jar-with-dependencies.jar cc2
 ```
 
-This will run the [CcExperimentTuples](src/main/java/org/dice_research/opal/licenses/cc/CcExperimentTuples.java).
+This will run the [CcExperimentTuples](src/main/java/org/example/licenses/cc/CcExperimentTuples.java).
 
 
 **Creative Commons cc.licenserdf with three input licenses**
@@ -49,7 +49,7 @@ This will run the [CcExperimentTuples](src/main/java/org/dice_research/opal/lice
 java -Dcc.licenserdf=../../cc.licenserdf/cc/licenserdf/licenses/ -jar licenses-jar-with-dependencies.jar cc3
 ```
 
-This will run the [CcExperimentTriples](src/main/java/org/dice_research/opal/licenses/cc/CcExperimentTriples.java).
+This will run the [CcExperimentTriples](src/main/java/org/example/licenses/cc/CcExperimentTriples.java).
 
 
 ### European Data Portal experiments
@@ -60,11 +60,11 @@ To run the evaluation of the European Data Portal (EDP) License Compatibility Ma
 mvn clean test -Dtest=EdpLcmEvaluationTest -Drun.edp.lcm.tests=true
 ```
 
-This will run the [EdpLcmEvaluationTest](src/test/java/org/dice_research/opal/licenses/EdpLcmEvaluationTest.java).
+This will run the [EdpLcmEvaluationTest](src/test/java/org/example/licenses/EdpLcmEvaluationTest.java).
 
 
 ## Credits
 
-[Data Science Group (DICE)](https://dice-research.org/) at [Paderborn University](https://www.uni-paderborn.de/)
+ANONYMIZED
 
-This work has been supported by the German Federal Ministry of Transport and Digital Infrastructure (BMVI) in the project [Open Data Portal Germany (OPAL)](http://projekt-opal.de/) (funding code 19F2028A).
+This work has been supported by ANONYMIZED.

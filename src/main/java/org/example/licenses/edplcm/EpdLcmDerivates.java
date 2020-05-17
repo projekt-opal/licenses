@@ -23,7 +23,7 @@ import org.example.licenses.transform.EdpLcmUriMapping;
  * 
  * Usage: Use {@link #getUris()} and {@link #getValue(String, String)}.
  * 
- * @author Adrian Wilke
+ * @author 33a1cc8d616a72f953d8e15274194bcd5aac2b78fbe6b4a4d1a911e0f2ef00cd
  */
 public class EpdLcmDerivates {
 
