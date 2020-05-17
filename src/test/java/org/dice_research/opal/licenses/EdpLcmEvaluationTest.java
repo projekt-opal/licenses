@@ -12,12 +12,18 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dice_research.opal.licenses.Attributes;
+import org.dice_research.opal.licenses.BackMapping;
+import org.dice_research.opal.licenses.Execution;
+import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.edplcm.EdpLcmKnowledgeBase;
 import org.dice_research.opal.licenses.edplcm.EpdLcmDerivates;
 import org.dice_research.opal.licenses.transform.GraphExport;
 import org.dice_research.opal.licenses.utils.ArrayUtil;
+import org.dice_research.opal.licenses.utils.Cfg;
 import org.dice_research.opal.licenses.utils.F1Score;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +40,16 @@ public class EdpLcmEvaluationTest {
 
 	@Before
 	public void setUp() throws Exception {
+
+		// Check execution flag
+		boolean execute = false;
+		try {
+			execute = Boolean.parseBoolean(Cfg.getRunEdpLcmTests());
+		} catch (Exception e) {
+			// Handled afterwards
+		}
+		Assume.assumeTrue("Execution flag set", execute);
+
 		derivates = new EpdLcmDerivates();
 		knowledgeBase = new EdpLcmKnowledgeBase().load();
 	}

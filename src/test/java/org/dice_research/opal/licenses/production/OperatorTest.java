@@ -1,8 +1,9 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.production;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import org.dice_research.opal.licenses.Operator;
 import org.junit.Assert;
 import org.junit.Test;
 

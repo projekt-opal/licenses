@@ -1,7 +1,9 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.cc;
 
 import java.io.IOException;
 
+import org.dice_research.opal.licenses.KnowledgeBase;
+import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.cc.CcData;
 import org.junit.Assert;
 import org.junit.Before;

@@ -1,5 +1,9 @@
 package org.dice_research.opal.licenses;
 
+import org.dice_research.opal.licenses.production.AttributeTest;
+import org.dice_research.opal.licenses.production.EdpLcmKnowledgeBaseTest;
+import org.dice_research.opal.licenses.production.EpdLcmDerivatesTest;
+import org.dice_research.opal.licenses.production.OperatorTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -11,27 +15,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 		OperatorTest.class,
 
-		ExecutionTest.class,
-
-		CcDataTest.class,
-
-		CcBackMappingTest.class,
-
-		CcEvaluationSingleTest.class,
-
-		CcEvaluationTest.class,
-
 		EdpLcmKnowledgeBaseTest.class,
 
 		EpdLcmDerivatesTest.class,
 
 })
 
-/**
- * Contains alls tests except of @link{EdpLcmEvaluationTest}
- * and @link{EdpLcmEvaluationSingleTest}.
- * 
- * @author Adrian Wilke
- */
 public class AllProductionTests {
 }

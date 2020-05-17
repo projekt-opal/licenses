@@ -1,9 +1,14 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.cc;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.dice_research.opal.licenses.Attributes;
+import org.dice_research.opal.licenses.BackMapping;
+import org.dice_research.opal.licenses.Execution;
+import org.dice_research.opal.licenses.KnowledgeBase;
+import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.cc.CcMatrix;
 import org.dice_research.opal.licenses.utils.ArrayUtil;
 import org.junit.Assert;

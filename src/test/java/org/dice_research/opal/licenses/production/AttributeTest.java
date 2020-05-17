@@ -1,5 +1,8 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.production;
 
+import org.dice_research.opal.licenses.Attribute;
+import org.dice_research.opal.licenses.Permission;
+import org.dice_research.opal.licenses.Requirement;
 import org.junit.Assert;
 import org.junit.Test;
 

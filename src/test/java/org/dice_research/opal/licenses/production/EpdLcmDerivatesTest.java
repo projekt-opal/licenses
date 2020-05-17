@@ -1,4 +1,4 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.production;
 
 import java.io.IOException;
 
@@ -6,6 +6,11 @@ import org.dice_research.opal.licenses.edplcm.EpdLcmDerivates;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Tests {@link EpdLcmDerivates}.
+ *
+ * @author Adrian Wilke
+ */
 public class EpdLcmDerivatesTest {
 
 	public static final String CC0_1_0 = "https://creativecommons.org/publicdomain/zero/1.0/legalcode";

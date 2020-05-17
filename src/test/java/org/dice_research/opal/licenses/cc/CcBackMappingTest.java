@@ -1,8 +1,14 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.cc;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import org.dice_research.opal.licenses.Attribute;
+import org.dice_research.opal.licenses.AttributeFactory;
+import org.dice_research.opal.licenses.Attributes;
+import org.dice_research.opal.licenses.BackMapping;
+import org.dice_research.opal.licenses.KnowledgeBase;
+import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.cc.CcMatrix;
 import org.junit.Assert;
 import org.junit.Before;

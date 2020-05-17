@@ -1,7 +1,10 @@
-package org.dice_research.opal.licenses;
+package org.dice_research.opal.licenses.production;
 
 import java.util.Collection;
 
+import org.dice_research.opal.licenses.Attribute;
+import org.dice_research.opal.licenses.Attributes;
+import org.dice_research.opal.licenses.License;
 import org.dice_research.opal.licenses.edplcm.EdpLcmKnowledgeBase;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -17,7 +20,7 @@ public class EdpLcmKnowledgeBaseTest {
 	/**
 	 * Config: Execute {@link #print()}.
 	 */
-	public static final boolean PRINT = false;
+	public static final boolean PRINT = true;
 
 	// Does not include attribute 'Sublicensing' as it contains a 'N.A.' value.
 	public static final int NUMBER_OF_ATTRIBUTES = 13;
