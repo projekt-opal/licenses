@@ -13,8 +13,10 @@ public class EdpOwlKnowledgeBaseTest {
 	@Test
 	public void test() {
 		EdpOwlKnowledgeBase kb = new EdpOwlKnowledgeBase();
-		
-		System.out.println(kb.toLines());
+
+		License l = kb.getLicense("http://europeandataportal.eu/ontologies/od-licenses#OGL2.0");
+		//System.out.println(kb.toLines());
+		System.out.println(l.getAttributes());
 	}
 
 }

@@ -37,7 +37,7 @@ public class EdpOwlKnowledgeBase extends KnowledgeBase {
 		NodeIterator ri = model.listObjectsOfProperty(cp);
 		while (ri.hasNext()) {
 			RDFNode node = ri.next();
-			
+
 			Attribute attr = AttributeFactory.get().createAttribute(typ, node.toString(), false);
 			addAttribute(attr);
 		}
