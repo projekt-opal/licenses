@@ -11,7 +11,7 @@ The following main steps are executed:
 
 ## Download
 
-Downloads are available at the [releases](./releases/) page.
+Downloads are available at the [releases](../../releases/) page.
 
 ## Evaluation and experiments
 
