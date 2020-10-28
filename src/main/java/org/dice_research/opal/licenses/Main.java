@@ -46,23 +46,22 @@ public class Main {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("Please provide the experiment to execute:");
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append("- " + CC_EXP + " Creative Commons License Compatibility Chart");
+		stringBuilder.append("- " + CC_EXP + ": Creative Commons License Compatibility Chart");
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append("- " + CC_EXP_2 + " Creative Commons cc.licenserdf, two input licenses");
+		stringBuilder.append("- " + CC_EXP_2 + ": Creative Commons cc.licenserdf, two input licenses");
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append("- " + CC_EXP_3 + " Creative Commons cc.licenserdf, three input licenses");
+		stringBuilder.append("- " + CC_EXP_3 + ": Creative Commons cc.licenserdf, three input licenses");
+		stringBuilder.append(" (runs around 10 hours)");
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append("  (runs around 10 hours)");
 		stringBuilder.append(System.lineSeparator());
+		stringBuilder.append("Additionally, the path to RDF license files of cc.licenserdf has to be provided.");
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append("Additionally, the path to RDF license files of cc.licenserdf have to be provided.");
+		stringBuilder.append("Download of cc.licenserdf: https://github.com/creativecommons/cc.licenserdf/archive/master.zip");
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append(System.lineSeparator());
 		stringBuilder.append("Example:");
 		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append("java -Dcc.licenserdf=../../cc.licenserdf/cc/licenserdf/licenses/ \\");
-		stringBuilder.append(System.lineSeparator());
-		stringBuilder.append(" -jar licenses-jar-with-dependencies.jar cc1");
+		stringBuilder.append("java -Dcc.licenserdf=cc.licenserdf-master/cc/licenserdf/licenses/ -jar ReCoDa.jar cc1");
 		System.out.println(stringBuilder.toString());
 	}
 }

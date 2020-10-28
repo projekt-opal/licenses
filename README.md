@@ -9,6 +9,10 @@ The following main steps are executed:
 - Finally, the [BackMapping](src/main/java/org/dice_research/opal/licenses/BackMapping.java) creates a list of compatible licenses.
 - To add additional Knowledge Bases, the [AttributeFactory](src/main/java/org/dice_research/opal/licenses/AttributeFactory.java) can be utilized and afterwards the [Execution](src/main/java/org/dice_research/opal/licenses/Execution.java) methods help to run an experiment.
 
+## Download
+
+Downloads are available at the [releases](releases/) page.
+
 ## Evaluation and experiments
 
 For the evaluation of the approach, experiments based on two license datasets are provided:
@@ -28,7 +32,7 @@ Example commands to run the experiments are listed below.
 **Creative Commons License Compatibility Chart**
 
 ```
-java -Dcc.licenserdf=../../cc.licenserdf/cc/licenserdf/licenses/ -jar licenses-jar-with-dependencies.jar cc1
+java -Dcc.licenserdf=cc.licenserdf-master/cc/licenserdf/licenses/ -jar ReCoDa.jar cc1
 ```
 
 This will run the [CcExperiment](src/main/java/org/dice_research/opal/licenses/cc/CcExperiment.java).
@@ -37,7 +41,7 @@ This will run the [CcExperiment](src/main/java/org/dice_research/opal/licenses/c
 **Creative Commons cc.licenserdf with two input licenses**
 
 ```
-java -Dcc.licenserdf=../../cc.licenserdf/cc/licenserdf/licenses/ -jar licenses-jar-with-dependencies.jar cc2
+java -Dcc.licenserdf=cc.licenserdf-master/cc/licenserdf/licenses/ -jar ReCoDa.jar cc2
 ```
 
 This will run the [CcExperimentTuples](src/main/java/org/dice_research/opal/licenses/cc/CcExperimentTuples.java).
@@ -46,7 +50,7 @@ This will run the [CcExperimentTuples](src/main/java/org/dice_research/opal/lice
 **Creative Commons cc.licenserdf with three input licenses**
 
 ```
-java -Dcc.licenserdf=../../cc.licenserdf/cc/licenserdf/licenses/ -jar licenses-jar-with-dependencies.jar cc3
+java -Dcc.licenserdf=cc.licenserdf-master/cc/licenserdf/licenses/ -jar ReCoDa.jar cc3
 ```
 
 This will run the [CcExperimentTriples](src/main/java/org/dice_research/opal/licenses/cc/CcExperimentTriples.java).
@@ -60,7 +64,7 @@ To run the evaluation of the European Data Portal (EDP) License Compatibility Ma
 mvn clean test -Dtest=EdpLcmEvaluationTest -Drun.edp.lcm.tests=true
 ```
 
-This will run the [EdpLcmEvaluationTest](src/test/java/org/dice_research/opal/licenses/EdpLcmEvaluationTest.java).
+This will run the additional [EdpLcmEvaluationTest](src/test/java/org/dice_research/opal/licenses/EdpLcmEvaluationTest.java).
 
 
 ## Credits
