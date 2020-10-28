@@ -1,4 +1,4 @@
-# OPAL Licenses
+# Relicensing Combined Datasets (ReCoDa)
 
 This repository contains code to generate a list of compatible licenses based on multiple input licenses to be checked.
 The following main steps are executed:
